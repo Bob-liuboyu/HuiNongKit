@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <!--- 默认不支持数据类型 展示的item布局,禁止修改！！ -->
+    <!--- 默认不支持数据类型 展示的item布局,禁止修改！！ -->
+    <!--- 默认不支持数据类型 展示的item布局,禁止修改！！ -->
+    <!--- 默认不支持数据类型 展示的item布局,禁止修改！！ -->
+    <!--- 默认不支持数据类型 展示的item布局,禁止修改！！ -->
+    <!--- 默认不支持数据类型 展示的item布局,禁止修改！！ -->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="该类型数据不支持,建议升级为最新APP"
+            android:textColor="@android:color/holo_red_light" />
+    </LinearLayout>
+</layout>

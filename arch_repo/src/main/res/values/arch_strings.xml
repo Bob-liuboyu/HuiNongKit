@@ -1,0 +1,23 @@
+<resources>
+    <string name="arch_name">tokentm_arch_repo</string>
+    <string name="arch_str_chain_info">链上信息</string>
+    <string name="arch_str_dialog_chain_num">上链序号：</string>
+    <string name="arch_str_dialog_chain_start_addr">发起地址：</string>
+    <string name="arch_str_dialog_chain_end_addr">交易地址：</string>
+    <string name="arch_str_dialog_chain_time">上链时间：</string>
+    <string name="arch_str_dialog_chain_conten">上链内容：</string>
+    <string name="arch_str_close">关闭</string>
+    <string name="arch_str_copy_private_key">复制私钥</string>
+    <string name="arch_str_key_important">此私钥非常重要，请妥善保管</string>
+    <string name="arch_str_get_it">知道啦</string>
+    <string name="arch_str_make_key">生成私钥</string>
+    <string name="arch_str_confirm">确认</string>
+    <string name="arch_str_cancel">取消</string>
+    <string name="arch_str_pwd_tips">请输入您的身份密码</string>
+    <string name="arch_str_tips">温馨提示</string>
+    <string name="arch_str_please_check">请选择</string>
+    <string name="arch_str_pwd_title">输入密码</string>
+    <string name="arch_str_loading">努力加载中，请稍后～</string>
+    <item name="tag_key_data" type="id" />
+    <item name="tag_key_position" type="id" />
+</resources>

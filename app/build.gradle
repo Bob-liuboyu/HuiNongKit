@@ -1,0 +1,63 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    resourcePrefix 'main'
+
+    defaultConfig {
+        applicationId "com.project.huinongkit"
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName(), AROUTER_GENERATE_DOC: "enable"]
+            }
+        }
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("${rootDir}/key.jks")
+            storePassword "HuiNongKit"
+            keyAlias "HuiNongKit"
+            keyPassword "HuiNongKit"
+        }
+
+        debug {
+            storeFile file("${rootDir}/key.jks")
+            storePassword "HuiNongKit"
+            keyAlias "HuiNongKit"
+            keyPassword "HuiNongKit"
+        }
+    }
+
+    buildTypes {
+        debug{
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "API_URL",   "\"http://123.56.96.214:8000/\""
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "API_URL",   "\"http://123.56.96.214:8000/\""
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    annotationProcessor rootProject.ext.dependencies.arouterAp
+    //业务模块
+    implementation project(':module_user')
+    //各个模块通用资源
+    implementation project(':common_resource')
+}

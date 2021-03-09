@@ -1,0 +1,6 @@
+include ':common_resource'
+include ':module_user'
+include ':config_repo'
+include ':arch_repo'
+include ':app'
+rootProject.name = "HuiNongKit"
