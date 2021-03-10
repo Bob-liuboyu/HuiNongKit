@@ -60,7 +60,9 @@ dependencies {
     api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.1.6'
     compileOnly project(path: ':config_repo')
 
-    // 滚轮
-    api 'com.github.tbruyelle:rxpermissions:0.10.2'
+//    api 'com.github.tbruyelle:rxpermissions:0.10.2'
     api 'com.android.support:multidex:1.0.1'
+
+//    api "com.github.permissions-dispatcher:permissionsdispatcher:3.2.0"
+//    annotationProcessor "com.github.permissions-dispatcher:permissionsdispatcher-processor:3.2.0"
 }

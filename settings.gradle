@@ -1,3 +1,4 @@
+include ':module_order'
 include ':common_resource'
 include ':module_user'
 include ':config_repo'

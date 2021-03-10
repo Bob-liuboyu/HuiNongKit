@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/arch_repo" />
             <option value="$PROJECT_DIR$/common_resource" />
             <option value="$PROJECT_DIR$/config_repo" />
+            <option value="$PROJECT_DIR$/module_order" />
             <option value="$PROJECT_DIR$/module_user" />
           </set>
         </option>

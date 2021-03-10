@@ -14,7 +14,8 @@ public class ArouterConfig {
      */
     public static final List<String> MODULE_INIT_PATHS = Arrays.asList(
             Main.INIT,
-            User.INIT
+            User.INIT,
+            Order.INIT
     );
 
 
@@ -40,5 +41,6 @@ public class ArouterConfig {
      */
     public static class Order {
         public static final String INIT = "/order/init";
+        public static final String ORDER_DETAIL = "/order/detail";
     }
 }
