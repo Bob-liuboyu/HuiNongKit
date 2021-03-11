@@ -56,8 +56,8 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     @NeedsPermission(Manifest.permission.CAMERA)
     public void showCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);// 启动系统相机
-        startActivityForResult(intent, 12);
+        Intent intent = new Intent(this, CameraTestActivity.class);
+        startActivityForResult(intent, 0);
     }
 
     @OnShowRationale(Manifest.permission.CAMERA)
