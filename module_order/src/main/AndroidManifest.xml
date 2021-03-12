@@ -12,5 +12,8 @@
         <activity
             android:name=".CameraTestActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.HelloArActivity"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>
