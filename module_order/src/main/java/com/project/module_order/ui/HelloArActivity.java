@@ -2,19 +2,30 @@ package com.project.module_order.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.net.Uri;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.PixelCopy;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.ar.core.Anchor;
@@ -59,11 +70,18 @@ import com.project.module_order.samplerender.VertexBuffer;
 import com.project.module_order.samplerender.arcore.BackgroundRenderer;
 import com.project.module_order.samplerender.arcore.PlaneRenderer;
 import com.project.module_order.samplerender.arcore.SpecularCubemapFilter;
+import com.project.module_order.utils.ImageUtils;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -154,6 +172,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     private final float[] viewInverseMatrix = new float[16];
     private final float[] worldLightDirection = {0.0f, 0.0f, 0.0f, 0.0f};
     private final float[] viewLightDirection = new float[4]; // view x world light direction
+    private ImageView settingsButton;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -174,12 +193,12 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
 
         depthSettings.onCreate(this);
         instantPlacementSettings.onCreate(this);
-        ImageButton settingsButton = findViewById(R.id.settings_button);
+        settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        getImage();
+                        takePhoto();
                     }
                 });
     }
@@ -459,11 +478,23 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
                 Image depthImage = frame.acquireDepthImage();
                 backgroundRenderer.updateCameraDepthTexture(depthImage);
                 Log.e("xxxxxxxxx", depthImage.toString());
+
+                Image image = frame.acquireCameraImage();
             } catch (NotYetAvailableException e) {
                 // This normally means that depth data is not available yet. This is normal so we will not
                 // spam the logcat with this.
+                Log.e("xxxxxxxxx", "NotYetAvailableException = " + e.getMessage());
             }
         }
+//        try {
+//            Image depthImage = frame.acquireDepthImage();
+//            backgroundRenderer.updateCameraDepthTexture(depthImage);
+//            Log.e("xxxxxxxxx", "Timestamp() " + depthImage.getTimestamp());
+//        } catch (NotYetAvailableException e) {
+//            // This normally means that depth data is not available yet. This is normal so we will not
+//            // spam the logcat with this.
+//            Log.e("xxxxxxxxx", "NotYetAvailableException = " + e.getMessage());
+//        }
 
         // Handle one tap per frame.
         handleTap(frame, camera);
@@ -748,12 +779,108 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     }
 
     private void getImage() {
-        try {
-            Frame update = session.update();
-            Image image = update.acquireDepthImage();
-            Log.e("xxxxxxxxx", image.toString());
-        } catch (Exception e) {
-            Log.e("xxxxxxxxx", e.getMessage());
+        settingsButton.setImageBitmap(getScreenShot(surfaceView));
+
+        Bitmap bitmap = getScreenShot(surfaceView);
+        if (bitmap != null) {
+            String path = Environment.getExternalStorageDirectory() + "/DCIM/Camera/"
+                    + System.currentTimeMillis() + ".jpg";
+            try {
+                FileOutputStream fout = new FileOutputStream(path);
+                BufferedOutputStream bos = new BufferedOutputStream(fout);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                bos.flush();
+                bos.close();
+                fout.close();
+                Log.e("xxxxxxxxx", "path = " + path);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("xxxxxxxxx", "IOException = " + e.getMessage());
+            }
+        }
+    }
+
+    public static Bitmap getScreenShot(View view) {
+        View screenView = view.getRootView();
+        screenView.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
+        screenView.setDrawingCacheEnabled(false);
+        return bitmap;
+    }
+
+
+    private String generateFilename() {
+       return Environment.getExternalStorageDirectory() + "/DCIM/HuiNongKit/"
+                + System.currentTimeMillis() + ".jpg";
+    }
+
+    private void saveBitmapToDisk(Bitmap bitmap, String filename) throws IOException {
+
+        File out = new File(filename);
+        if (!out.getParentFile().exists()) {
+            out.getParentFile().mkdirs();
+        }
+        try (FileOutputStream outputStream = new FileOutputStream(filename);
+             ByteArrayOutputStream outputData = new ByteArrayOutputStream()) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputData);
+            outputData.writeTo(outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException ex) {
+            throw new IOException("Failed to save bitmap to disk", ex);
+        }
+    }
+
+    private void takePhoto() {
+        final String filename = generateFilename();
+        /*ArSceneView view = fragment.getArSceneView();*/
+        // Create a bitmap the size of the scene view.
+        final Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(),
+                Bitmap.Config.ARGB_8888);
+        settingsButton.setImageBitmap(bitmap);
+        // Create a handler thread to offload the processing of the image.
+        final HandlerThread handlerThread = new HandlerThread("PixelCopier");
+        handlerThread.start();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            PixelCopy.request(surfaceView, bitmap, new PixelCopy.OnPixelCopyFinishedListener() {
+                @Override
+                public void onPixelCopyFinished(int copyResult) {
+                    if (copyResult == PixelCopy.SUCCESS) {
+                        try {
+                            saveBitmapToDisk(bitmap, filename);
+                        } catch (IOException e) {
+                            Toast toast = Toast.makeText(HelloArActivity.this, e.toString(),
+                                    Toast.LENGTH_LONG);
+                            toast.show();
+                            return;
+                        }
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
+                                "Photo saved", Snackbar.LENGTH_LONG);
+                        snackbar.setAction("Open in Photos", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                File photoFile = new File(filename);
+
+                                Uri photoURI = FileProvider.getUriForFile(HelloArActivity.this,
+                                        HelloArActivity.this.getPackageName() + ".ar.codelab.name.provider",
+                                        photoFile);
+                                Intent intent = new Intent(Intent.ACTION_VIEW, photoURI);
+                                intent.setDataAndType(photoURI, "image/*");
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivity(intent);
+                            }
+                        });
+                        snackbar.show();
+                    } else {
+                        Log.d("HelloArActivity", "Failed to copyPixels: " + copyResult);
+                        Toast toast = Toast.makeText(HelloArActivity.this,
+                                "Failed to copyPixels: " + copyResult, Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                    handlerThread.quitSafely();
+                }
+            }, new Handler(handlerThread.getLooper()));
         }
     }
 }

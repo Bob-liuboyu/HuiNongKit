@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.databinding.OrderActivityDetailBinding;
+import com.project.module_order.ui.HelloArActivity;
 import com.project.module_order.ui.TestAR2;
 
 import permissions.dispatcher.NeedsPermission;
@@ -56,7 +57,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     @NeedsPermission(Manifest.permission.CAMERA)
     public void showCamera() {
-        Intent intent = new Intent(this, TestAR2.class);
+        Intent intent = new Intent(this, HelloArActivity.class);
         startActivityForResult(intent, 0);
     }
 

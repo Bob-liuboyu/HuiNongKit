@@ -10,14 +10,14 @@
       android:layout_height="fill_parent"
       android:layout_gravity="top"/>
 
-  <ImageButton
+  <ImageView
       android:id="@+id/settings_button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="@dimen/arch_dp_200"
+      android:layout_height="@dimen/arch_dp_200"
       android:layout_alignParentEnd="true"
       android:layout_alignParentTop="true"
       android:layout_margin="25dp"
       android:src="@mipmap/ic_launcher"
-      android:background="@android:color/transparent"/>
+      android:background="@android:color/background_dark"/>
 
 </RelativeLayout>
