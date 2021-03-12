@@ -7,15 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.google.ar.core.ArCoreApk;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.databinding.OrderActivityDetailBinding;
-import com.project.module_order.ui.HelloArActivity;
+import com.project.module_order.ui.TestAR2;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
@@ -58,10 +56,8 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     @NeedsPermission(Manifest.permission.CAMERA)
     public void showCamera() {
-        Intent intent = new Intent(this, HelloArActivity.class);
+        Intent intent = new Intent(this, TestAR2.class);
         startActivityForResult(intent, 0);
-        ArCoreApk.Availability availability = ArCoreApk.getInstance().checkAvailability(this);
-        Log.e("xxxxxxxxx", "isSupported = " + availability.isSupported());
     }
 
     @OnShowRationale(Manifest.permission.CAMERA)
