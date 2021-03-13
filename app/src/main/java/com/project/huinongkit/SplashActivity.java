@@ -7,7 +7,7 @@ import android.view.KeyEvent;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.config_repo.ArouterConfig;
-import com.project.huinongkit.databinding.ActivitySplashBinding;
+import com.project.huinongkit.databinding.MainActivitySplashBinding;
 
 import java.util.concurrent.TimeUnit;
 
@@ -23,12 +23,12 @@ import io.reactivex.schedulers.Schedulers;
  * @CreateDate: 2019-10-30 14:10
  */
 public class SplashActivity extends BaseActivity {
-    ActivitySplashBinding binding;
+    MainActivitySplashBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySplashBinding.inflate(getLayoutInflater());
+        binding = MainActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initView();
     }

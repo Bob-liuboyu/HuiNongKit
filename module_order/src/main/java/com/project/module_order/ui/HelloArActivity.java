@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
+import android.opengl.GLES20;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -79,13 +80,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.opengl.GLES10.GL_CLAMP_TO_EDGE;
+import static android.opengl.GLES10.GL_NEAREST;
+import static android.opengl.GLES10.GL_TEXTURE_2D;
+import static android.opengl.GLES10.GL_TEXTURE_MAG_FILTER;
+import static android.opengl.GLES10.GL_TEXTURE_MIN_FILTER;
+import static android.opengl.GLES10.GL_TEXTURE_WRAP_S;
+import static android.opengl.GLES10.GL_TEXTURE_WRAP_T;
+import static android.opengl.GLES10.glBindTexture;
+import static android.opengl.GLES10.glGenTextures;
+import static android.opengl.GLES10.glTexImage2D;
+import static android.opengl.GLES11.glTexParameteri;
+import static android.opengl.GLES30.GL_R16UI;
+import static android.opengl.GLES30.GL_RED_INTEGER;
 import static com.google.ar.core.ArCoreApk.InstallStatus.INSTALL_REQUESTED;
+import static javax.microedition.khronos.opengles.GL10.GL_UNSIGNED_SHORT;
 
 public class HelloArActivity extends AppCompatActivity implements SampleRender.Renderer {
 
@@ -835,15 +851,74 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     }
 
     private void getDepthImage(Frame frame) {
-        if(!dealDepth){
+        if (!dealDepth) {
             return;
         }
         dealDepth = false;
         try {
             Image depthImage = frame.acquireDepthImage();
-            Log.e("xxxxxxxxx", "depthImage " + depthImage.getFormat() + " , " + depthImage.getTimestamp());
+
+            ShortBuffer shortDepthBuffer = depthImage.getPlanes()[0].getBuffer().asShortBuffer();
+            short depthSample = shortDepthBuffer.get();
+            short depthRange = (short) (depthSample & 0x1FFF);
+            short depthConfidence = (short) ((depthSample >> 13) & 0x7);
+            float depthPercentage = depthConfidence == 0 ? 1.f : (depthConfidence - 1) / 7.f;
+
+            Log.e("xxxxxxxxx", depthRange + " , " + depthConfidence + " , " + depthPercentage);
+
         } catch (Exception e) {
             Log.e("xxxxxxxxx", "NotYetAvailableException = " + e);
         }
     }
+
+
+    public void createOnGlThread() {
+        int[] textureId = new int[1];
+        glGenTextures(1, textureId, 0);
+        int depthTextureId = textureId[0];
+        glBindTexture(GL_TEXTURE_2D, depthTextureId);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
+
+    public void update(Image depthImage, int depthTextureId) {
+        try {
+            int depthTextureWidth = depthImage.getWidth();
+            int depthTextureHeight = depthImage.getHeight();
+            String msg = String.format("width: %s, height: %s", depthTextureWidth, depthTextureHeight);
+            Log.e("xxxxxxxxx", "msg = " + msg);
+            glBindTexture(GL_TEXTURE_2D, depthTextureId);
+            glTexImage2D(
+                    GL_TEXTURE_2D,
+                    0,
+                    GL_R16UI,
+                    depthTextureWidth,
+                    depthTextureHeight,
+                    0,
+                    GL_RED_INTEGER,
+                    GL_UNSIGNED_SHORT,
+                    depthImage.getPlanes()[0].getBuffer().asShortBuffer());
+            depthImage.close();
+
+        } catch (Exception e) {
+            Log.e("xxxxxxxxx", "Exception = " + e);
+        }
+    }
+
+
+//    float GetBgDepthMillimeters(in vec2 depth_uv) {
+//        GL_UNSIGNED_INT_VEC3 rawDepth = texture(bgDepthTexture, depth_uv).xyz;
+//        int depthRange = int(rawDepth.r) & 0x1FFF;
+//        int depthConfidence = ((int(rawDepth.r) >> 13) & 0x7);
+//        float depthPercentage = depthConfidence == 0 ? 1.0 : float(depthConfidence - 1) / 7.0;
+//        float depth = depthPercentage > 0.1 ? float(depthRange) : FAR * 1000.0;
+//        depth = max(depth, NEAR * 1000.0);
+//        depth = min(depth, FAR * 1000.0);
+//        return depth;
+//    }
+
 }

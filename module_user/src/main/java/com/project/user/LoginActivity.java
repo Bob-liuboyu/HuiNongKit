@@ -32,10 +32,18 @@ public class LoginActivity extends BaseActivity {
         if(binding == null){
             return;
         }
-        binding.tvText.setOnClickListener(new View.OnClickListener() {
+        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ARouter.getInstance().build(ArouterConfig.Order.ORDER_DETAIL)
+                ARouter.getInstance().build(ArouterConfig.Main.MAIN)
+                        .navigation();
+//                finish();
+            }
+        });
+        binding.btnRegist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ARouter.getInstance().build(ArouterConfig.User.RESET_PWD)
                         .navigation();
 //                finish();
             }

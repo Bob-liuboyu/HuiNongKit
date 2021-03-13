@@ -24,7 +24,7 @@ public class ArouterConfig {
      */
     public static class Main {
         public static final String INIT = "/main/init";
-        public static final String RESULT = "/main/result";
+        public static final String MAIN = "/main/main";
 
     }
 
@@ -34,6 +34,7 @@ public class ArouterConfig {
     public static class User {
         public static final String INIT = "/user/init";
         public static final String LOGIN = "/user/login";
+        public static final String RESET_PWD = "/user/reset_pwd";
     }
 
     /**
