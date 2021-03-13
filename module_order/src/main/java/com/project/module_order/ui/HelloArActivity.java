@@ -174,6 +174,11 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     private final float[] viewLightDirection = new float[4]; // view x world light direction
     private ImageView settingsButton;
 
+    /**
+     * 处理深度图片标志，处理过后，重制false
+     */
+    private boolean dealDepth = false;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,7 +203,8 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        takePhoto();
+//                        takePhoto();
+                        dealDepth = true;
                     }
                 });
     }
@@ -470,31 +476,20 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
         // used to draw the background camera image.
         backgroundRenderer.updateDisplayGeometry(frame);
 
-        if (camera.getTrackingState() == TrackingState.TRACKING
-                && (depthSettings.useDepthForOcclusion()
-                || depthSettings.depthColorVisualizationEnabled())) {
-
-            try {
-                Image depthImage = frame.acquireDepthImage();
-                backgroundRenderer.updateCameraDepthTexture(depthImage);
-                Log.e("xxxxxxxxx", depthImage.toString());
-
-                Image image = frame.acquireCameraImage();
-            } catch (NotYetAvailableException e) {
-                // This normally means that depth data is not available yet. This is normal so we will not
-                // spam the logcat with this.
-                Log.e("xxxxxxxxx", "NotYetAvailableException = " + e.getMessage());
-            }
-        }
-//        try {
-//            Image depthImage = frame.acquireDepthImage();
-//            backgroundRenderer.updateCameraDepthTexture(depthImage);
-//            Log.e("xxxxxxxxx", "Timestamp() " + depthImage.getTimestamp());
-//        } catch (NotYetAvailableException e) {
-//            // This normally means that depth data is not available yet. This is normal so we will not
-//            // spam the logcat with this.
-//            Log.e("xxxxxxxxx", "NotYetAvailableException = " + e.getMessage());
+//        if (camera.getTrackingState() == TrackingState.TRACKING
+//                && (depthSettings.useDepthForOcclusion()
+//                || depthSettings.depthColorVisualizationEnabled())) {
+//
+//            try {
+//                Image depthImage = frame.acquireDepthImage();
+//                backgroundRenderer.updateCameraDepthTexture(depthImage);
+//            } catch (NotYetAvailableException e) {
+//            }
 //        }
+
+
+        // 获取深度图像
+        getDepthImage(frame);
 
         // Handle one tap per frame.
         handleTap(frame, camera);
@@ -672,21 +667,6 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
                 .show();
     }
 
-    private void applySettingsMenuDialogCheckboxes() {
-        depthSettings.setUseDepthForOcclusion(depthSettingsMenuDialogCheckboxes[0]);
-        depthSettings.setDepthColorVisualizationEnabled(depthSettingsMenuDialogCheckboxes[1]);
-        instantPlacementSettings.setInstantPlacementEnabled(
-                instantPlacementSettingsMenuDialogCheckboxes[0]);
-        configureSession();
-    }
-
-    private void resetSettingsMenuDialogCheckboxes() {
-        depthSettingsMenuDialogCheckboxes[0] = depthSettings.useDepthForOcclusion();
-        depthSettingsMenuDialogCheckboxes[1] = depthSettings.depthColorVisualizationEnabled();
-        instantPlacementSettingsMenuDialogCheckboxes[0] =
-                instantPlacementSettings.isInstantPlacementEnabled();
-    }
-
     /**
      * Checks if we detected at least one plane.
      */
@@ -765,6 +745,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     private void configureSession() {
         Config config = session.getConfig();
         config.setLightEstimationMode(Config.LightEstimationMode.ENVIRONMENTAL_HDR);
+        config.setFocusMode(Config.FocusMode.AUTO);
         if (session.isDepthModeSupported(Config.DepthMode.AUTOMATIC)) {
             config.setDepthMode(Config.DepthMode.AUTOMATIC);
         } else {
@@ -778,39 +759,8 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
         session.configure(config);
     }
 
-    private void getImage() {
-        settingsButton.setImageBitmap(getScreenShot(surfaceView));
-
-        Bitmap bitmap = getScreenShot(surfaceView);
-        if (bitmap != null) {
-            String path = Environment.getExternalStorageDirectory() + "/DCIM/Camera/"
-                    + System.currentTimeMillis() + ".jpg";
-            try {
-                FileOutputStream fout = new FileOutputStream(path);
-                BufferedOutputStream bos = new BufferedOutputStream(fout);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-                bos.flush();
-                bos.close();
-                fout.close();
-                Log.e("xxxxxxxxx", "path = " + path);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e("xxxxxxxxx", "IOException = " + e.getMessage());
-            }
-        }
-    }
-
-    public static Bitmap getScreenShot(View view) {
-        View screenView = view.getRootView();
-        screenView.setDrawingCacheEnabled(true);
-        Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
-        screenView.setDrawingCacheEnabled(false);
-        return bitmap;
-    }
-
-
     private String generateFilename() {
-       return Environment.getExternalStorageDirectory() + "/DCIM/HuiNongKit/"
+        return Environment.getExternalStorageDirectory() + "/DCIM/HuiNongKit/"
                 + System.currentTimeMillis() + ".jpg";
     }
 
@@ -881,6 +831,19 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
                     handlerThread.quitSafely();
                 }
             }, new Handler(handlerThread.getLooper()));
+        }
+    }
+
+    private void getDepthImage(Frame frame) {
+        if(!dealDepth){
+            return;
+        }
+        dealDepth = false;
+        try {
+            Image depthImage = frame.acquireDepthImage();
+            Log.e("xxxxxxxxx", "depthImage " + depthImage.getFormat() + " , " + depthImage.getTimestamp());
+        } catch (Exception e) {
+            Log.e("xxxxxxxxx", "NotYetAvailableException = " + e);
         }
     }
 }
