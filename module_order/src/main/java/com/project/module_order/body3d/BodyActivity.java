@@ -18,14 +18,26 @@ package com.project.module_order.body3d;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.Image;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.view.PixelCopy;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.google.ar.core.Frame;
 import com.huawei.hiar.ARBodyTrackingConfig;
 import com.huawei.hiar.ARConfigBase;
 import com.huawei.hiar.AREnginesApk;
@@ -40,6 +52,28 @@ import com.project.module_order.R;
 import com.project.module_order.body3d.rendering.BodyRenderManager;
 import com.project.module_order.common.ConnectAppMarketActivity;
 import com.project.module_order.common.DisplayRotationManager;
+import com.project.module_order.ui.HelloArActivity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ShortBuffer;
+
+import static android.opengl.GLES10.GL_CLAMP_TO_EDGE;
+import static android.opengl.GLES10.GL_NEAREST;
+import static android.opengl.GLES10.GL_TEXTURE_2D;
+import static android.opengl.GLES10.GL_TEXTURE_MAG_FILTER;
+import static android.opengl.GLES10.GL_TEXTURE_MIN_FILTER;
+import static android.opengl.GLES10.GL_TEXTURE_WRAP_S;
+import static android.opengl.GLES10.GL_TEXTURE_WRAP_T;
+import static android.opengl.GLES10.glBindTexture;
+import static android.opengl.GLES10.glGenTextures;
+import static android.opengl.GLES10.glTexImage2D;
+import static android.opengl.GLES11.glTexParameteri;
+import static android.opengl.GLES30.GL_R16UI;
+import static android.opengl.GLES30.GL_RED_INTEGER;
+import static javax.microedition.khronos.opengles.GL10.GL_UNSIGNED_SHORT;
 
 /**
  * The sample code demonstrates the capability of HUAWEI AR Engine to identify
@@ -68,6 +102,8 @@ public class BodyActivity extends Activity {
 
     private boolean isRemindInstall = false;
 
+    private ImageView btn_done;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +128,14 @@ public class BodyActivity extends Activity {
 
         mSurfaceView.setRenderer(mBodyRenderManager);
         mSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+        btn_done = findViewById(R.id.btn_done);
+        btn_done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                takePhoto();
+                mBodyRenderManager.getDepthImage();
+            }
+        });
     }
 
     @Override
@@ -200,6 +244,82 @@ public class BodyActivity extends Activity {
                     .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
+    }
+
+    // ---------------------------------------------------------------
+
+    private String generateFilename() {
+        return Environment.getExternalStorageDirectory() + "/DCIM/HuiNongKit/"
+                + System.currentTimeMillis() + ".jpg";
+    }
+
+    private void saveBitmapToDisk(Bitmap bitmap, String filename) throws IOException {
+
+        File out = new File(filename);
+        if (!out.getParentFile().exists()) {
+            out.getParentFile().mkdirs();
+        }
+        try (FileOutputStream outputStream = new FileOutputStream(filename);
+             ByteArrayOutputStream outputData = new ByteArrayOutputStream()) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputData);
+            outputData.writeTo(outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException ex) {
+            throw new IOException("Failed to save bitmap to disk", ex);
+        }
+    }
+
+    private void takePhoto() {
+        final String filename = generateFilename();
+        /*ArSceneView view = fragment.getArSceneView();*/
+        // Create a bitmap the size of the scene view.
+        final Bitmap bitmap = Bitmap.createBitmap(mSurfaceView.getWidth(), mSurfaceView.getHeight(),
+                Bitmap.Config.ARGB_8888);
+        // Create a handler thread to offload the processing of the image.
+        final HandlerThread handlerThread = new HandlerThread("PixelCopier");
+        handlerThread.start();
+        btn_done.setImageBitmap(bitmap);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            PixelCopy.request(mSurfaceView, bitmap, new PixelCopy.OnPixelCopyFinishedListener() {
+                @Override
+                public void onPixelCopyFinished(int copyResult) {
+                    if (copyResult == PixelCopy.SUCCESS) {
+                        try {
+                            saveBitmapToDisk(bitmap, filename);
+                        } catch (IOException e) {
+                            Toast toast = Toast.makeText(BodyActivity.this, e.toString(),
+                                    Toast.LENGTH_LONG);
+                            toast.show();
+                            return;
+                        }
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
+                                "Photo saved", Snackbar.LENGTH_LONG);
+                        snackbar.setAction("Open in Photos", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                File photoFile = new File(filename);
+
+                                Uri photoURI = FileProvider.getUriForFile(BodyActivity.this,
+                                        BodyActivity.this.getPackageName() + ".ar.codelab.name.provider",
+                                        photoFile);
+                                Intent intent = new Intent(Intent.ACTION_VIEW, photoURI);
+                                intent.setDataAndType(photoURI, "image/*");
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivity(intent);
+                            }
+                        });
+                        snackbar.show();
+                    } else {
+                        Log.d("HelloArActivity", "Failed to copyPixels: " + copyResult);
+                        Toast toast = Toast.makeText(BodyActivity.this,
+                                "Failed to copyPixels: " + copyResult, Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                    handlerThread.quitSafely();
+                }
+            }, new Handler(handlerThread.getLooper()));
         }
     }
 }

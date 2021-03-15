@@ -22,4 +22,12 @@
         tools:layout_editor_absoluteX="315dp"
         tools:layout_editor_absoluteY="4dp" />
 
+    <ImageView
+        android:id="@+id/btn_done"
+        android:src="@mipmap/ic_launcher"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_width="@dimen/arch_dp_100"
+        android:layout_height="@dimen/arch_dp_100"/>
+
 </RelativeLayout>
