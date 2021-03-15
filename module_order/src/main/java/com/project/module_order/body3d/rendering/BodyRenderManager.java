@@ -1,17 +1,17 @@
 /**
  * Copyright 2020. Huawei Technologies Co., Ltd. All rights reserved.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.project.module_order.body3d.rendering;
@@ -95,9 +95,10 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
     private DisplayRotationManager mDisplayRotationManager;
 
     private boolean dealDepth;
+    public static final float NEAR = 0.1f, FAR = 3f;
+
     /**
      * The constructor passes activity.
-     * This method will be called when {@link Activity#onCreate}.
      *
      * @param activity Activity
      */
@@ -167,7 +168,7 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
     /**
      * The OpenGL thread calls back the UI thread to display text.
      *
-     * @param text Gesture information displayed on the screen
+     * @param text      Gesture information displayed on the screen
      * @param positionX The left padding in pixels.
      * @param positionY The right padding in pixels.
      */
@@ -218,7 +219,7 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
 
             // Obtain the projection matrix of ARCamera.
             camera.getProjectionMatrix(projectionMatrix, PROJECTION_MATRIX_OFFSET, PROJECTION_MATRIX_NEAR,
-                PROJECTION_MATRIX_FAR);
+                    PROJECTION_MATRIX_FAR);
             mTextureDisplay.onDrawFrame(frame);
             Collection<ARBody> bodies = mSession.getAllTrackables(ARBody.class);
             if (bodies.size() == 0) {
@@ -226,8 +227,8 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
                 return;
             }
 
-            // 获取深度图像
-            getDepthImage(frame);
+            // 获取深度图像]
+            getBgDepthMillimeters(frame);
 
             for (ARBody body : bodies) {
                 if (body.getTrackingState() != ARTrackable.TrackingState.TRACKING) {
@@ -255,7 +256,7 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
     /**
      * Update gesture-related data for display.
      *
-     * @param sb String buffer.
+     * @param sb   String buffer.
      * @param body ARBody
      */
     private void updateMessageData(StringBuilder sb, ARBody body) {
@@ -278,7 +279,7 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
         return fps;
     }
 
-    public void getDepthImage(){
+    public void getDepthImage() {
         dealDepth = true;
     }
 
@@ -342,17 +343,32 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
     }
 
 
-    float GetBgDepthMillimeters(in vec2 depth_uv) {
-        GL_UNSIGNED_INT_VEC3 rawDepth = texture(bgDepthTexture, depth_uv).xyz;
-        int depthRange = rawDepth.r & 0x1FFF;
-        int depthConfidence = ((int(rawDepth.r) >> 13) & 0x7);
-        float depthPercentage = depthConfidence == 0 ? 1.0 : float(depthConfidence - 1) / 7.0;
-        float depth = depthPercentage > 0.1 ? float(depthRange) : FAR * 1000.0;
-        depth = Math.max(depth, NEAR * 1000.0);
-        depth = Math.min(depth, FAR * 1000.0);
-        return depth;
-    }
+    public float getBgDepthMillimeters(ARFrame frame) {
+//        Log.e("xxxxxxxxx", "getBgDepthMillimeters " + dealDepth);
+        if (!dealDepth) {
+//            Log.e("xxxxxxxxx", "getBgDepthMillimeters return 0");
+            return 0;
+        }
+        dealDepth = false;
+        try {
+            Image depthImage = frame.acquireDepthImage();
+            ShortBuffer shortDepthBuffer = depthImage.getPlanes()[0].getBuffer().asShortBuffer();
+            short depthSample = shortDepthBuffer.get();
+            short depthRange = (short) (depthSample & 0x1FFF);
+            short depthConfidence = (short) ((depthSample >> 13) & 0x7);
+            float depthPercentage = depthConfidence == 0 ? 1.f : (depthConfidence - 1) / 7.f;
 
-    private void test(){
+            float depth = depthPercentage > 0.1 ? depthRange : (float) (FAR * 1000.0);
+            Log.e("xxxxxxxxx", "depthRange = "+depthRange + " ,depthConfidence=  " + depthConfidence + " ,depthPercentage = " + depthPercentage);
+            depth = (float) Math.max(depth, NEAR * 1000.0);//100
+            depth = (float) Math.min(depth, FAR * 1000.0);//3000
+
+            Log.e("xxxxxxxxx", "depth2 = " + depth);
+            Log.e("xxxxxxxxx", "-----------------");
+            return depth;
+        } catch (Exception e) {
+            Log.e("xxxxxxxxx", "NotYetAvailableException = " + e);
+        }
+        return 0;
     }
 }

@@ -132,7 +132,7 @@ public class BodyActivity extends Activity {
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                takePhoto();
+                takePhoto();
                 mBodyRenderManager.getDepthImage();
             }
         });
@@ -267,6 +267,7 @@ public class BodyActivity extends Activity {
             outputStream.flush();
             outputStream.close();
         } catch (IOException ex) {
+            Log.e("xxxxxxxxx", "IOException = " + ex);
             throw new IOException("Failed to save bitmap to disk", ex);
         }
     }
