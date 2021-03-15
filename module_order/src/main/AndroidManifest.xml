@@ -19,6 +19,9 @@
         <activity
             android:name=".ui.TestAR2"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".body3d.BodyActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 </manifest>

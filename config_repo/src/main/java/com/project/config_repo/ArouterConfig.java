@@ -43,5 +43,6 @@ public class ArouterConfig {
     public static class Order {
         public static final String INIT = "/order/init";
         public static final String ORDER_DETAIL = "/order/detail";
+        public static final String ORDER_BODY_3D = "/order/body_3d";
     }
 }

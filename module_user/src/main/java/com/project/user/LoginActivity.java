@@ -28,8 +28,8 @@ public class LoginActivity extends BaseActivity {
         setListener();
     }
 
-    public void setListener(){
-        if(binding == null){
+    public void setListener() {
+        if (binding == null) {
             return;
         }
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -37,15 +37,7 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
                 ARouter.getInstance().build(ArouterConfig.Main.MAIN)
                         .navigation();
-//                finish();
-            }
-        });
-        binding.btnRegist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ARouter.getInstance().build(ArouterConfig.User.RESET_PWD)
-                        .navigation();
-//                finish();
+                finish();
             }
         });
     }

@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.config_repo.ArouterConfig;
 import com.project.huinongkit.databinding.MainActivityMainBinding;
@@ -44,5 +45,12 @@ public class MainActivity extends BaseActivity {
         mBaseFragmentAdapter.bindTitle(true, Arrays.asList("首页", "我的"));
         mBinding.mViewPager.setAdapter(mBaseFragmentAdapter);
         mBinding.tabLayout.setupWithViewPager(mBinding.mViewPager);
+        mBinding.btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ARouter.getInstance().build(ArouterConfig.Order.ORDER_BODY_3D)
+                        .navigation();
+            }
+        });
     }
 }
