@@ -132,7 +132,7 @@ public class BodyActivity extends Activity {
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePhoto();
+//                takePhoto();
                 mBodyRenderManager.getDepthImage();
             }
         });

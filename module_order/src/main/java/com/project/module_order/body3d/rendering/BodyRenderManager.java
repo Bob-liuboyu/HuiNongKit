@@ -344,31 +344,35 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
 
 
     public float getBgDepthMillimeters(ARFrame frame) {
+        float depth = 0f;
 //        Log.e("xxxxxxxxx", "getBgDepthMillimeters " + dealDepth);
         if (!dealDepth) {
 //            Log.e("xxxxxxxxx", "getBgDepthMillimeters return 0");
-            return 0;
+            return depth;
         }
         dealDepth = false;
         try {
             Image depthImage = frame.acquireDepthImage();
+//            Log.e("xxxxxxxxx", "depthImage.getPlanes() = " + depthImage.getPlanes().length);
             ShortBuffer shortDepthBuffer = depthImage.getPlanes()[0].getBuffer().asShortBuffer();
-            short depthSample = shortDepthBuffer.get();
-            short depthRange = (short) (depthSample & 0x1FFF);
-            short depthConfidence = (short) ((depthSample >> 13) & 0x7);
-            float depthPercentage = depthConfidence == 0 ? 1.f : (depthConfidence - 1) / 7.f;
-
-            float depth = depthPercentage > 0.1 ? depthRange : (float) (FAR * 1000.0);
-            Log.e("xxxxxxxxx", "depthRange = "+depthRange + " ,depthConfidence=  " + depthConfidence + " ,depthPercentage = " + depthPercentage);
-            depth = (float) Math.max(depth, NEAR * 1000.0);//100
-            depth = (float) Math.min(depth, FAR * 1000.0);//3000
-
-            Log.e("xxxxxxxxx", "depth2 = " + depth);
-            Log.e("xxxxxxxxx", "-----------------");
+//            short depthSample = shortDepthBuffer.get();
+//            short depthRange = (short) (depthSample & 0x1FFF);
+//            short depthConfidence = (short) ((depthSample >> 13) & 0x7);
+//            float depthPercentage = depthConfidence == 0 ? 1.f : (depthConfidence - 1) / 7.f;
+//
+//            depth = depthPercentage > 0.1 ? depthRange : (float) (FAR * 1000.0);
+//            Log.e("xxxxxxxxx", "depthRange = "+depthRange + " ,depthConfidence=  " + depthConfidence + " ,depthPercentage = " + depthPercentage);
+//            depth = (float) Math.max(depth, NEAR * 1000.0);//100
+//            depth = (float) Math.min(depth, FAR * 1000.0);//3000
+//
+//
+//            Log.e("xxxxxxxxx", "depth2 = " + depth);
+//            Log.e("xxxxxxxxx", "-----------------");
             return depth;
+
         } catch (Exception e) {
             Log.e("xxxxxxxxx", "NotYetAvailableException = " + e);
         }
-        return 0;
+        return depth;
     }
 }

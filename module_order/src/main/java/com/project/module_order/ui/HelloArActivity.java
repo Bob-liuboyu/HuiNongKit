@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
 import android.opengl.GLES20;
@@ -194,6 +195,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
      * 处理深度图片标志，处理过后，重制false
      */
     private boolean dealDepth = false;
+    public static final float NEAR = 0.1f, FAR = 3f;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -505,7 +507,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
 
 
         // 获取深度图像
-        getDepthImage(frame);
+        getDepthImage2(frame);
 
         // Handle one tap per frame.
         handleTap(frame, camera);
@@ -859,6 +861,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
             Image depthImage = frame.acquireDepthImage();
 
             ShortBuffer shortDepthBuffer = depthImage.getPlanes()[0].getBuffer().asShortBuffer();
+            Log.e("xxxxxxxxx", "depthImage.getPlanes() = " + depthImage.getPlanes().length);
             short depthSample = shortDepthBuffer.get();
             short depthRange = (short) (depthSample & 0x1FFF);
             short depthConfidence = (short) ((depthSample >> 13) & 0x7);
@@ -920,5 +923,41 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
 //        depth = min(depth, FAR * 1000.0);
 //        return depth;
 //    }
+
+
+    private void getDepthImage2(Frame frame) {
+        if (!dealDepth) {
+            return;
+        }
+        dealDepth = false;
+        try {
+            Image depthImage = frame.acquireDepthImage();
+
+            int imwidth = depthImage.getWidth();
+            int imheight = depthImage.getHeight();
+            ShortBuffer shortDepthBuffer = depthImage.getPlanes()[0].getBuffer().asShortBuffer();
+//            Log.e("xxxxxxxxx", "imwidth = " + imwidth + " , imheight = " + imheight);
+            for (int i = 0; i < imheight; i++) {
+                for (int j = 0; j < imwidth; j++) {
+                    int index = (i * imwidth + j);
+                    shortDepthBuffer.position(index);
+                    short depthSample = shortDepthBuffer.get();
+                    short depthRange = (short) (depthSample & 0x1FFF);
+                    //If you only want the distance value, here it is
+                    byte value = (byte) depthRange;
+                    short depthConfidence = (short) ((depthSample >> 13) & 0x7);
+                    float depthPercentage = depthConfidence == 0 ? 1.f : (depthConfidence - 1) / 7.f;
+                    float depth = depthPercentage > 0.1 ? depthRange : (float) (FAR * 1000.0);
+//                    Log.e("xxxxxxxxx", "depthRange = " + depthRange + " ,depthConfidence=  " + depthConfidence + " ,depthPercentage = " + depthPercentage);
+                    depth = (float) Math.max(depth, NEAR * 1000.0);//100
+                    depth = (float) Math.min(depth, FAR * 1000.0);//3000
+
+                    Log.e("xxxxxxxxx", "depth = " + depth + " ,depthRange=  " + depthRange);
+                }
+            }
+        } catch (Exception e) {
+            Log.e("xxxxxxxxx", "NotYetAvailableException = " + e);
+        }
+    }
 
 }
