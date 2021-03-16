@@ -73,6 +73,7 @@ import com.project.module_order.samplerender.arcore.BackgroundRenderer;
 import com.project.module_order.samplerender.arcore.PlaneRenderer;
 import com.project.module_order.samplerender.arcore.SpecularCubemapFilter;
 import com.project.module_order.utils.ImageUtils;
+import com.project.module_order.utils.LogToFile;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -195,7 +196,8 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
      * 处理深度图片标志，处理过后，重制false
      */
     private boolean dealDepth = false;
-    public static final float NEAR = 0.1f, FAR = 3f;
+    private float NEAR = 0.1f;
+    private float FAR  = 100.0f;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -221,7 +223,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        takePhoto();
+                        takePhoto();
                         dealDepth = true;
                     }
                 });
@@ -783,7 +785,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     }
 
     private void saveBitmapToDisk(Bitmap bitmap, String filename) throws IOException {
-
+        Log.e("xxxxxxxxx", "filename = " + filename);
         File out = new File(filename);
         if (!out.getParentFile().exists()) {
             out.getParentFile().mkdirs();
@@ -931,30 +933,30 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
         }
         dealDepth = false;
         try {
+            StringBuffer sb = new StringBuffer();
             Image depthImage = frame.acquireDepthImage();
-
             int imwidth = depthImage.getWidth();
             int imheight = depthImage.getHeight();
             ShortBuffer shortDepthBuffer = depthImage.getPlanes()[0].getBuffer().asShortBuffer();
-//            Log.e("xxxxxxxxx", "imwidth = " + imwidth + " , imheight = " + imheight);
             for (int i = 0; i < imheight; i++) {
                 for (int j = 0; j < imwidth; j++) {
                     int index = (i * imwidth + j);
                     shortDepthBuffer.position(index);
                     short depthSample = shortDepthBuffer.get();
                     short depthRange = (short) (depthSample & 0x1FFF);
-                    //If you only want the distance value, here it is
-                    byte value = (byte) depthRange;
+
                     short depthConfidence = (short) ((depthSample >> 13) & 0x7);
                     float depthPercentage = depthConfidence == 0 ? 1.f : (depthConfidence - 1) / 7.f;
                     float depth = depthPercentage > 0.1 ? depthRange : (float) (FAR * 1000.0);
-//                    Log.e("xxxxxxxxx", "depthRange = " + depthRange + " ,depthConfidence=  " + depthConfidence + " ,depthPercentage = " + depthPercentage);
                     depth = (float) Math.max(depth, NEAR * 1000.0);//100
                     depth = (float) Math.min(depth, FAR * 1000.0);//3000
-
-                    Log.e("xxxxxxxxx", "depth = " + depth + " ,depthRange=  " + depthRange);
+                    sb.append("depth = " + depth + " ,depthRange=  " + depthRange).append("\n");
+//                    Log.e("xxxxxxxxx", "depth = " + depth + " ,depthRange=  " + depthRange);
                 }
             }
+            LogToFile.init(this);
+            LogToFile.d("liuboyu", sb.toString());
+//            Log.e("xxxxxxxxx", sb.toString());
         } catch (Exception e) {
             Log.e("xxxxxxxxx", "NotYetAvailableException = " + e);
         }
