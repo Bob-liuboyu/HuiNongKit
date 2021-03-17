@@ -223,7 +223,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        takePhoto();
+//                        takePhoto();
                         dealDepth = true;
                     }
                 });
@@ -938,24 +938,43 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
             int imwidth = depthImage.getWidth();
             int imheight = depthImage.getHeight();
             ShortBuffer shortDepthBuffer = depthImage.getPlanes()[0].getBuffer().asShortBuffer();
+//            for (int i = 0; i < imheight; i++) {
+//                for (int j = 0; j < imwidth; j++) {
+//                    int index = (i * imwidth + j);
+//                    shortDepthBuffer.position(index);
+//                    short depthSample = shortDepthBuffer.get();
+//                    short depthRange = (short) (depthSample & 0x1FFF);
+//
+//                    short depthConfidence = (short) ((depthSample >> 13) & 0x7);
+//                    float depthPercentage = depthConfidence == 0 ? 1.f : (depthConfidence - 1) / 7.f;
+//                    float depth = depthPercentage > 0.1 ? depthRange : (float) (FAR * 1000.0);
+//                    depth = (float) Math.max(depth, NEAR * 1000.0);//100
+//                    depth = (float) Math.min(depth, FAR * 1000.0);//3000
+//                    sb.append("depth = " + depth + " ,depthRange=  " + depthRange).append("\n");
+////                    Log.e("xxxxxxxxx", "depth = " + depth + " ,depthRange=  " + depthRange);
+//                }
+//            }
+           final Bitmap disBimap = Bitmap.createBitmap(imwidth, imheight, Bitmap.Config.RGB_565);
             for (int i = 0; i < imheight; i++) {
                 for (int j = 0; j < imwidth; j++) {
                     int index = (i * imwidth + j);
                     shortDepthBuffer.position(index);
                     short depthSample = shortDepthBuffer.get();
                     short depthRange = (short) (depthSample & 0x1FFF);
-
-                    short depthConfidence = (short) ((depthSample >> 13) & 0x7);
-                    float depthPercentage = depthConfidence == 0 ? 1.f : (depthConfidence - 1) / 7.f;
-                    float depth = depthPercentage > 0.1 ? depthRange : (float) (FAR * 1000.0);
-                    depth = (float) Math.max(depth, NEAR * 1000.0);//100
-                    depth = (float) Math.min(depth, FAR * 1000.0);//3000
-                    sb.append("depth = " + depth + " ,depthRange=  " + depthRange).append("\n");
-//                    Log.e("xxxxxxxxx", "depth = " + depth + " ,depthRange=  " + depthRange);
+                    byte value = (byte) (depthRange / 8000f * 255);
+                    disBimap.setPixel(j, i, Color.rgb(value, value, value));
                 }
             }
-            LogToFile.init(this);
-            LogToFile.d("liuboyu", sb.toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    settingsButton.setImageBitmap(disBimap);
+                }
+            });
+
+            saveBitmapToDisk(disBimap, generateFilename());
+//            LogToFile.i nit(this);
+//            LogToFile.d("liuboyu", sb.toString());
 //            Log.e("xxxxxxxxx", sb.toString());
         } catch (Exception e) {
             Log.e("xxxxxxxxx", "NotYetAvailableException = " + e);

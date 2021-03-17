@@ -17,16 +17,20 @@
 package com.project.module_order.body3d.rendering;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.Image;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.huawei.hiar.ARBody;
 import com.huawei.hiar.ARCamera;
 import com.huawei.hiar.ARFrame;
+import com.huawei.hiar.ARImage;
+import com.huawei.hiar.ARPointCloud;
 import com.huawei.hiar.ARSceneMesh;
 import com.huawei.hiar.ARSession;
 import com.huawei.hiar.ARTrackable;
@@ -34,7 +38,12 @@ import com.project.module_order.common.ArDemoRuntimeException;
 import com.project.module_order.common.DisplayRotationManager;
 import com.project.module_order.common.TextDisplay;
 import com.project.module_order.common.TextureDisplay;
+import com.project.module_order.utils.LogToFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -343,36 +352,55 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
     }
 
 
-    public float getBgDepthMillimeters(ARFrame frame) {
-        float depth = 0f;
-//        Log.e("xxxxxxxxx", "getBgDepthMillimeters " + dealDepth);
+    public void getBgDepthMillimeters(ARFrame frame) {
         if (!dealDepth) {
-//            Log.e("xxxxxxxxx", "getBgDepthMillimeters return 0");
-            return depth;
+            return;
         }
         dealDepth = false;
         try {
-            Image depthImage = frame.acquireDepthImage();
-//            Log.e("xxxxxxxxx", "depthImage.getPlanes() = " + depthImage.getPlanes().length);
-            ShortBuffer shortDepthBuffer = depthImage.getPlanes()[0].getBuffer().asShortBuffer();
-//            short depthSample = shortDepthBuffer.get();
-//            short depthRange = (short) (depthSample & 0x1FFF);
-//            short depthConfidence = (short) ((depthSample >> 13) & 0x7);
-//            float depthPercentage = depthConfidence == 0 ? 1.f : (depthConfidence - 1) / 7.f;
-//
-//            depth = depthPercentage > 0.1 ? depthRange : (float) (FAR * 1000.0);
-//            Log.e("xxxxxxxxx", "depthRange = "+depthRange + " ,depthConfidence=  " + depthConfidence + " ,depthPercentage = " + depthPercentage);
-//            depth = (float) Math.max(depth, NEAR * 1000.0);//100
-//            depth = (float) Math.min(depth, FAR * 1000.0);//3000
-//
-//
-//            Log.e("xxxxxxxxx", "depth2 = " + depth);
-//            Log.e("xxxxxxxxx", "-----------------");
-            return depth;
-
+            StringBuffer sb = new StringBuffer();
+            ARImage depthImage = (ARImage) frame.acquireDepthImage();
+            int imwidth = depthImage.getWidth();
+            int imheight = depthImage.getHeight();
+//            ARPointCloud arPointCloud = frame.acquirePointCloud();
+            ARSceneMesh arSceneMesh = frame.acquireSceneMesh();
+            ShortBuffer shortDepthBuffer = arSceneMesh.getSceneDepth();
+            Bitmap disBimap = Bitmap.createBitmap(imwidth, imheight, Bitmap.Config.RGB_565);
+            for (int i = 0; i < imheight; i++) {
+                for (int j = 0; j < imwidth; j++) {
+                    int index = (i * imwidth + j);
+                    shortDepthBuffer.position(index);
+                    short depthSample = shortDepthBuffer.get();
+                    short depthRange = (short) (depthSample & 0x1FFF);
+                    byte value = (byte) (depthRange / 8000f * 255);
+                    disBimap.setPixel(j, i, Color.rgb(value, value, value));
+                }
+            }
+//            saveBitmapToDisk(disBimap, generateFilename());
         } catch (Exception e) {
             Log.e("xxxxxxxxx", "NotYetAvailableException = " + e);
         }
-        return depth;
+    }
+
+    private void saveBitmapToDisk(Bitmap bitmap, String filename) throws IOException {
+        Log.e("xxxxxxxxx", "filename = " + filename);
+        File out = new File(filename);
+        if (!out.getParentFile().exists()) {
+            out.getParentFile().mkdirs();
+        }
+        try (FileOutputStream outputStream = new FileOutputStream(filename);
+             ByteArrayOutputStream outputData = new ByteArrayOutputStream()) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputData);
+            outputData.writeTo(outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException ex) {
+            throw new IOException("Failed to save bitmap to disk", ex);
+        }
+    }
+
+    private String generateFilename() {
+        return Environment.getExternalStorageDirectory() + "/DCIM/HuiNongKit/"
+                + System.currentTimeMillis() + ".jpg";
     }
 }
