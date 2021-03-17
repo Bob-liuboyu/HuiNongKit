@@ -223,7 +223,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        takePhoto();
+                        takePhoto();
                         dealDepth = true;
                     }
                 });
@@ -933,6 +933,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
         }
         dealDepth = false;
         try {
+            frame.acquirePointCloud();
             StringBuffer sb = new StringBuffer();
             Image depthImage = frame.acquireDepthImage();
             int imwidth = depthImage.getWidth();
@@ -963,6 +964,13 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
                     short depthRange = (short) (depthSample & 0x1FFF);
                     byte value = (byte) (depthRange / 8000f * 255);
                     disBimap.setPixel(j, i, Color.rgb(value, value, value));
+
+                    short depthConfidence = (short) ((depthSample >> 13) & 0x7);
+                    float depthPercentage = depthConfidence == 0 ? 1.f : (depthConfidence - 1) / 7.f;
+                    float depth = depthPercentage > 0.1 ? depthRange : (float) (FAR * 1000.0);
+                    depth = (float) Math.max(depth, NEAR * 1000.0);//100
+                    depth = (float) Math.min(depth, FAR * 1000.0);//3000
+                    sb.append("depth = " + depth + " ,depthRange=  " + depthRange).append("\n");
                 }
             }
             runOnUiThread(new Runnable() {
@@ -973,8 +981,8 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
             });
 
             saveBitmapToDisk(disBimap, generateFilename());
-//            LogToFile.i nit(this);
-//            LogToFile.d("liuboyu", sb.toString());
+            LogToFile.init(this);
+            LogToFile.d("liuboyu", sb.toString());
 //            Log.e("xxxxxxxxx", sb.toString());
         } catch (Exception e) {
             Log.e("xxxxxxxxx", "NotYetAvailableException = " + e);

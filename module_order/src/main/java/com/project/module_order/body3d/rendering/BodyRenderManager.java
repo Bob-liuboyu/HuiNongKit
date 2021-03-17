@@ -19,6 +19,7 @@ package com.project.module_order.body3d.rendering;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.media.Image;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -44,6 +45,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -237,7 +239,7 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
             }
 
             // 获取深度图像]
-            getBgDepthMillimeters(frame);
+            getBgDepthMillimeters2(frame);
 
             for (ARBody body : bodies) {
                 if (body.getTrackingState() != ARTrackable.TrackingState.TRACKING) {
@@ -360,22 +362,23 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
         try {
             StringBuffer sb = new StringBuffer();
             ARImage depthImage = (ARImage) frame.acquireDepthImage();
-            int imwidth = depthImage.getWidth();
-            int imheight = depthImage.getHeight();
-//            ARPointCloud arPointCloud = frame.acquirePointCloud();
-            ARSceneMesh arSceneMesh = frame.acquireSceneMesh();
-            ShortBuffer shortDepthBuffer = arSceneMesh.getSceneDepth();
-            Bitmap disBimap = Bitmap.createBitmap(imwidth, imheight, Bitmap.Config.RGB_565);
-            for (int i = 0; i < imheight; i++) {
-                for (int j = 0; j < imwidth; j++) {
-                    int index = (i * imwidth + j);
-                    shortDepthBuffer.position(index);
-                    short depthSample = shortDepthBuffer.get();
-                    short depthRange = (short) (depthSample & 0x1FFF);
-                    byte value = (byte) (depthRange / 8000f * 255);
-                    disBimap.setPixel(j, i, Color.rgb(value, value, value));
-                }
-            }
+//            int imwidth = depthImage.getWidth();
+//            int imheight = depthImage.getHeight();
+            ARPointCloud arPointCloud = frame.acquirePointCloud();
+            FloatBuffer points = arPointCloud.getPoints();
+//            ARSceneMesh arSceneMesh = frame.acquireSceneMesh();
+//            ShortBuffer shortDepthBuffer = arSceneMesh.getSceneDepth();
+//            Bitmap disBimap = Bitmap.createBitmap(imwidth, imheight, Bitmap.Config.RGB_565);
+//            for (int i = 0; i < imheight; i++) {
+//                for (int j = 0; j < imwidth; j++) {
+//                    int index = (i * imwidth + j);
+//                    shortDepthBuffer.position(index);
+//                    short depthSample = shortDepthBuffer.get();
+//                    short depthRange = (short) (depthSample & 0x1FFF);
+//                    byte value = (byte) (depthRange / 8000f * 255);
+//                    disBimap.setPixel(j, i, Color.rgb(value, value, value));
+//                }
+//            }
 //            saveBitmapToDisk(disBimap, generateFilename());
         } catch (Exception e) {
             Log.e("xxxxxxxxx", "NotYetAvailableException = " + e);
@@ -403,4 +406,58 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
         return Environment.getExternalStorageDirectory() + "/DCIM/HuiNongKit/"
                 + System.currentTimeMillis() + ".jpg";
     }
+
+
+    public void getBgDepthMillimeters2(ARFrame arFrame) {
+        if (!dealDepth) {
+            return;
+        }
+        dealDepth = false;
+        try {
+            int width = arFrame.acquireSceneMesh().getSceneDepthWidth();
+            int height = arFrame.acquireSceneMesh().getSceneDepthHeight();
+            Log.e("xxxxxxxxx", "WorldRenderManager: arFrame.acquireSceneMesh().getSceneDepthWidth()" + width + "");
+            Log.e("xxxxxxxxx", "WorldRenderManager: arFrame.acquireSceneMesh().getSceneDepthHeight()" + height + "");
+            ShortBuffer shortBuffer = arFrame.acquireSceneMesh().getSceneDepth();
+
+            if (shortBuffer != null) {
+                try {
+                    //Set the file name and path
+                    File file = new File(generateFilename());
+                    Bitmap disBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+
+                    for (int i = 0; i < height; i++) {
+                        for (int j = 0; j < width; j++) {
+                            int index = (i * width + j);
+                            shortBuffer.position(index);
+                            short depthSample = shortBuffer.get();
+                            short depthRange = (short) (depthSample & 0x1FFF);
+                            byte value = (byte) (depthRange);
+                            disBitmap.setPixel(j, i, Color.rgb(value, value, value));
+                        }
+                    }
+                    Matrix matrix = new Matrix();
+                    matrix.setRotate(90);
+                    Bitmap rotatedBitmap = Bitmap.createBitmap(disBitmap, 0, 0, width, height, matrix, true);
+
+                    try {
+                        FileOutputStream out = new FileOutputStream(file);
+                        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                        out.flush();
+                        out.close();
+                        Log.e("xxxxxxxxx", "filename = " + file);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            Log.e("xxxxxxxxx", "NotYetAvailableException = " + e);
+        }
+    }
+
 }

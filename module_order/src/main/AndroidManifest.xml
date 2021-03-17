@@ -23,5 +23,9 @@
             android:name=".body3d.BodyActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".world.WorldActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 </manifest>
