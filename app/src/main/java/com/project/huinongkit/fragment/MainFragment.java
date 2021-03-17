@@ -8,15 +8,14 @@ import android.view.View;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.fragment.BaseFragment;
+import com.project.arch_repo.widget.DatePickerDialog;
 import com.project.common_resource.OrderModel;
 import com.project.config_repo.ArouterConfig;
 import com.project.huinongkit.SelectFilterDialog;
 import com.project.huinongkit.adapter.OrderListAdapter;
 import com.project.huinongkit.databinding.MainFragmentMainBinding;
-import com.project.huinongkit.databinding.MainFragmentMineBinding;
 import com.project.huinongkit.model.SelectFilterModel;
 import com.xxf.arch.dialog.IResultDialog;
-import com.xxf.arch.dialog.Void;
 import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
@@ -82,7 +81,7 @@ public class MainFragment extends BaseFragment {
         mBinding.mEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SelectFilterDialog(getActivity(), new IResultDialog.OnDialogClickListener<SelectFilterModel>() {
+                new SelectFilterDialog(getActivity(), getActivity(), new IResultDialog.OnDialogClickListener<SelectFilterModel>() {
                     @Override
                     public boolean onCancel(@NonNull DialogInterface dialog, @Nullable SelectFilterModel cancelResult) {
                         ToastUtils.showToast(cancelResult.getStart());
@@ -95,6 +94,7 @@ public class MainFragment extends BaseFragment {
                         return false;
                     }
                 }).show();
+
             }
         });
     }

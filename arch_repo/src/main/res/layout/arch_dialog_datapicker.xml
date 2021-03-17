@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/arch_color_translate">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/arch_dp_49">
+
+                <TextView
+                    android:id="@+id/tv_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/arch_dp_15"
+                    android:text="@string/arch_str_cancel"
+                    android:textColor="@color/arch_color_ff00c1ce"
+                    android:textSize="@dimen/arch_dp_17" />
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/arch_dp_15"
+                    android:text="@string/arch_str_please_check"
+                    android:textColor="@color/arch_color_374F66"
+                    android:textSize="@dimen/arch_dp_17" />
+
+                <TextView
+                    android:id="@+id/tv_ok"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/arch_dp_15"
+                    android:text="@string/arch_str_confirm"
+                    android:textColor="@color/arch_color_ff00c1ce"
+                    android:textSize="@dimen/arch_dp_17" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="bottom"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+
+                <DatePicker
+                    android:id="@+id/mDatePicker"
+                    style="@android:style/Widget.DatePicker"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:datePickerMode="spinner"
+                    android:gravity="center"
+                    android:padding="0dp"
+                    android:spinnersShown="true" />
+
+                <TimePicker
+                    android:id="@+id/mTimePicker"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:spinnersShown="true"
+                    android:timePickerMode="spinner" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</layout>
