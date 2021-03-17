@@ -1,17 +1,17 @@
 /**
  * Copyright 2020. Huawei Technologies Co., Ltd. All rights reserved.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.project.module_order.world.rendering;
@@ -38,9 +38,12 @@ import com.huawei.hiar.ARHitResult;
 import com.huawei.hiar.ARLightEstimate;
 import com.huawei.hiar.ARPlane;
 import com.huawei.hiar.ARPoint;
+import com.huawei.hiar.ARPointCloud;
 import com.huawei.hiar.ARPose;
+import com.huawei.hiar.ARSceneMesh;
 import com.huawei.hiar.ARSession;
 import com.huawei.hiar.ARTrackable;
+import com.huawei.hiar.ARWorldTrackingConfig;
 import com.project.module_order.R;
 import com.project.module_order.common.ArDemoRuntimeException;
 import com.project.module_order.common.DisplayRotationManager;
@@ -51,6 +54,7 @@ import com.project.module_order.world.VirtualObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -80,9 +84,9 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
 
     private static final float MATRIX_SCALE_SY = -1.0f;
 
-    private static final float[] BLUE_COLORS = new float[] {66.0f, 133.0f, 244.0f, 255.0f};
+    private static final float[] BLUE_COLORS = new float[]{66.0f, 133.0f, 244.0f, 255.0f};
 
-    private static final float[] GREEN_COLORS = new float[] {66.0f, 133.0f, 244.0f, 255.0f};
+    private static final float[] GREEN_COLORS = new float[]{66.0f, 133.0f, 244.0f, 255.0f};
 
     private ARSession mSession;
 
@@ -117,7 +121,6 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
     private ArrayList<VirtualObject> mVirtualObjects = new ArrayList<>();
 
     /**
-     * The constructor passes context and activity. This method will be called when {@link Activity#onCreate}.
      *
      * @param activity Activity
      * @param context Context
@@ -251,13 +254,13 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
             arCamera.getViewMatrix(viewMatrix, 0);
             for (ARPlane plane : mSession.getAllTrackables(ARPlane.class)) {
                 if (plane.getType() != ARPlane.PlaneType.UNKNOWN_FACING
-                    && plane.getTrackingState() == ARTrackable.TrackingState.TRACKING) {
+                        && plane.getTrackingState() == ARTrackable.TrackingState.TRACKING) {
                     hideLoadingMessage();
                     break;
                 }
             }
             mLabelDisplay.onDrawFrame(mSession.getAllTrackables(ARPlane.class), arCamera.getDisplayOrientedPose(),
-                projectionMatrix);
+                    projectionMatrix);
             handleGestureEvent(arFrame, arCamera, projectionMatrix, viewMatrix);
             ARLightEstimate lightEstimate = arFrame.getLightEstimate();
             float lightPixelIntensity = 1;
@@ -304,7 +307,7 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
         TextView view = mActivity.findViewById(id);
         view.setDrawingCacheEnabled(true);
         view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
         Bitmap bitmap = view.getDrawingCache();
         android.graphics.Matrix matrix = new android.graphics.Matrix();
@@ -446,12 +449,12 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
             ARTrackable trackable = hitResultTemp.getTrackable();
 
             boolean isPlanHitJudge =
-                trackable instanceof ARPlane && ((ARPlane) trackable).isPoseInPolygon(hitResultTemp.getHitPose())
-                    && (calculateDistanceToPlane(hitResultTemp.getHitPose(), camera.getPose()) > 0);
+                    trackable instanceof ARPlane && ((ARPlane) trackable).isPoseInPolygon(hitResultTemp.getHitPose())
+                            && (calculateDistanceToPlane(hitResultTemp.getHitPose(), camera.getPose()) > 0);
 
             // Determine whether the point cloud is clicked and whether the point faces the camera.
             boolean isPointHitJudge = trackable instanceof ARPoint
-                && ((ARPoint) trackable).getOrientationMode() == ARPoint.OrientationMode.ESTIMATED_SURFACE_NORMAL;
+                    && ((ARPoint) trackable).getOrientationMode() == ARPoint.OrientationMode.ESTIMATED_SURFACE_NORMAL;
 
             // Select points on the plane preferentially.
             if (isPlanHitJudge || isPointHitJudge) {
@@ -481,8 +484,8 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
 
         // Calculate the distance based on projection.
         return (cameraPose.tx() - planePose.tx()) * normals[0] // 0:x
-            + (cameraPose.ty() - planePose.ty()) * normals[1] // 1:y
-            + (cameraPose.tz() - planePose.tz()) * normals[2]; // 2:z
+                + (cameraPose.ty() - planePose.ty()) * normals[1] // 1:y
+                + (cameraPose.tz() - planePose.tz()) * normals[2]; // 2:z
     }
 
     private boolean dealDepth;
@@ -497,17 +500,15 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
         }
         dealDepth = false;
         try {
-            Image image = arFrame.acquireDepthImage();
-            image.getHeight();
+
             int width = arFrame.acquireSceneMesh().getSceneDepthWidth();
             int height = arFrame.acquireSceneMesh().getSceneDepthHeight();
             Log.e("xxxxxxxxx", "WorldRenderManager: arFrame.acquireSceneMesh().getSceneDepthWidth()" + width + "");
             Log.e("xxxxxxxxx", "WorldRenderManager: arFrame.acquireSceneMesh().getSceneDepthHeight()" + height + "");
-            ShortBuffer shortBuffer = arFrame.acquireSceneMesh().getSceneDepth();
 
+            ShortBuffer shortBuffer = arFrame.acquireSceneMesh().getSceneDepth();
             if (shortBuffer != null) {
                 try {
-                    //Set the file name and path
                     File file = new File(generateFilename());
                     Bitmap disBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 

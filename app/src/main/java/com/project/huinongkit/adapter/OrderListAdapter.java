@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import com.project.arch_repo.base.recyclerview.BaseBindableAdapter;
 import com.project.common_resource.OrderModel;
 import com.project.huinongkit.databinding.MainItemOrderBinding;
-import com.project.huinongkit.databinding.MainItemOrderBindingImpl;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 
 /**

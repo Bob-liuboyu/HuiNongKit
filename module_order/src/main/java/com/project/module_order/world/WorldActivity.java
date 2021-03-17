@@ -168,6 +168,7 @@ public class WorldActivity extends Activity {
                 }
                 mArSession = new ARSession(this);
                 ARWorldTrackingConfig config = new ARWorldTrackingConfig(mArSession);
+                config.setEnableItem(ARConfigBase.ENABLE_MESH | ARConfigBase.ENABLE_DEPTH);
                 config.setFocusMode(ARConfigBase.FocusMode.AUTO_FOCUS);
                 config.setSemanticMode(ARWorldTrackingConfig.SEMANTIC_PLANE);
                 mArSession.configure(config);
