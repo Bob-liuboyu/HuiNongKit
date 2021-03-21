@@ -31,6 +31,7 @@
     <item>Enable Instant Placement</item>
   </string-array>
 
+  <string name="measure_weight">测量重量 = </string>
   <string name="plane_other">Other</string>
   <string name="plane_floor">Floor</string>
   <string name="plane_wall">Wall</string>

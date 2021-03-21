@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:background="#00c1ce"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:singleLine="true"
+                android:text="理赔登记"
+                android:textColor="@android:color/white"
+                android:textSize="17dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -37,7 +56,7 @@
                     android:layout_marginRight="10dp"
                     android:background="@android:color/transparent"
                     android:gravity="center|left"
-                    android:hint="搜索"
+                    android:hint="请输入理赔单号模糊搜索"
                     android:imeOptions="actionSearch"
                     android:maxLength="10"
                     android:singleLine="true"
@@ -53,6 +72,7 @@
             android:layout_height="match_parent"
             android:background="@color/arch_white"
             android:orientation="vertical"
+            android:padding="@dimen/arch_dp_15"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
     </LinearLayout>
 </layout>

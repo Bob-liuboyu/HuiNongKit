@@ -60,7 +60,9 @@ public class MainActivity extends BaseActivity {
         mBinding.btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivityPermissionsDispatcher.gotoCameraWithCheck(MainActivity.this);
+//                MainActivityPermissionsDispatcher.gotoCameraWithCheck(MainActivity.this);
+                ARouter.getInstance().build(ArouterConfig.Order.ORDER_CREATE)
+                        .navigation();
             }
         });
     }

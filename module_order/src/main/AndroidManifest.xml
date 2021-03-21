@@ -26,6 +26,16 @@
         <activity
             android:name=".world.WorldActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.CreateOrderActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ChoosePolicyActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.PrePhotoActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 </manifest>

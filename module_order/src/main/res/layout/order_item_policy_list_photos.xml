@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.project.common_resource.OrderPhotoListModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/arch_dp_100"
+        android:clickable="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/arch_white"
+            android:orientation="horizontal"
+            android:padding="@dimen/arch_dp_15"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center|left"
+            android:orientation="vertical"
+            android:padding="@dimen/arch_dp_15">
+
+            <TextView
+                android:id="@+id/tv_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="测量结果" />
+
+            <TextView
+                android:id="@+id/tv_result_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12kg"
+                android:textSize="30dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>
