@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.project.arch_repo.base.activity.BaseActivity;
+import com.project.arch_repo.base.activity.BaseTitleBarActivity;
 import com.project.config_repo.ArouterConfig;
 import com.project.huinongkit.databinding.MainActivityMainBinding;
 import com.project.huinongkit.fragment.MainFragment;
@@ -30,7 +30,7 @@ import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
 @Route(path = ArouterConfig.Main.MAIN)
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseTitleBarActivity {
     private MainActivityMainBinding mBinding;
     private BaseFragmentAdapter mBaseFragmentAdapter;
     private MainFragment mainFragment;
@@ -52,6 +52,7 @@ public class MainActivity extends BaseActivity {
 
 
     private void initView() {
+        getTitleBar().setTitleBarTitle("慧农保");
         mBaseFragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
         mBaseFragmentAdapter.bindData(true, Arrays.asList(mainFragment, mineFragment));
         mBaseFragmentAdapter.bindTitle(true, Arrays.asList("首页", "我的"));
