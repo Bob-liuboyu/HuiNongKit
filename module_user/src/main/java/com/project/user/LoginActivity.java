@@ -6,6 +6,8 @@ import android.view.View;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.activity.BaseActivity;
+import com.project.arch_repo.widget.CommonDialog;
+import com.project.arch_repo.widget.GrDialogUtils;
 import com.project.config_repo.ArouterConfig;
 import com.project.user.databinding.UserActivityLoginBinding;
 
@@ -38,6 +40,22 @@ public class LoginActivity extends BaseActivity {
                 ARouter.getInstance().build(ArouterConfig.Main.MAIN)
                         .navigation();
                 finish();
+            }
+        });
+        binding.tvForgetPwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GrDialogUtils.createCommonDialog(LoginActivity.this, "忘记密码", "请联系公司管理员重置登陆密码", new CommonDialog.OnDialogClickListener() {
+                    @Override
+                    public void onClickConfirm(View view) {
+
+                    }
+
+                    @Override
+                    public void onClickCancel(View view) {
+
+                    }
+                }).show();
             }
         });
     }

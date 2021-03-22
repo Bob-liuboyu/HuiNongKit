@@ -42,7 +42,7 @@ public class SplashActivity extends BaseActivity {
                     @Override
                     public void accept(Long aLong) throws Exception {
                         if (aLong <= 0) {
-                            goToMainPage();
+                            goLogin();
                         }
                     }
                 });
@@ -57,10 +57,10 @@ public class SplashActivity extends BaseActivity {
     }
 
     /**
-     * 去主页面
+     * 去登陆
      */
     @SuppressLint("WrongConstant")
-    private void goToMainPage() {
+    private void goLogin() {
         ARouter.getInstance().build(ArouterConfig.User.LOGIN)
                 .navigation();
         finish();

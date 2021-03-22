@@ -77,7 +77,6 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
     private static final int PROJ_MATRIX_OFFSET = 0;
 
     private static final float PROJ_MATRIX_NEAR = 0.1f;
-
     private static final float PROJ_MATRIX_FAR = 100.0f;
 
     private static final float MATRIX_SCALE_SX = -1.0f;
@@ -500,7 +499,7 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
         }
         dealDepth = false;
         try {
-
+            ARCamera camera = arFrame.getCamera();
             int width = arFrame.acquireSceneMesh().getSceneDepthWidth();
             int height = arFrame.acquireSceneMesh().getSceneDepthHeight();
             Log.e("xxxxxxxxx", "WorldRenderManager: arFrame.acquireSceneMesh().getSceneDepthWidth()" + width + "");
