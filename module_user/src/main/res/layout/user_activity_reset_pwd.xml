@@ -1,138 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:background="#F6F8FA"
+        android:orientation="vertical">
 
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="15dp">
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/arch_dp_16"
+            android:layout_marginTop="34dp"
+            android:text="首次登录修改登录密码"
+            android:textColor="#0073BC"
+            android:textSize="20dp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:layout_marginLeft="@dimen/arch_dp_25"
+            android:layout_marginRight="@dimen/arch_dp_45"
+            android:orientation="vertical">
 
-            <TextView
+            <EditText
+                android:id="@+id/et_pwd"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:text="设置密码"
-                android:textColor="#ff374f66"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/identity_pwd_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:gravity="center_vertical"
-                    android:hint="请设置您的新密码"
-                    android:inputType="textPassword"
-                    android:maxLength="20"
-                    android:maxLines="1"
-                    android:padding="7dp"
-                    android:textSize="15sp" />
-
-
-                <ImageView
-                    android:id="@+id/identity_pwd_hide_iv"
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/base_ic_eye_selector" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/identity_pwd_check_length_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/user_ic_pwd_selected_state_sl"
-                    android:drawablePadding="5dp"
-                    android:text="6-20位字符"
-                    android:textColor="#ff737785"
-                    android:textSize="12sp"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/identity_pwd_check_combine_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:drawableLeft="@drawable/user_ic_pwd_selected_state_sl"
-                    android:drawablePadding="5dp"
-                    android:text="字母及数字组合"
-                    android:textColor="#ff737785"
-                    android:textSize="12sp"
-                    android:visibility="gone" />
-            </LinearLayout>
+                android:layout_height="44dp"
+                android:background="@null"
+                android:hint="请输入新密码（6-20位数字及字母）"
+                android:maxLength="20"
+                android:paddingLeft="10dp"
+                android:textColor="#374F66"
+                android:textSize="17sp" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#F1F1F1" />
+                android:layout_height="3dp"
+                android:background="@drawable/base_dot_line" />
 
-            <TextView
+            <EditText
+                android:id="@+id/et_re_pwd"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="17dp"
-                android:text="确认密码"
-                android:textColor="#ff374f66"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:layout_height="44dp"
+                android:background="@null"
+                android:layout_marginTop="@dimen/arch_dp_26"
+                android:hint="请输入新密码（6-20位数字及字母）"
+                android:maxLength="20"
+                android:paddingLeft="10dp"
+                android:textColor="#374F66"
+                android:textSize="17sp" />
 
-            <LinearLayout
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/identity_repwd_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:gravity="center_vertical"
-                    android:hint="请确认您的新密码"
-                    android:inputType="textPassword"
-                    android:maxLength="20"
-                    android:maxLines="1"
-                    android:padding="7dp"
-                    android:textSize="15sp" />
-
-                <ImageView
-                    android:id="@+id/identity_repwd_hide_iv"
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/base_ic_eye_selector" />
-            </LinearLayout>
-
-
-            <Button
-                android:id="@+id/ok_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:layout_marginBottom="85dp"
-                android:text="确认"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:layout_height="3dp"
+                android:background="@drawable/base_dot_line" />
         </LinearLayout>
-    </ScrollView>
+
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="128dp"
+            android:layout_marginRight="32dp"
+            android:background="@drawable/base_btn_bg_selector"
+            android:text="登录"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
 </layout>

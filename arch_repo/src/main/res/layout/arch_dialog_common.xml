@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/arch_bg_dialog"
-        android:paddingTop="@dimen/arch_dp_15"
+        android:paddingTop="@dimen/arch_dp_21"
         android:orientation="vertical">
 
         <TextView
@@ -18,13 +19,13 @@
             android:maxEms="12"
             android:singleLine="true"
             android:text="@string/arch_str_pwd_title"
-            android:textColor="#333333"
+            android:textColor="#4D4D4E"
             android:textSize="@dimen/arch_dp_18"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/arch_dp_13"
+            android:layout_marginTop="@dimen/arch_dp_18"
             android:paddingLeft="@dimen/arch_dp_20"
             android:paddingRight="@dimen/arch_dp_20"
             >
@@ -32,26 +33,21 @@
             <TextView
                 android:id="@+id/tv_desc"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/arch_dp_40"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="3dp"
                 android:gravity="center"
-                android:ems="20"
-                android:focusable="true"
-                android:hint="@string/arch_str_pwd_tips"
-                android:padding="@dimen/arch_dp_5"
-                android:singleLine="true"
-                android:textColor="@color/arch_color_737785"
-                android:textSize="@dimen/arch_dp_14"/>
+                tools:text="@string/arch_str_pwd_tips"
+                android:textColor="#666666"
+                android:textSize="@dimen/arch_dp_15"/>
 
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/arch_dp_0_5"
+            android:layout_height="2dp"
             android:layout_marginTop="@dimen/arch_dp_20"
-            android:background="@color/arch_color_f1f1f1"/>
+            android:background="@drawable/base_dot_line"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,9 +68,10 @@
                 android:textSize="@dimen/arch_dp_18"/>
 
             <View
+                android:id="@+id/line"
                 android:layout_width="@dimen/arch_dp_0_5"
                 android:layout_height="match_parent"
-                android:background="@color/arch_color_f1f1f1"/>
+                android:background="@drawable/base_dot_line"/>
 
             <TextView
                 android:id="@+id/select_btn"

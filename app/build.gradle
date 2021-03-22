@@ -60,7 +60,7 @@ dependencies {
     implementation project(':module_user')
     implementation project(':module_order')
     //各个模块通用资源
-    implementation project(':common_resource')
+    implementation project(':arch_repo')
 
     //需要再写一遍，否则没法自动生成类
     implementation 'com.github.hotchemi:permissionsdispatcher:2.3.1'

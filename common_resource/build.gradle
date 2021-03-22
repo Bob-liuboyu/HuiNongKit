@@ -38,6 +38,5 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(':arch_repo')
     api project(':config_repo')
 }

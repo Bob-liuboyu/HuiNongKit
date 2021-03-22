@@ -3,14 +3,12 @@ package com.project.arch_repo.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.project.arch_repo.R;
 import com.project.arch_repo.databinding.ArchDialogCommonBinding;
-import com.project.arch_repo.databinding.ArchDialogInputBinding;
 import com.project.arch_repo.utils.DisplayUtils;
 import com.xxf.arch.XXF;
 
@@ -40,7 +38,7 @@ public class CommonDialog extends Dialog {
         mBinding = ArchDialogCommonBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.width = DisplayUtils.getRealScreenSize(this.getContext()).x - DisplayUtils.dip2px(XXF.getApplication(),53 * 2);
+        params.width = DisplayUtils.getRealScreenSize(this.getContext()).x - DisplayUtils.dip2px(XXF.getApplication(),47 * 2);
         getWindow().setAttributes(params);
         initView();
     }
@@ -60,6 +58,9 @@ public class CommonDialog extends Dialog {
         //取消
         if (!TextUtils.isEmpty(mCancelStr)) {
             mBinding.cancelBtn.setText(mCancelStr);
+        }else {
+            mBinding.cancelBtn.setVisibility(View.GONE);
+            mBinding.line.setVisibility(View.GONE);
         }
 
         //content
