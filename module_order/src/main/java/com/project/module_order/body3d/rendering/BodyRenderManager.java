@@ -18,6 +18,7 @@ package com.project.module_order.body3d.rendering;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.Image;
@@ -40,11 +41,13 @@ import com.project.module_order.common.DisplayRotationManager;
 import com.project.module_order.common.TextDisplay;
 import com.project.module_order.common.TextureDisplay;
 import com.project.module_order.utils.LogToFile;
+import com.xxf.arch.utils.ToastUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
@@ -239,7 +242,7 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
             }
 
             // 获取深度图像]
-            getBgDepthMillimeters2(frame);
+            getBgDepthMillimeters(frame);
 
             for (ARBody body : bodies) {
                 if (body.getTrackingState() != ARTrackable.TrackingState.TRACKING) {
@@ -300,7 +303,7 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
         }
         dealDepth = false;
         try {
-            Image depthImage = frame.acquireDepthImage();
+            ARImage depthImage = (ARImage) frame.acquireDepthImage();
 
             ShortBuffer shortDepthBuffer = depthImage.getPlanes()[0].getBuffer().asShortBuffer();
             short depthSample = shortDepthBuffer.get();
@@ -362,10 +365,16 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
         try {
             StringBuffer sb = new StringBuffer();
             ARImage depthImage = (ARImage) frame.acquireDepthImage();
+
+            ByteBuffer buffer = depthImage.getPlanes()[0].getBuffer();
+            byte[] bytes = new byte[buffer.capacity()];
+            buffer.get(bytes);
+            Bitmap bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
+
 //            int imwidth = depthImage.getWidth();
 //            int imheight = depthImage.getHeight();
-            ARPointCloud arPointCloud = frame.acquirePointCloud();
-            FloatBuffer points = arPointCloud.getPoints();
+//            ARPointCloud arPointCloud = frame.acquirePointCloud();
+//            FloatBuffer points = arPointCloud.getPoints();
 //            ARSceneMesh arSceneMesh = frame.acquireSceneMesh();
 //            ShortBuffer shortDepthBuffer = arSceneMesh.getSceneDepth();
 //            Bitmap disBimap = Bitmap.createBitmap(imwidth, imheight, Bitmap.Config.RGB_565);
@@ -379,9 +388,12 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
 //                    disBimap.setPixel(j, i, Color.rgb(value, value, value));
 //                }
 //            }
-//            saveBitmapToDisk(disBimap, generateFilename());
+
+            String path = generateFilename();
+            saveBitmapToDisk(bitmapImage, path);
+            ToastUtils.showToast(path);
         } catch (Exception e) {
-            Log.e("xxxxxxxxx", "NotYetAvailableException = " + e);
+            e.printStackTrace();
         }
     }
 

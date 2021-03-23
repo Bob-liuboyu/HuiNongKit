@@ -19,17 +19,23 @@ package com.project.module_order.world.rendering;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.media.Image;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
+import android.util.Base64;
 import android.util.Log;
+import android.util.Size;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -51,11 +57,19 @@ import com.project.module_order.common.ArDemoRuntimeException;
 import com.project.module_order.common.DisplayRotationManager;
 import com.project.module_order.common.TextDisplay;
 import com.project.module_order.common.TextureDisplay;
+import com.project.module_order.utils.LogToFile;
 import com.project.module_order.world.GestureEvent;
 import com.project.module_order.world.VirtualObject;
+import com.xxf.arch.utils.ToastUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.SoftReference;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
@@ -65,6 +79,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
+import static com.project.module_order.body3d.rendering.BodyRenderManager.FAR;
+import static com.project.module_order.body3d.rendering.BodyRenderManager.NEAR;
 
 /**
  * This class provides rendering management related to the world scene, including
@@ -122,9 +139,8 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
     private ArrayList<VirtualObject> mVirtualObjects = new ArrayList<>();
 
     /**
-     *
      * @param activity Activity
-     * @param context Context
+     * @param context  Context
      */
     public WorldRenderManager(Activity activity, Context context) {
         mActivity = activity;
@@ -194,7 +210,7 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
     /**
      * Create a thread for text display in the UI thread. This thread will be called back in TextureDisplay.
      *
-     * @param text Gesture information displayed on the screen
+     * @param text      Gesture information displayed on the screen
      * @param positionX The left padding in pixels.
      * @param positionY The right padding in pixels.
      */
@@ -472,7 +488,7 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
      * Calculate the distance between a point in a space and a plane. This method is used
      * to calculate the distance between a camera in a space and a specified plane.
      *
-     * @param planePose ARPose of a plane.
+     * @param planePose  ARPose of a plane.
      * @param cameraPose ARPose of a camera.
      * @return Calculation results.
      */
@@ -501,12 +517,22 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
         }
         dealDepth = false;
         try {
-            ARCamera camera = arFrame.getCamera();
+            Image cameraImage = arFrame.acquireCameraImage();
+            Image previewImage = arFrame.acquirePreviewImage();
+            Image image = arFrame.acquireDepthImage();
+            Bitmap bitmap = imageToBitmap(cameraImage, 90);
+            saveBitmapToDisk(bitmap, generateFilename());
+
+            Bitmap bitmap2 = imageToBitmap(image, 90);
+            saveBitmapToDisk(bitmap2, generateFilename());
+
+
+            getImage(previewImage);
+//            getImage(image);
+
             int width = arFrame.acquireSceneMesh().getSceneDepthWidth();
             int height = arFrame.acquireSceneMesh().getSceneDepthHeight();
-            Log.e("xxxxxxxxx", "WorldRenderManager: arFrame.acquireSceneMesh().getSceneDepthWidth()" + width + "");
-            Log.e("xxxxxxxxx", "WorldRenderManager: arFrame.acquireSceneMesh().getSceneDepthHeight()" + height + "");
-
+            StringBuffer sb = new StringBuffer();
             ShortBuffer shortBuffer = arFrame.acquireSceneMesh().getSceneDepth();
             if (shortBuffer != null) {
                 try {
@@ -520,22 +546,32 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
                             short depthSample = shortBuffer.get();
                             short depthRange = (short) (depthSample & 0x1FFF);
                             byte value = (byte) (depthRange);
-                            disBitmap.setPixel(j, i, Color.rgb(value, value, value));
+//                            disBitmap.setPixel(j, i, Color.rgb(value, value, value));
+
+                            short depthConfidence = (short) ((depthSample >> 13) & 0x7);
+                            float depthPercentage = depthConfidence == 0 ? 1.f : (depthConfidence - 1) / 7.f;
+                            float depth = depthPercentage > 0.1 ? depthRange : (float) (FAR * 1000.0);
+                            depth = (float) Math.max(depth, NEAR * 1000.0);//100
+                            depth = (float) Math.min(depth, FAR * 1000.0);//3000
+                            sb.append("depth = " + depth + " ,depthRange=  " + depthRange).append("\n");
                         }
                     }
-                    Matrix matrix = new Matrix();
-                    matrix.setRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(disBitmap, 0, 0, width, height, matrix, true);
+//                    Matrix matrix = new Matrix();
+//                    matrix.setRotate(90);
+//                    Bitmap rotatedBitmap = Bitmap.createBitmap(disBitmap, 0, 0, width, height, matrix, true);
+//
+//                    try {
+//                        FileOutputStream out = new FileOutputStream(file);
+//                        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+//                        out.flush();
+//                        out.close();
+//                        Log.e("xxxxxxxxx", "filename = " + file);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
 
-                    try {
-                        FileOutputStream out = new FileOutputStream(file);
-                        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                        out.flush();
-                        out.close();
-                        Log.e("xxxxxxxxx", "filename = " + file);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    LogToFile.init(mContext);
+                    LogToFile.d("liuboyu", sb.toString());
 
 
                 } catch (Exception e) {
@@ -552,4 +588,117 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
                 + System.currentTimeMillis() + ".jpg";
     }
 
+    private void getImage(Image image) {
+        try {
+            ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+            byte[] bytes = new byte[buffer.capacity()];
+            buffer.get(bytes);
+//            Bitmap bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            YuvImage yuvimage = new YuvImage(bytes, ImageFormat.YUV_420_888, 200, 200, null);//20、20分别是图的宽度与高度
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            yuvimage.compressToJpeg(new Rect(0, 0, 200, 200), 100, baos);//80--JPG图片的质量[0-100],100最高
+            byte[] jdata = baos.toByteArray();
+
+            Bitmap bitmapImage = BitmapFactory.decodeByteArray(jdata, 0, jdata.length);
+            if (bitmapImage == null) {
+                Log.e("xxxxxxxxx", "bitmapImage = null");
+                return;
+            }
+            String path = generateFilename();
+            saveBitmapToDisk(bitmapImage, path);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("xxxxxxxxx", "Exception = " + e);
+        }
+    }
+
+    private void saveBitmapToDisk(Bitmap bitmap, String filename) throws IOException {
+        Log.e("xxxxxxxxx", "filename = " + filename);
+        File out = new File(filename);
+        if (!out.getParentFile().exists()) {
+            out.getParentFile().mkdirs();
+        }
+        try (FileOutputStream outputStream = new FileOutputStream(filename);
+             ByteArrayOutputStream outputData = new ByteArrayOutputStream()) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputData);
+            outputData.writeTo(outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException ex) {
+            throw new IOException("Failed to save bitmap to disk", ex);
+        }
+    }
+
+    private Bitmap getBitmap(byte[] bytes) {
+        Bitmap bitmap = null;
+
+        InputStream input = null;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 8;
+            input = new ByteArrayInputStream(bytes);
+            SoftReference softRef = new SoftReference(BitmapFactory.decodeStream(input, null, options));
+            bitmap = (Bitmap) softRef.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return bitmap;
+        }
+    }
+
+    public Bitmap imageToBitmap(Image image, float rotationDegrees) {
+
+        assert (image.getFormat() == ImageFormat.NV21);
+
+// NV21 is a plane of 8 bit Y values followed by interleaved Cb Cr
+
+        ByteBuffer ib = ByteBuffer.allocate(image.getHeight() * image.getWidth() * 2);
+
+        ByteBuffer y = image.getPlanes()[0].getBuffer();
+
+        ByteBuffer cr = image.getPlanes()[1].getBuffer();
+
+        ByteBuffer cb = image.getPlanes()[2].getBuffer();
+
+        ib.put(y);
+
+        ib.put(cb);
+
+        ib.put(cr);
+
+        YuvImage yuvImage = new YuvImage(ib.array(),
+
+                ImageFormat.NV21, image.getWidth(), image.getHeight(), null);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        yuvImage.compressToJpeg(new Rect(0, 0,
+
+                image.getWidth(), image.getHeight()), 50, out);
+
+        byte[] imageBytes = out.toByteArray();
+
+        Bitmap bm = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+        Bitmap bitmap = bm;
+
+        if (rotationDegrees != 0) {
+
+            Matrix matrix = new Matrix();
+
+            matrix.postRotate(rotationDegrees);
+
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bm,
+
+                    bm.getWidth(), bm.getHeight(), true);
+
+            bitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
+
+                    scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+
+        }
+
+        return bitmap;
+
+    }
 }

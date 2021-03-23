@@ -93,7 +93,7 @@ public class LogToFile {
 
         String fileName = logPath + "/log_" + dateFormat.format(new Date()) + ".log";//log日志名，使用时间命名，保证不重复
         String log = dateFormat.format(date) + " " + type + " " + tag + " " + msg + "\n";//log日志内容，可以自行定制
-        Log.e("xxxxxxxxx","fileName = "+fileName);
+        Log.e("xxxxxxxxx", "fileName = " + fileName);
         //如果父路径不存在
         File file = new File(logPath);
         if (!file.exists()) {

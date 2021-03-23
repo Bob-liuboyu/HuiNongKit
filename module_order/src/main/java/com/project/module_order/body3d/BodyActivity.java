@@ -93,7 +93,6 @@ import static javax.microedition.khronos.opengles.GL10.GL_UNSIGNED_SHORT;
  * @author HW
  * @since 2020-04-01
  */
-@Route(path = ArouterConfig.Order.ORDER_BODY_3D)
 public class BodyActivity extends Activity {
     private static final String TAG = BodyActivity.class.getSimpleName();
 
@@ -144,8 +143,8 @@ public class BodyActivity extends Activity {
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePhoto();
-//                mBodyRenderManager.getDepthImage();
+//                takePhoto();
+                mBodyRenderManager.getDepthImage();
             }
         });
         btn_done.setImageBitmap(maskBitmap);

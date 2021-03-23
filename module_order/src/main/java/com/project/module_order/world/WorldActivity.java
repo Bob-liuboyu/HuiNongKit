@@ -53,6 +53,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  * @author HW
  * @since 2020-04-05
  */
+@Route(path = ArouterConfig.Order.ORDER_BODY_3D)
 public class WorldActivity extends Activity {
     private static final String TAG = WorldActivity.class.getSimpleName();
 
