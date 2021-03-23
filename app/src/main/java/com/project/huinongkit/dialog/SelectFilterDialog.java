@@ -1,4 +1,4 @@
-package com.project.huinongkit;
+package com.project.huinongkit.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +15,7 @@ import android.view.WindowManager;
 
 import com.project.arch_repo.base.dialog.BaseDialog;
 import com.project.arch_repo.widget.DatePickerDialog;
+import com.project.huinongkit.R;
 import com.project.huinongkit.databinding.MainDialogSelectFilterBinding;
 import com.project.huinongkit.model.SelectFilterModel;
 import com.xxf.arch.dialog.IResultDialog;
