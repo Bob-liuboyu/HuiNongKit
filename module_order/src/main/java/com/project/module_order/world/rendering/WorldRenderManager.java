@@ -517,6 +517,7 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
         }
         dealDepth = false;
         try {
+            ARCamera camera = arFrame.getCamera();
             Image cameraImage = arFrame.acquireCameraImage();
             Image previewImage = arFrame.acquirePreviewImage();
             Image image = arFrame.acquireDepthImage();
