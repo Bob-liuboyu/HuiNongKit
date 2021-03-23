@@ -79,9 +79,9 @@ public class MainActivity extends BaseTitleBarActivity {
         mBinding.btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                MainActivityPermissionsDispatcher.gotoCameraWithCheck(MainActivity.this);
-                ARouter.getInstance().build(ArouterConfig.Order.ORDER_CREATE)
-                        .navigation();
+                MainActivityPermissionsDispatcher.gotoCameraWithCheck(MainActivity.this);
+//                ARouter.getInstance().build(ArouterConfig.Order.ORDER_CREATE)
+//                        .navigation();
             }
         });
     }

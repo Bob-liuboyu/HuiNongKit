@@ -17,8 +17,15 @@
 package com.project.module_order.body3d;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
@@ -30,6 +37,7 @@ import android.os.HandlerThread;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.PixelCopy;
 import android.view.View;
 import android.widget.ImageView;
@@ -47,12 +55,14 @@ import com.huawei.hiar.exceptions.ARUnSupportedConfigurationException;
 import com.huawei.hiar.exceptions.ARUnavailableClientSdkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceApkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceNotInstalledException;
+import com.project.arch_repo.utils.ImageMaskUtil;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
 import com.project.module_order.body3d.rendering.BodyRenderManager;
 import com.project.module_order.common.ConnectAppMarketActivity;
 import com.project.module_order.common.DisplayRotationManager;
 import com.project.module_order.ui.HelloArActivity;
+import com.xxf.arch.utils.ToastUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -83,7 +93,7 @@ import static javax.microedition.khronos.opengles.GL10.GL_UNSIGNED_SHORT;
  * @author HW
  * @since 2020-04-01
  */
-
+@Route(path = ArouterConfig.Order.ORDER_BODY_3D)
 public class BodyActivity extends Activity {
     private static final String TAG = BodyActivity.class.getSimpleName();
 
@@ -103,6 +113,7 @@ public class BodyActivity extends Activity {
     private boolean isRemindInstall = false;
 
     private ImageView btn_done;
+    private Bitmap maskBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +122,8 @@ public class BodyActivity extends Activity {
         mTextView = findViewById(R.id.bodyTextView);
         mSurfaceView = findViewById(R.id.bodySurfaceview);
         mDisplayRotationManager = new DisplayRotationManager(this);
-
+        maskBitmap = getBitmap(this, R.drawable.ic_camera);
+//        maskBitmap = BitmapFactory.decodeStream(getClass().getResourceAsStream("/res/drawable/ic_camera.png"));;
         // Keep the OpenGL ES running context.
         mSurfaceView.setPreserveEGLContextOnPause(true);
 
@@ -132,10 +144,11 @@ public class BodyActivity extends Activity {
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                takePhoto();
-                mBodyRenderManager.getDepthImage();
+                takePhoto();
+//                mBodyRenderManager.getDepthImage();
             }
         });
+        btn_done.setImageBitmap(maskBitmap);
     }
 
     @Override
@@ -281,15 +294,22 @@ public class BodyActivity extends Activity {
         // Create a handler thread to offload the processing of the image.
         final HandlerThread handlerThread = new HandlerThread("PixelCopier");
         handlerThread.start();
-        btn_done.setImageBitmap(bitmap);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             PixelCopy.request(mSurfaceView, bitmap, new PixelCopy.OnPixelCopyFinishedListener() {
                 @Override
                 public void onPixelCopyFinished(int copyResult) {
                     if (copyResult == PixelCopy.SUCCESS) {
                         try {
-                            saveBitmapToDisk(bitmap, filename);
-                        } catch (IOException e) {
+                            final Bitmap result = ImageMaskUtil.createWaterMaskLeftTop(BodyActivity.this, bitmap, maskBitmap, 100, 100);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    btn_done.setImageBitmap(result);
+                                }
+                            });
+
+                            saveBitmapToDisk(result, filename);
+                        } catch (Exception e) {
                             Toast toast = Toast.makeText(BodyActivity.this, e.toString(),
                                     Toast.LENGTH_LONG);
                             toast.show();
@@ -323,4 +343,50 @@ public class BodyActivity extends Activity {
             }, new Handler(handlerThread.getLooper()));
         }
     }
+
+
+//    private Bitmap createWatermark(Bitmap bitmap, String mark) {
+//        int w = bitmap.getWidth();
+//        int h = bitmap.getHeight();
+//        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+//        Bitmap src = BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher);
+//        Canvas canvas = new Canvas(bmp);
+//        Paint p = new Paint();
+//        // 水印颜色
+//        p.setColor(Color.parseColor("#c5576370"));
+//        // 水印字体大小
+//        p.setTextSize(150);
+//        //抗锯齿
+//        p.setAntiAlias(true);
+//        //绘制图像
+//        canvas.drawBitmap(bitmap, 0, 0, p);
+//        //绘制文字
+//        canvas.drawText(mark, 0, h / 2, p);
+//
+//        int iconHeight = iconWidth * ((watermark.getHeight()*1000)/watermark.getWidth())/1000;//维持图片宽高比例，也可以简单粗暴 iconHeight = iconWidth;
+//        //图片相对文字位置居中
+//        RectF rectF=new RectF(marginLeft,srcHeight - marginBottom - layout.getHeight()/2 - iconHeight/2
+//                ,marginLeft + iconWidth,srcHeight - marginBottom - layout.getHeight()/2 + iconHeight/2);
+//        canvas.drawBitmap(watermark,null,rectF,null);//限定图片显示范围
+//        canvas.save();
+//        canvas.restore();
+//        return bmp;
+//    }
+
+    private Bitmap getBitmap(Context context, int resId) {
+        Bitmap bitmap = null;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            Drawable vectorDrawable = context.getDrawable(resId);
+            bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                    vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            vectorDrawable.draw(canvas);
+        } else {
+            bitmap = BitmapFactory.decodeResource(context.getResources(), resId);
+        }
+        return bitmap;
+    }
+
+
 }

@@ -19,8 +19,10 @@ package com.project.module_order.world.rendering;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.media.Image;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -549,4 +551,5 @@ public class WorldRenderManager implements GLSurfaceView.Renderer {
         return Environment.getExternalStorageDirectory() + "/DCIM/HuiNongKit/"
                 + System.currentTimeMillis() + ".jpg";
     }
+
 }
