@@ -8,10 +8,12 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.activity.BaseTitleBarActivity;
 import com.project.config_repo.ArouterConfig;
 import com.project.user.databinding.UserActivityResetPwdBinding;
 import com.xxf.arch.utils.ToastUtils;
+import com.xxf.view.utils.StatusBarUtils;
 
 import io.reactivex.functions.Action;
 
@@ -30,6 +32,8 @@ public class ResetPwdActivity extends BaseTitleBarActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int color = 0xFFFFFFFF;
+        StatusBarUtils.compatStatusBarForM(this, false, color);
         binding = UserActivityResetPwdBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initView();
@@ -72,10 +76,13 @@ public class ResetPwdActivity extends BaseTitleBarActivity {
 
     @SuppressLint("CheckResult")
     private void submit() {
-        if (!checkInputLegal()) {
-            return;
-        }
-        String pwd = binding.etRePwd.getText().toString().trim();
-        ToastUtils.showToast(pwd);
+//        if (!checkInputLegal()) {
+//            return;
+//        }
+//        String pwd = binding.etRePwd.getText().toString().trim();
+//        ToastUtils.showToast(pwd);
+        ARouter.getInstance().build(ArouterConfig.Main.MAIN)
+                .navigation();
+        finish();
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -12,110 +13,127 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F6F8FA"
+        android:background="#f6f8f5"
         android:orientation="vertical">
 
-
-        <FrameLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/arch_dp_15"
-            android:background="@drawable/arch_bg_dialog">
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="5dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/arch_dp_18">
+
+                    <ImageView
+                        android:id="@+id/iv_avatar"
+                        android:layout_width="@dimen/arch_dp_59"
+                        android:layout_height="@dimen/arch_dp_59"
+                        android:layout_marginTop="15dp"
+                        android:src="@mipmap/head" />
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/arch_dp_7"
+                        android:gravity="center"
+                        android:text="@{model.getName()}"
+                        android:textColor="#1B1B1B"
+                        android:textSize="@dimen/arch_dp_15"
+                        tools:text="刘伯羽" />
+
+                    <TextView
+                        android:id="@+id/tv_company1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/arch_dp_7"
+                        android:gravity="center"
+                        android:text="@{model.getCompany()}"
+                        android:textColor="#666666"
+                        android:textSize="@dimen/arch_dp_16"
+                        tools:text="刘伯羽" />
+
+                    <TextView
+                        android:id="@+id/tv_company2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/arch_dp_7"
+                        android:gravity="center"
+                        android:text="@{model.getCompany()}"
+                        android:textColor="#999999"
+                        android:textSize="@dimen/arch_dp_16"
+                        tools:text="承德县公司 " />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|top"
+                    android:layout_marginTop="@dimen/arch_dp_15"
+                    android:layout_marginRight="@dimen/arch_dp_15"
+                    android:drawableLeft="@mipmap/icon_id"
+                    android:drawablePadding="5dp"
+                    android:src="@mipmap/ic_launcher"
+                    android:text="理赔员"
+                    android:textColor="#0073BC"
+                    android:textSize="@dimen/arch_dp_13" />
+            </FrameLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/arch_dp_15"
+            android:layout_marginRight="@dimen/arch_dp_15"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="5dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/arch_dp_18">
-
-                <ImageView
-                    android:id="@+id/iv_avatar"
-                    android:layout_width="@dimen/arch_dp_59"
-                    android:layout_height="@dimen/arch_dp_59"
-                    android:layout_marginTop="15dp"
-                    android:src="@mipmap/ic_launcher" />
-
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/arch_dp_7"
-                    android:gravity="center"
-                    android:text="@{model.getName()}"
-                    android:textColor="#1B1B1B"
-                    android:textSize="@dimen/arch_dp_15"
-                    tools:text="刘伯羽" />
-
-                <TextView
-                    android:id="@+id/tv_company1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/arch_dp_7"
-                    android:gravity="center"
-                    android:text="@{model.getCompany()}"
-                    android:textColor="#666666"
-                    android:textSize="@dimen/arch_dp_16"
-                    tools:text="刘伯羽" />
-
-                <TextView
-                    android:id="@+id/tv_company2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/arch_dp_7"
-                    android:gravity="center"
-                    android:text="@{model.getCompany()}"
-                    android:textColor="#999999"
-                    android:textSize="@dimen/arch_dp_16"
-                    tools:text="承德县公司 " />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|top"
-                android:layout_marginTop="@dimen/arch_dp_15"
-                android:layout_marginRight="@dimen/arch_dp_15"
-                android:drawableLeft="@mipmap/icon_id"
-                android:drawablePadding="5dp"
-                android:src="@mipmap/ic_launcher"
-                android:text="理赔员"
-                android:textColor="#0073BC"
-                android:textSize="@dimen/arch_dp_13" />
-        </FrameLayout>
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/arch_dp_20"
+                android:paddingRight="@dimen/arch_dp_20">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/arch_dp_15"
-            android:layout_marginRight="@dimen/arch_dp_15"
-            android:paddingLeft="@dimen/arch_dp_20"
-            android:paddingRight="@dimen/arch_dp_20"
-            android:background="@drawable/arch_bg_dialog"
-            android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:gravity="center|left"
+                    android:textColor="#1B1B1B"
+                    android:textSize="15sp"
+                    tools:text="版本号" />
 
-            <TextView
-                android:id="@+id/tv_version"
-                android:layout_width="match_parent"
-                android:layout_height="61dp"
-                android:gravity="center|left"
-                android:textColor="#1B1B1B"
-                android:textSize="15sp"
-                tools:text="版本号" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="@drawable/base_dot_line" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:background="@drawable/base_dot_line" />
-
-            <TextView
-                android:id="@+id/tv_support"
-                android:layout_width="match_parent"
-                android:layout_height="61dp"
-                android:gravity="center|left"
-                android:textColor="#1B1B1B"
-                android:textSize="15sp"
-                tools:text="技术支持" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_support"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:gravity="center|left"
+                    android:textColor="#1B1B1B"
+                    android:textSize="15sp"
+                    tools:text="技术支持" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 </layout>

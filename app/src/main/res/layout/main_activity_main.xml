@@ -4,6 +4,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#f6f8f1"
         android:orientation="vertical">
 
         <com.project.arch_repo.widget.NoScrollViewPager
@@ -12,35 +13,56 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/arch_dp_80">
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tab_layout"
-                style="@style/arch_tabLayout"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content">
 
-            <!--            <RelativeLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="@dimen/arch_dp_80">-->
-            <!--                <TextView-->
-            <!--                    android:id="@+id/tv_home"-->
-            <!--                    android:text="首页"-->
-            <!--                    android:drawableTop="@drawable/main_tab_home"-->
-            <!--                    android:textColor="@color/main_tab_sl"-->
-            <!--                    android:textSize="@dimen/arch_dp_13"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"/>-->
-            <!--            </RelativeLayout>-->
+                <LinearLayout
+                    android:layout_gravity="bottom"
+                    android:layout_width="match_parent"
+                    android:background="@mipmap/mian_bottom_bg"
+                    android:layout_height="@dimen/arch_dp_80">
 
-            <ImageView
-                android:id="@+id/btn_create"
-                android:layout_width="@dimen/arch_dp_68"
-                android:layout_height="@dimen/arch_dp_68"
-                android:layout_gravity="center_horizontal"
-                android:src="@mipmap/ic_launcher" />
-        </FrameLayout>
+                    <TextView
+                        android:id="@+id/tv_home"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/main_tab_home"
+                        android:drawablePadding="@dimen/arch_dp_10"
+                        android:gravity="center"
+                        android:text="首页"
+                        android:textColor="@color/main_tab_sl"
+                        android:textSize="@dimen/arch_dp_13" />
+
+                    <View
+                        android:layout_width="@dimen/arch_dp_68"
+                        android:layout_height="@dimen/arch_dp_68"
+                        android:layout_gravity="center_horizontal"
+                        android:visibility="invisible"/>
+
+                    <TextView
+                        android:id="@+id/tv_mine"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/main_tab_mine"
+                        android:drawablePadding="@dimen/arch_dp_10"
+                        android:gravity="center"
+                        android:text="我的"
+                        android:textColor="@color/main_tab_sl"
+                        android:textSize="@dimen/arch_dp_13" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btn_create"
+                    android:layout_width="@dimen/arch_dp_68"
+                    android:layout_height="@dimen/arch_dp_68"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/arch_dp_42"
+                    android:src="@mipmap/icon_add" />
+            </FrameLayout>
     </LinearLayout>
 </layout>

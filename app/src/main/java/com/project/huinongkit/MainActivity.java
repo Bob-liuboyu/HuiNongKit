@@ -18,6 +18,7 @@ import com.project.huinongkit.databinding.MainActivityMainBinding;
 import com.project.huinongkit.fragment.MainFragment;
 import com.project.huinongkit.fragment.MineFragment;
 import com.xxf.arch.widget.BaseFragmentAdapter;
+import com.xxf.view.utils.StatusBarUtils;
 
 import java.util.Arrays;
 
@@ -39,6 +40,8 @@ public class MainActivity extends BaseTitleBarActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int color = 0xFFFFFFFF;
+        StatusBarUtils.compatStatusBarForM(this, false, color);
         mBinding = MainActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         initFragment();
@@ -52,12 +55,27 @@ public class MainActivity extends BaseTitleBarActivity {
 
 
     private void initView() {
-        getTitleBar().setTitleBarTitle("慧农保");
+        getTitleBar().setTitleBarTitle("慧农保").setTitleBarLeftIcon(null, null);
         mBaseFragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
         mBaseFragmentAdapter.bindData(true, Arrays.asList(mainFragment, mineFragment));
-        mBaseFragmentAdapter.bindTitle(true, Arrays.asList("首页", "我的"));
         mBinding.mViewPager.setAdapter(mBaseFragmentAdapter);
-        mBinding.tabLayout.setupWithViewPager(mBinding.mViewPager);
+        mBinding.tvHome.setSelected(true);
+        mBinding.tvHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBinding.mViewPager.setCurrentItem(0);
+                mBinding.tvHome.setSelected(true);
+                mBinding.tvMine.setSelected(false);
+            }
+        });
+        mBinding.tvMine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBinding.mViewPager.setCurrentItem(1);
+                mBinding.tvHome.setSelected(false);
+                mBinding.tvMine.setSelected(true);
+            }
+        });
         mBinding.btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
