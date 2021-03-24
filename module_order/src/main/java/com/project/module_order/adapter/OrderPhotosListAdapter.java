@@ -16,6 +16,8 @@ import com.xxf.view.recyclerview.adapter.BaseViewHolder;
  * @description: 首页订单列表
  */
 public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyListPhotosBinding, OrderPhotoListModel> {
+    private int width;
+
     @Override
     protected OrderItemPolicyListPhotosBinding onCreateBinding(LayoutInflater inflater, ViewGroup viewGroup, int viewType) {
         return OrderItemPolicyListPhotosBinding.inflate(inflater, viewGroup, false);
@@ -29,6 +31,13 @@ public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyL
         OrderPhotoListAdapter adapter = new OrderPhotoListAdapter();
         adapter.bindData(true, model.getPhotos());
         binding.recyclerView.setAdapter(adapter);
-        binding.tvResultNum.setText(model.getResult());
+        binding.tvResult.setText(model.getResult());
+        binding.tvIndex.setText((index + 1) + "");
+
+
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 }

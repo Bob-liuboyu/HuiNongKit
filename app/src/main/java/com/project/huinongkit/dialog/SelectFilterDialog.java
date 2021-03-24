@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -22,7 +20,6 @@ import com.project.huinongkit.R;
 import com.project.huinongkit.databinding.MainDialogSelectFilterBinding;
 import com.project.huinongkit.model.SelectFilterModel;
 import com.xxf.arch.dialog.IResultDialog;
-import com.xxf.arch.utils.ToastUtils;
 
 import java.util.Date;
 
@@ -96,7 +93,7 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
     }
 
     private void showStartDataPicker() {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(activity, new OnDialogClickListener<Date>() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(activity, "起始日期", new OnDialogClickListener<Date>() {
             @Override
             public boolean onCancel(@NonNull DialogInterface dialog, @Nullable Date cancelResult) {
                 return false;
@@ -115,7 +112,7 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
     }
 
     private void showEndDataPicker() {
-        new DatePickerDialog(activity, new IResultDialog.OnDialogClickListener<Date>() {
+        new DatePickerDialog(activity, "结束日期", new IResultDialog.OnDialogClickListener<Date>() {
             @Override
             public boolean onCancel(@NonNull DialogInterface dialog, @Nullable Date cancelResult) {
                 return false;

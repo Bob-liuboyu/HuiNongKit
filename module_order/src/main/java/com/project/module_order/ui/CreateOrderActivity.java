@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.alibaba.android.arouter.launcher.ARouter;
-import com.project.arch_repo.base.activity.BaseActivity;
+import com.project.arch_repo.base.activity.BaseTitleBarActivity;
+import com.project.arch_repo.utils.DisplayUtils;
 import com.project.common_resource.OrderPhotoListModel;
 import com.project.common_resource.PhotoModel;
 import com.project.config_repo.ArouterConfig;
@@ -29,7 +29,7 @@ import java.util.Random;
  * @description: 创建订单
  */
 @Route(path = ArouterConfig.Order.ORDER_CREATE)
-public class CreateOrderActivity extends BaseActivity {
+public class CreateOrderActivity extends BaseTitleBarActivity {
 
     private OrderActivityCreateBinding binding;
     private OrderPhotosListAdapter mAdapter;
@@ -38,6 +38,7 @@ public class CreateOrderActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getTitleBar().setTitleBarTitle("理赔登记");
         binding = OrderActivityCreateBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setListener();
@@ -45,24 +46,24 @@ public class CreateOrderActivity extends BaseActivity {
     }
 
     private void setListener() {
-        binding.tvChoose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ARouter.getInstance().build(ArouterConfig.Order.ORDER_CHOOSE)
-                        .navigation(CreateOrderActivity.this, RESULT_CHOOSE);
-            }
-        });
+//        binding.tvChoose.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ARouter.getInstance().build(ArouterConfig.Order.ORDER_CHOOSE)
+//                        .navigation(CreateOrderActivity.this, RESULT_CHOOSE);
+//            }
+//        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data == null) {
-            return;
-        }
-        if (requestCode == RESULT_CHOOSE && resultCode == 1) {
-            binding.tvPolicyNum.setText(data.getStringExtra("result"));
-        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (data == null) {
+//            return;
+//        }
+//        if (requestCode == RESULT_CHOOSE && resultCode == 1) {
+//            binding.tvPolicyNum.setText(data.getStringExtra("result"));
+//        }
     }
 
     private void initPhotoList() {
@@ -111,9 +112,16 @@ public class CreateOrderActivity extends BaseActivity {
         models.add(new OrderPhotoListModel(random.nextInt(100) + "kg", photo));
         models.add(new OrderPhotoListModel(random.nextInt(100) + "kg", photo));
         models.add(new OrderPhotoListModel(random.nextInt(100) + "kg", photo));
-
         binding.recyclerView.setAdapter(mAdapter = new OrderPhotosListAdapter());
         mAdapter.bindData(true, models);
+        binding.recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                int width = (binding.recyclerView.getWidth() - DisplayUtils.dip2px(CreateOrderActivity.this, 5 * 2)) / 3;
+                mAdapter.setWidth(width);
+            }
+        });
+
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
@@ -122,7 +130,7 @@ public class CreateOrderActivity extends BaseActivity {
                 bundle.putSerializable("list", (Serializable) models);
                 bundle.putInt("index", index);
 
-                Intent intent = new Intent(CreateOrderActivity.this,PrePhotoActivity.class);
+                Intent intent = new Intent(CreateOrderActivity.this, PrePhotoActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
 

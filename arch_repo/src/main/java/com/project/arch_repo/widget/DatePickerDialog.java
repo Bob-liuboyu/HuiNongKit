@@ -1,13 +1,11 @@
 package com.project.arch_repo.widget;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +32,11 @@ public class DatePickerDialog extends BaseDialog<Date> {
      * 选择监听
      */
     private Date initDate;
+    private String title;
 
-    public DatePickerDialog(@NonNull Context context, @Nullable OnDialogClickListener<Date> onDialogClickListener) {
+    public DatePickerDialog(@NonNull Context context,String title, @Nullable OnDialogClickListener<Date> onDialogClickListener) {
         super(context, onDialogClickListener);
+        this.title = title;
     }
 
     @Override
@@ -69,6 +69,7 @@ public class DatePickerDialog extends BaseDialog<Date> {
      */
     private void initView() {
         mBinding.mDatePicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        mBinding.tvTitle.setText(title);
         __initDate2UI();
         mBinding.tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override

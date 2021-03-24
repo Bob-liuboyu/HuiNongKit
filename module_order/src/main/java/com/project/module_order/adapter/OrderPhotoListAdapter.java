@@ -16,6 +16,8 @@ import com.xxf.view.recyclerview.adapter.BaseViewHolder;
  * @Description
  */
 public class OrderPhotoListAdapter extends BaseBindableAdapter<OrderItemPolicyListPhotoBinding, PhotoModel> {
+    private int width;
+
     @Override
     protected OrderItemPolicyListPhotoBinding onCreateBinding(LayoutInflater inflater, ViewGroup viewGroup, int viewType) {
         return OrderItemPolicyListPhotoBinding.inflate(inflater, viewGroup, false);
@@ -26,6 +28,16 @@ public class OrderPhotoListAdapter extends BaseBindableAdapter<OrderItemPolicyLi
         if (model == null) {
             return;
         }
+        ViewGroup.LayoutParams params = binding.ivPhoto.getLayoutParams();
+        params.width = width;
+        params.height = width;
+        binding.ivPhoto.setLayoutParams(params);
         GlideUtils.loadImage(binding.ivPhoto, model.getUrl());
+
+
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 }

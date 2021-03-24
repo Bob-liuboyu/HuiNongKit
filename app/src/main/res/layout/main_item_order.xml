@@ -14,7 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/arch_dp_10"
+        android:layout_marginLeft="@dimen/arch_dp_15"
+        android:layout_marginTop="@dimen/arch_dp_12"
+        android:layout_marginRight="@dimen/arch_dp_15"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="5dp"
         app:cardPreventCornerOverlap="true"
@@ -23,7 +25,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/arch_dp_23"
+            android:paddingTop="@dimen/arch_dp_15"
+            android:paddingRight="@dimen/arch_dp_23"
+            android:paddingBottom="@dimen/arch_dp_8">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -35,56 +41,36 @@
                     android:id="@+id/tv_title"
                     android:layout_width="1dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/arch_dp_15"
                     android:layout_weight="1"
-                    android:drawablePadding="@dimen/arch_dp_10"
+                    android:drawableLeft="@mipmap/icon_id"
+                    android:drawablePadding="@dimen/arch_dp_3"
+                    android:ellipsize="end"
                     android:gravity="center|left"
-                    android:text="被保险人名称"
-                    android:textColor="@color/arch_color_374F66"
+                    android:paddingRight="@dimen/arch_dp_15"
+                    android:singleLine="true"
+                    android:text="北京神州慧达信息技术有限公司"
+                    android:textColor="@color/arch_color_base"
                     android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/base_btn_bg"
+                    android:layout_width="@dimen/arch_dp_59"
+                    android:layout_height="@dimen/arch_dp_25"
+                    android:background="@drawable/base_status_bg_selector"
                     android:gravity="center"
-                    android:padding="@dimen/dp_5"
-                    android:paddingRight="@dimen/arch_dp_15"
                     android:text="待处理"
-                    android:textColor="@color/arch_color_ffa7aab3"
+                    android:textColor="@color/white"
                     android:textSize="13sp" />
             </LinearLayout>
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="1dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/arch_dp_15"
-                    android:layout_weight="1"
-                    android:drawablePadding="@dimen/arch_dp_10"
-                    android:gravity="center|left"
-                    android:text="保险单号"
-                    android:textColor="@color/arch_color_374F66"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/tv_category"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/arch_dp_30"
-                    android:drawableLeft="@mipmap/ic_launcher"
-                    android:gravity="center"
-                    android:padding="@dimen/dp_5"
-                    android:paddingRight="@dimen/arch_dp_15"
-                    android:text="能繁母猪"
-                    android:textColor="@color/arch_color_ffa7aab3"
-                    android:textSize="13sp" />
-            </LinearLayout>
+                android:layout_marginTop="@dimen/arch_dp_18"
+                android:gravity="center|left"
+                android:text="保险单号"
+                android:textColor="#AAAAAA"
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -96,36 +82,43 @@
                     android:id="@+id/tv_num"
                     android:layout_width="1dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/arch_dp_15"
+                    android:layout_marginTop="@dimen/arch_dp_2"
                     android:layout_weight="1"
-                    android:drawablePadding="@dimen/arch_dp_10"
+                    android:ellipsize="end"
                     android:gravity="center|left"
+                    android:paddingRight="@dimen/arch_dp_15"
+                    android:singleLine="true"
                     android:text="LKJLKKLJLAKJLJLK"
-                    android:textColor="@color/arch_color_374F66"
+                    android:textColor="#1B1B1B"
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/tv_phone_num"
+                    android:id="@+id/tv_category"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/arch_dp_30"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_pig_girl"
+                    android:drawablePadding="@dimen/arch_dp_3"
                     android:gravity="center"
-                    android:padding="@dimen/dp_5"
-                    android:paddingRight="@dimen/arch_dp_15"
-                    android:text="15011447166"
-                    android:textColor="@color/arch_color_ffa7aab3"
-                    android:textSize="13sp" />
+                    android:text="能繁母猪"
+                    android:textColor="#AAAAAA"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/arch_dp_3"
+                android:layout_marginTop="@dimen/arch_dp_13"
+                android:layout_marginBottom="@dimen/arch_dp_12"
                 android:background="@drawable/base_dot_line" />
 
             <TextView
                 android:id="@+id/tv_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2021-3-23" />
+                android:layout_marginBottom="@dimen/arch_dp_8"
+                android:text="2021-3-23"
+                android:textColor="#999999"
+                android:textSize="@dimen/arch_dp_14" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </layout>

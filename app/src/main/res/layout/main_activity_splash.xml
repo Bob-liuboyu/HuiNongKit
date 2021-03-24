@@ -8,6 +8,6 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:background="@color/cardview_dark_background"
+        android:background="@mipmap/bg_splash"
         android:scaleType="centerInside"/>
 </layout>

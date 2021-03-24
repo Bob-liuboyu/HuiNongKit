@@ -10,43 +10,83 @@
             type="com.project.common_resource.OrderPhotoListModel" />
     </data>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/arch_dp_100"
-        android:clickable="false"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/arch_white"
-            android:orientation="horizontal"
-            android:padding="@dimen/arch_dp_15"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/arch_dp_13"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="1dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center|left"
-            android:orientation="vertical"
-            android:padding="@dimen/arch_dp_15">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/arch_dp_100"
+                android:background="@color/arch_white"
+                android:clickable="false"
+                android:gravity="center_vertical"
+                android:paddingRight="@dimen/arch_dp_15"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_result"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="测量结果" />
+                <LinearLayout
+                    android:layout_width="97dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center|left"
+                    android:layout_marginLeft="@dimen/arch_dp_8"
+                    android:paddingRight="@dimen/arch_dp_10"
+                    android:orientation="vertical"
+                    >
 
-            <TextView
-                android:id="@+id/tv_result_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="12kg"
-                android:textSize="30dp" />
-        </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="测量结果："
+                        android:textColor="#666666"
+                        android:textSize="@dimen/arch_dp_13" />
 
-    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_result"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/arch_dp_6"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="12kg"
+                        android:textColor="#1B1B1B"
+                        android:textSize="@dimen/arch_dp_20" />
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/arch_white"
+                    android:orientation="horizontal"
+                    app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/tv_index"
+            android:layout_width="@dimen/arch_dp_22"
+            android:textColor="@color/arch_white"
+            android:textSize="@dimen/arch_dp_13"
+            android:layout_gravity="right"
+            android:gravity="center"
+            android:elevation="1dp"
+            android:textStyle="bold"
+            android:text="1"
+            android:layout_marginTop="@dimen/arch_dp_5"
+            android:background="@drawable/base_btn_bg"
+            android:layout_height="@dimen/arch_dp_22" />
+    </FrameLayout>
+
+
 </layout>

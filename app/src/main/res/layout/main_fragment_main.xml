@@ -5,6 +5,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#f7f7f7"
         android:orientation="vertical">
 
         <LinearLayout
@@ -63,7 +64,6 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/arch_white"
             android:orientation="vertical"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
     </LinearLayout>
