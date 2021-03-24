@@ -5,7 +5,10 @@
 
     <application>
         <activity
-            android:name=".OrderDetailActivity"
+            android:name=".GoogleTestActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.OrderDetailActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".CameraActivity"

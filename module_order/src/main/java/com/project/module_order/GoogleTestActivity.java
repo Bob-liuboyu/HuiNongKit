@@ -10,11 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
-import com.project.config_repo.ArouterConfig;
-import com.project.module_order.databinding.OrderActivityDetailBinding;
+import com.project.module_order.databinding.OrderActivityGoogleTestBinding;
 import com.project.module_order.ui.HelloArActivity;
-import com.project.module_order.ui.TestAR2;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
@@ -29,16 +26,15 @@ import permissions.dispatcher.RuntimePermissions;
  * @date: 2021/3/10 2:50 PM
  * @description: 订单详情
  */
-@Route(path = ArouterConfig.Order.ORDER_DETAIL)
 @RuntimePermissions
-public class OrderDetailActivity extends AppCompatActivity {
-    private OrderActivityDetailBinding binding;
+public class GoogleTestActivity extends AppCompatActivity {
+    private OrderActivityGoogleTestBinding binding;
     private static final int REQUEST_CODE_SETTING = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = OrderActivityDetailBinding.inflate(getLayoutInflater());
+        binding = OrderActivityGoogleTestBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setListener();
     }
@@ -50,7 +46,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         binding.btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OrderDetailActivityPermissionsDispatcher.showCameraWithCheck(OrderDetailActivity.this);
+                GoogleTestActivityPermissionsDispatcher.showCameraWithCheck(GoogleTestActivity.this);
             }
         });
     }
@@ -110,6 +106,6 @@ public class OrderDetailActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        OrderDetailActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        GoogleTestActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 }
