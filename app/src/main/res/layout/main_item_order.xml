@@ -1,58 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="model"
             type="com.project.common_resource.OrderModel" />
     </data>
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/arch_dp_10"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="5dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:orientation="horizontal"
-            >
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="1dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/arch_dp_15"
+                    android:layout_weight="1"
+                    android:drawablePadding="@dimen/arch_dp_10"
+                    android:gravity="center|left"
+                    android:text="被保险人名称"
+                    android:textColor="@color/arch_color_374F66"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/base_btn_bg"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_5"
+                    android:paddingRight="@dimen/arch_dp_15"
+                    android:text="待处理"
+                    android:textColor="@color/arch_color_ffa7aab3"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="1dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/arch_dp_15"
+                    android:layout_weight="1"
+                    android:drawablePadding="@dimen/arch_dp_10"
+                    android:gravity="center|left"
+                    android:text="保险单号"
+                    android:textColor="@color/arch_color_374F66"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/arch_dp_30"
+                    android:drawableLeft="@mipmap/ic_launcher"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_5"
+                    android:paddingRight="@dimen/arch_dp_15"
+                    android:text="能繁母猪"
+                    android:textColor="@color/arch_color_ffa7aab3"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_num"
+                    android:layout_width="1dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/arch_dp_15"
+                    android:layout_weight="1"
+                    android:drawablePadding="@dimen/arch_dp_10"
+                    android:gravity="center|left"
+                    android:text="LKJLKKLJLAKJLJLK"
+                    android:textColor="@color/arch_color_374F66"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_phone_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/arch_dp_30"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_5"
+                    android:paddingRight="@dimen/arch_dp_15"
+                    android:text="15011447166"
+                    android:textColor="@color/arch_color_ffa7aab3"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/arch_dp_3"
+                android:background="@drawable/base_dot_line" />
 
             <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="1dp"
-                android:layout_height="52dp"
-                android:layout_marginLeft="@dimen/arch_dp_15"
-                android:layout_weight="1"
-                android:drawablePadding="@dimen/arch_dp_10"
-                android:gravity="center|left"
-                tools:text="账号"
-                android:text="@{model.getId()}"
-                android:textColor="@color/arch_color_374F66"
-                android:textSize="15sp"/>
-
-            <TextView
-                android:id="@+id/tv_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="49dp"
-                android:drawableRight="@mipmap/right_allow"
-                android:drawablePadding="@dimen/arch_dp_10"
-                android:gravity="center"
-                android:paddingRight="@dimen/arch_dp_15"
-                tools:text="账号"
-                android:text="@{model.getTitle()}"
-                android:textColor="@color/arch_color_ffa7aab3"
-                android:textSize="13sp"/>
+                android:id="@+id/tv_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2021-3-23" />
         </LinearLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/arch_dp_0_5"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="@dimen/arch_dp_15"
-            android:layout_marginRight="@dimen/arch_dp_15"
-            android:background="@color/arch_color_f1f1f1"/>
-    </LinearLayout>
+    </android.support.v7.widget.CardView>
 </layout>

@@ -118,6 +118,6 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         window.setAttributes(layoutParams);
         window.getDecorView().setBackgroundColor(Color.TRANSPARENT);
         window.getAttributes().windowAnimations = R.style.arch_AnimBottomDialog;
-        window.setDimAmount(0f);
+        window.setDimAmount(0.5f);
     }
 }

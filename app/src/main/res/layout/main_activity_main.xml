@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#F7F7F7"
@@ -10,60 +10,62 @@
         <com.project.arch_repo.widget.NoScrollViewPager
             android:id="@+id/mViewPager"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/arch_dp_80"
+            />
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:background="@color/arch_color_translate">
 
-                <LinearLayout
-                    android:layout_gravity="bottom"
-                    android:layout_width="match_parent"
-                    android:background="@mipmap/mian_bottom_bg"
-                    android:layout_height="@dimen/arch_dp_80">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/arch_dp_80"
+                android:layout_gravity="bottom"
+                android:background="@mipmap/mian_bottom_bg">
 
-                    <TextView
-                        android:id="@+id/tv_home"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/main_tab_home"
-                        android:drawablePadding="@dimen/arch_dp_10"
-                        android:gravity="center"
-                        android:text="首页"
-                        android:textColor="@color/main_tab_sl"
-                        android:textSize="@dimen/arch_dp_13" />
+                <TextView
+                    android:id="@+id/tv_home"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/main_tab_home"
+                    android:drawablePadding="@dimen/arch_dp_10"
+                    android:gravity="center"
+                    android:text="首页"
+                    android:textColor="@color/main_tab_sl"
+                    android:textSize="@dimen/arch_dp_13" />
 
-                    <View
-                        android:layout_width="@dimen/arch_dp_68"
-                        android:layout_height="@dimen/arch_dp_68"
-                        android:layout_gravity="center_horizontal"
-                        android:visibility="invisible"/>
-
-                    <TextView
-                        android:id="@+id/tv_mine"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/main_tab_mine"
-                        android:drawablePadding="@dimen/arch_dp_10"
-                        android:gravity="center"
-                        android:text="我的"
-                        android:textColor="@color/main_tab_sl"
-                        android:textSize="@dimen/arch_dp_13" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/btn_create"
+                <View
                     android:layout_width="@dimen/arch_dp_68"
                     android:layout_height="@dimen/arch_dp_68"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/arch_dp_42"
-                    android:src="@mipmap/icon_add" />
-            </FrameLayout>
-    </LinearLayout>
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/tv_mine"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/main_tab_mine"
+                    android:drawablePadding="@dimen/arch_dp_10"
+                    android:gravity="center"
+                    android:text="我的"
+                    android:textColor="@color/main_tab_sl"
+                    android:textSize="@dimen/arch_dp_13" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btn_create"
+                android:layout_width="@dimen/arch_dp_68"
+                android:layout_height="@dimen/arch_dp_68"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/arch_dp_42"
+                android:src="@mipmap/icon_add" />
+        </FrameLayout>
+    </FrameLayout>
 </layout>
