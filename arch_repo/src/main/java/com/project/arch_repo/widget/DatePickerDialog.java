@@ -1,5 +1,6 @@
 package com.project.arch_repo.widget;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -25,17 +26,16 @@ import java.util.Date;
  * @Date 2019-06-27
  * @Description 时间选择弹窗
  */
-public class DatePickerDialog extends BaseDialog<String> {
+public class DatePickerDialog extends BaseDialog<Date> {
 
     private ArchDialogDatapickerBinding mBinding;
 
     /**
      * 选择监听
      */
-    private DataPickerCallBack mCallBack;
     private Date initDate;
 
-    public DatePickerDialog(@NonNull Context context, @Nullable OnDialogClickListener<String> onDialogClickListener) {
+    public DatePickerDialog(@NonNull Context context, @Nullable OnDialogClickListener<Date> onDialogClickListener) {
         super(context, onDialogClickListener);
     }
 
@@ -50,19 +50,6 @@ public class DatePickerDialog extends BaseDialog<String> {
     @Override
     public void onStart() {
         super.onStart();
-//        Window win = getDialog().getWindow();
-//        // 一定要设置Background，如果不设置，window属性设置无效
-//        win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        DisplayMetrics dm = new DisplayMetrics();
-//        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-//        WindowManager.LayoutParams params = win.getAttributes();
-//        params.gravity = Gravity.BOTTOM;
-//        // 使用ViewGroup.LayoutParams，以便Dialog 宽度充满整个屏幕
-//        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-//        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-//        win.setAttributes(params);
-//        win.getAttributes().windowAnimations = R.style.arch_AnimBottomDialog;
-
         Window window = getWindow();
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         window.getDecorView().setPadding(0, 0, 0, 0);
@@ -93,11 +80,7 @@ public class DatePickerDialog extends BaseDialog<String> {
                         mBinding.mTimePicker.getCurrentHour(),
                         mBinding.mTimePicker.getCurrentMinute(),
                         0);
-//                if (mCallBack == null) {
-//                    dismissAllowingStateLoss();
-//                } else if (!mCallBack.onClickCancel(DatePickerDialogFragment.this, instance.getTime())) {
-//                    dismissAllowingStateLoss();
-//                }
+                cancel(instance.getTime());
             }
         });
         mBinding.tvOk.setOnClickListener(new View.OnClickListener() {
@@ -110,11 +93,7 @@ public class DatePickerDialog extends BaseDialog<String> {
                         mBinding.mTimePicker.getCurrentHour(),
                         mBinding.mTimePicker.getCurrentMinute(),
                         0);
-//                if (mCallBack == null) {
-//                    dismissAllowingStateLoss();
-//                } else if (!mCallBack.onClickConfirm(DatePickerDialogFragment.this, instance.getTime())) {
-//                    dismissAllowingStateLoss();
-//                }
+                confirm(instance.getTime());
             }
         });
 
@@ -143,32 +122,5 @@ public class DatePickerDialog extends BaseDialog<String> {
         this.initDate = initDate;
         __initDate2UI();
         return this;
-    }
-
-
-    /**
-     * 选择监听
-     *
-     * @param callBack
-     */
-    public DatePickerDialog setDataPickerCallBack(DataPickerCallBack callBack) {
-        this.mCallBack = callBack;
-        return this;
-    }
-
-    public interface DataPickerCallBack {
-        /**
-         * @param dialog
-         * @param date
-         * @return true 标示自己关闭页面,否则自动关闭
-         */
-        boolean onClickCancel(@NonNull DialogFragment dialog, @NonNull Date date);
-
-        /**
-         * @param dialog
-         * @param date
-         * @return true 标示自己关闭页面,否则自动关闭
-         */
-        boolean onClickConfirm(@NonNull DialogFragment dialog, @NonNull Date date);
     }
 }
