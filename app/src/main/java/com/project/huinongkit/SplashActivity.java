@@ -8,6 +8,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.config_repo.ArouterConfig;
 import com.project.huinongkit.databinding.MainActivitySplashBinding;
+import com.xxf.view.utils.StatusBarUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +29,8 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int color = 0xFFFFFFFF;
+        StatusBarUtils.compatStatusBarForM(this, false, color);
         binding = MainActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initView();

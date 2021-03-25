@@ -1,5 +1,6 @@
 package com.project.user;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
@@ -10,6 +11,7 @@ import com.project.arch_repo.widget.CommonDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
 import com.project.config_repo.ArouterConfig;
 import com.project.user.databinding.UserActivityLoginBinding;
+import com.xxf.view.utils.StatusBarUtils;
 
 /**
  * @fileName: LoginActivity
@@ -25,6 +27,8 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int color = Color.parseColor("#22a8e1");
+        StatusBarUtils.compatStatusBarForM(this, false, color);
         binding = UserActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setListener();

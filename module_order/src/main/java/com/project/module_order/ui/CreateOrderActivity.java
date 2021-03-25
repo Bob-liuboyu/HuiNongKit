@@ -3,6 +3,7 @@ package com.project.module_order.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -16,6 +17,7 @@ import com.project.module_order.databinding.OrderActivityCreateBinding;
 import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 import com.xxf.view.recyclerview.adapter.OnItemClickListener;
+import com.xxf.view.utils.StatusBarUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,6 +41,9 @@ public class CreateOrderActivity extends BaseTitleBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getTitleBar().setTitleBarTitle("理赔登记");
+        int color = 0xFFFFFFFF;
+        StatusBarUtils.compatStatusBarForM(this, false, color);
+
         binding = OrderActivityCreateBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setListener();
@@ -112,16 +117,9 @@ public class CreateOrderActivity extends BaseTitleBarActivity {
         models.add(new OrderPhotoListModel(random.nextInt(100) + "kg", photo));
         models.add(new OrderPhotoListModel(random.nextInt(100) + "kg", photo));
         models.add(new OrderPhotoListModel(random.nextInt(100) + "kg", photo));
-        binding.recyclerView.setAdapter(mAdapter = new OrderPhotosListAdapter());
+        mAdapter = new OrderPhotosListAdapter();
+        binding.recyclerView.setAdapter(mAdapter);
         mAdapter.bindData(true, models);
-        binding.recyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                int width = (binding.recyclerView.getWidth() - DisplayUtils.dip2px(CreateOrderActivity.this, 5 * 2)) / 3;
-                mAdapter.setWidth(width);
-            }
-        });
-
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {

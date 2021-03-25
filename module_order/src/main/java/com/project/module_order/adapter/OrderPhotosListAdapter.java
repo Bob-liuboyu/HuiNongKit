@@ -1,12 +1,15 @@
 package com.project.module_order.adapter;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.project.arch_repo.base.recyclerview.BaseBindableAdapter;
+import com.project.arch_repo.utils.DisplayUtils;
 import com.project.common_resource.OrderPhotoListModel;
 import com.project.module_order.databinding.OrderItemPolicyListPhotosBinding;
+import com.project.module_order.ui.CreateOrderActivity;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 
 /**
@@ -24,15 +27,25 @@ public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyL
     }
 
     @Override
-    public void onBindHolder(BaseViewHolder holder, OrderItemPolicyListPhotosBinding binding, @Nullable OrderPhotoListModel model, int index) {
+    public void onBindHolder(BaseViewHolder holder, final OrderItemPolicyListPhotosBinding binding, @Nullable final OrderPhotoListModel model, final int index) {
         if (model == null) {
             return;
         }
-        OrderPhotoListAdapter adapter = new OrderPhotoListAdapter();
-        adapter.bindData(true, model.getPhotos());
-        binding.recyclerView.setAdapter(adapter);
-        binding.tvResult.setText(model.getResult());
-        binding.tvIndex.setText((index + 1) + "");
+        final OrderPhotoListAdapter adapter = new OrderPhotoListAdapter();
+        binding.recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                int screenWidth = DisplayUtils.getRealScreenSize(binding.recyclerView.getContext()).x;
+                int leftWidth = binding.llLeft.getWidth();
+                int width = (screenWidth - DisplayUtils.dip2px(binding.recyclerView.getContext(), 15 * 6) - leftWidth) / 3;
+                Log.e("xxxxxxxxx", screenWidth + "," + leftWidth + "," + width);
+                adapter.setWidth(width);
+                adapter.bindData(true, model.getPhotos());
+                binding.recyclerView.setAdapter(adapter);
+                binding.tvResult.setText(model.getResult());
+                binding.tvIndex.setText((index + 1) + "");
+            }
+        });
 
 
     }
