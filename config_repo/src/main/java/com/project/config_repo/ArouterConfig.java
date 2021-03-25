@@ -47,5 +47,6 @@ public class ArouterConfig {
         public static final String ORDER_CREATE = "/order/create";
         public static final String ORDER_CHOOSE = "/order/choose";
         public static final String ORDER_PHOTO_PRE = "/order/photo_pre";
+        public static final String ORDER_TAKE_PHOTO = "/order/take_photo";
     }
 }

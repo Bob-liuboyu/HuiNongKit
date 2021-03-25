@@ -112,7 +112,7 @@ public class CreateOrderActivity extends BaseTitleBarActivity {
         binding.btnMeasure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ARouter.getInstance().build(ArouterConfig.Order.ORDER_PHOTO_PRE)
+                ARouter.getInstance().build(ArouterConfig.Order.ORDER_TAKE_PHOTO)
                         .navigation();
             }
         });
