@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.project.arch_repo.base.activity.BaseTitleBarActivity;
@@ -12,6 +15,7 @@ import com.project.arch_repo.utils.DisplayUtils;
 import com.project.common_resource.OrderPhotoListModel;
 import com.project.common_resource.PhotoModel;
 import com.project.config_repo.ArouterConfig;
+import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
 import com.project.module_order.databinding.OrderActivityCreateBinding;
 import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
@@ -33,7 +37,7 @@ import java.util.Random;
 @Route(path = ArouterConfig.Order.ORDER_CREATE)
 public class CreateOrderActivity extends BaseTitleBarActivity {
 
-    private OrderActivityCreateBinding binding;
+    protected OrderActivityCreateBinding binding;
     private OrderPhotosListAdapter mAdapter;
     public static final int RESULT_CHOOSE = 100;
 
@@ -46,8 +50,51 @@ public class CreateOrderActivity extends BaseTitleBarActivity {
 
         binding = OrderActivityCreateBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        createMeasureWayItems();
+        createPolicyCategoryItems();
         setListener();
         initPhotoList();
+    }
+
+    private void createMeasureWayItems() {
+        TextView item1 = new TextView(this);
+        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(DisplayUtils.dip2px(this, 100), DisplayUtils.dip2px(this, 50));
+        item1.setText("测重");
+        item1.setGravity(Gravity.CENTER);
+        item1.setBackgroundColor(getResources().getColor(R.color.arch_color_00c1ce));
+        item1.setLayoutParams(params1);
+
+        TextView item2 = new TextView(this);
+        LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(DisplayUtils.dip2px(this, 100), DisplayUtils.dip2px(this, 50));
+        params2.leftMargin = DisplayUtils.dip2px(this, 15);
+        item2.setBackgroundColor(getResources().getColor(R.color.arch_color_fff96a0e));
+        item2.setText("测长");
+        item2.setGravity(Gravity.CENTER);
+        item2.setLayoutParams(params2);
+
+        binding.llMeasureWay.addView(item1);
+        binding.llMeasureWay.addView(item2);
+    }
+
+
+    private void createPolicyCategoryItems() {
+        TextView item1 = new TextView(this);
+        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(DisplayUtils.dip2px(this, 100), DisplayUtils.dip2px(this, 50));
+        item1.setText("母猪");
+        item1.setGravity(Gravity.CENTER);
+        item1.setBackgroundColor(getResources().getColor(R.color.arch_color_00c1ce));
+        item1.setLayoutParams(params1);
+
+        TextView item2 = new TextView(this);
+        LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(DisplayUtils.dip2px(this, 100), DisplayUtils.dip2px(this, 50));
+        params2.leftMargin = DisplayUtils.dip2px(this, 15);
+        item2.setBackgroundColor(getResources().getColor(R.color.arch_color_fff96a0e));
+        item2.setText("公猪");
+        item2.setGravity(Gravity.CENTER);
+        item2.setLayoutParams(params2);
+
+        binding.llPolicyCategory.addView(item1);
+        binding.llPolicyCategory.addView(item2);
     }
 
     private void setListener() {

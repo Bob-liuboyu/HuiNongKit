@@ -19,9 +19,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="理赔基本信息"
                 android:drawableLeft="@mipmap/icon_id"
                 android:drawablePadding="@dimen/arch_dp_3"
+                android:text="理赔基本信息"
                 android:textColor="#0073BC"
                 android:textSize="@dimen/arch_dp_15" />
 
@@ -54,11 +54,12 @@
                             android:textColor="#999999"
                             android:textSize="@dimen/arch_dp_14" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/tv_name"
-                            android:layout_width="@dimen/arch_dp_100"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="刘伯羽"
+                            android:background="@color/arch_color_translate"
+                            android:hint="请输入保险人姓名"
                             android:textColor="#333333"
                             android:textSize="@dimen/arch_dp_14" />
                     </LinearLayout>
@@ -89,7 +90,15 @@
                             android:gravity="center|left"
                             android:singleLine="true"
                             android:text="能繁母猪"
-                            android:textSize="@dimen/arch_dp_14" />
+                            android:textColor="#333333"
+                            android:textSize="@dimen/arch_dp_14"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:id="@+id/ll_policy_category"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal" />
                     </LinearLayout>
 
                     <View
@@ -112,14 +121,23 @@
 
                         <TextView
                             android:id="@+id/tv_code"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:ellipsize="end"
                             android:gravity="center|left"
+                            android:hint="请选择保险单号"
                             android:singleLine="true"
-                            android:text="LJLKLKJSLAKJF"
                             android:textColor="#333333"
                             android:textSize="@dimen/arch_dp_14" />
+
+                        <TextView
+                            android:id="@+id/tv_choose"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="点击选择"
+                            android:textColor="#00c1ce"
+                             />
                     </LinearLayout>
 
                     <View
@@ -142,12 +160,35 @@
 
                         <TextView
                             android:id="@+id/tv_date_start"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:gravity="center|left"
+                            android:hint="开始日期"
                             android:singleLine="true"
-                            android:text="2021-03-13  至  2021-03-13"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/arch_dp_14" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/arch_dp_15"
+                            android:layout_marginRight="@dimen/arch_dp_15"
+                            android:ellipsize="end"
+                            android:gravity="center|left"
+                            android:singleLine="true"
+                            android:text="至"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/arch_dp_14" />
+
+                        <TextView
+                            android:id="@+id/tv_date_end"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:gravity="center|left"
+                            android:hint="截止日期"
+                            android:singleLine="true"
                             android:textColor="#333333"
                             android:textSize="@dimen/arch_dp_14" />
                     </LinearLayout>
@@ -183,13 +224,17 @@
                     </LinearLayout>
 
                     <View
+                        android:id="@+id/line_commit_date"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/arch_dp_3"
+                        android:visibility="gone"
                         android:background="@drawable/base_dot_line" />
 
                     <LinearLayout
+                        android:id="@+id/ll_commit_date"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/arch_dp_55"
+                        android:visibility="gone"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -219,10 +264,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="理赔测量方式与数量"
                 android:layout_marginTop="@dimen/arch_dp_23"
                 android:drawableLeft="@mipmap/icon_id"
                 android:drawablePadding="@dimen/arch_dp_3"
+                android:text="理赔测量方式与数量"
                 android:textColor="#0073BC"
                 android:textSize="@dimen/arch_dp_15" />
 
@@ -262,18 +307,29 @@
                             android:layout_height="wrap_content"
                             android:text="测重"
                             android:textColor="#333333"
-                            android:textSize="@dimen/arch_dp_14" />
+                            android:textSize="@dimen/arch_dp_14"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:id="@+id/ll_measure_way"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal" />
                     </LinearLayout>
 
                     <View
+                        android:id="@+id/line_count"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/arch_dp_3"
+                        android:visibility="gone"
                         android:background="@drawable/base_dot_line" />
 
                     <LinearLayout
+                        android:id="@+id/ll_count"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/arch_dp_55"
                         android:gravity="center_vertical"
+                        android:visibility="gone"
                         android:orientation="horizontal">
 
                         <TextView
@@ -291,6 +347,7 @@
                             android:gravity="center|left"
                             android:singleLine="true"
                             android:text="10只"
+                            android:textColor="#333333"
                             android:textSize="@dimen/arch_dp_14" />
                     </LinearLayout>
 
@@ -300,10 +357,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="理赔测量图片"
                 android:layout_marginTop="@dimen/arch_dp_23"
                 android:drawableLeft="@mipmap/icon_id"
                 android:drawablePadding="@dimen/arch_dp_3"
+                android:text="理赔测量图片"
                 android:textColor="#0073BC"
                 android:textSize="@dimen/arch_dp_15" />
 
@@ -316,10 +373,11 @@
 
 
             <LinearLayout
-                android:visibility="gone"
+                android:id="@+id/ll_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
 
                 <Button
                     android:id="@+id/btn_cancel"
