@@ -41,8 +41,6 @@ public class LoginActivity extends BaseActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ARouter.getInstance().build(ArouterConfig.Main.MAIN)
-//                        .navigation();
                 ARouter.getInstance().build(ArouterConfig.User.RESET_PWD)
                         .navigation();
                 finish();

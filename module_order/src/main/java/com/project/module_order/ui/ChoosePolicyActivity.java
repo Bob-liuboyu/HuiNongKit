@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.project.arch_repo.base.activity.BaseActivity;
+import com.project.arch_repo.base.activity.BaseTitleBarActivity;
 import com.project.common_resource.OrderModel;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.adapter.ChoosePolicyListAdapter;
@@ -13,6 +13,7 @@ import com.project.module_order.databinding.OrderActivityChoosePolicyBinding;
 import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 import com.xxf.view.recyclerview.adapter.OnItemClickListener;
+import com.xxf.view.utils.StatusBarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +25,16 @@ import java.util.Random;
  * @Description
  */
 @Route(path = ArouterConfig.Order.ORDER_CHOOSE)
-public class ChoosePolicyActivity extends BaseActivity {
+public class ChoosePolicyActivity extends BaseTitleBarActivity {
     private OrderActivityChoosePolicyBinding mBinding;
     private ChoosePolicyListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getTitleBar().setTitleBarTitle("理赔登记");
+        int color = 0xFFFFFFFF;
+        StatusBarUtils.compatStatusBarForM(this, false, color);
         mBinding = OrderActivityChoosePolicyBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         initView();

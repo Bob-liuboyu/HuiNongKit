@@ -7,29 +7,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_50"
-            android:background="#00c1ce"
-            android:baselineAligned="false"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:singleLine="true"
-                android:text="理赔登记"
-                android:textColor="@android:color/white"
-                android:textSize="17dp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#ff00c1ce"
+            android:layout_height="45dp"
+            android:background="#ffffff"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:paddingTop="5dp"
@@ -37,18 +18,21 @@
             android:paddingBottom="5dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/base_bg_white_round_rect_4">
+                android:layout_weight="1"
+                android:background="@drawable/base_bg_gray_round_rect_999"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
                 <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="15dp"
-                    android:src="@mipmap/card_ic_search_gray" />
+                    android:src="@mipmap/icon_serch" />
 
-                <TextView
+                <EditText
                     android:id="@+id/mEditText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -56,7 +40,7 @@
                     android:layout_marginRight="10dp"
                     android:background="@android:color/transparent"
                     android:gravity="center|left"
-                    android:hint="请输入理赔单号模糊搜索"
+                    android:hint="搜索被保险人名称或保单号"
                     android:imeOptions="actionSearch"
                     android:maxLength="10"
                     android:singleLine="true"
@@ -64,15 +48,28 @@
                     android:textSize="15sp" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/iv_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="@dimen/arch_dp_10"
+                android:paddingRight="15dp"
+                android:text="取消"
+                android:textColor="#AAAAAA"
+                android:textSize="14dp" />
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/arch_dp_34"
+            android:layout_marginRight="@dimen/arch_dp_34"
+            android:layout_marginBottom="@dimen/arch_dp_15"
             android:background="@color/arch_white"
             android:orientation="vertical"
-            android:padding="@dimen/arch_dp_15"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
     </LinearLayout>
 </layout>

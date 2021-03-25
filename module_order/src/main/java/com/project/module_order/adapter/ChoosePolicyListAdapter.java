@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 
 import com.project.arch_repo.base.recyclerview.BaseBindableAdapter;
 import com.project.common_resource.OrderModel;
-import com.project.module_order.databinding.OrderItemPolicyBinding;
+import com.project.module_order.databinding.OrderItemPolicyChooseBinding;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 
 /**
@@ -15,14 +15,14 @@ import com.xxf.view.recyclerview.adapter.BaseViewHolder;
  * @date: 2021/3/13 2:34 PM
  * @description: 首页订单列表
  */
-public class ChoosePolicyListAdapter extends BaseBindableAdapter<OrderItemPolicyBinding, OrderModel> {
+public class ChoosePolicyListAdapter extends BaseBindableAdapter<OrderItemPolicyChooseBinding, OrderModel> {
     @Override
-    protected OrderItemPolicyBinding onCreateBinding(LayoutInflater inflater, ViewGroup viewGroup, int viewType) {
-        return OrderItemPolicyBinding.inflate(inflater, viewGroup, false);
+    protected OrderItemPolicyChooseBinding onCreateBinding(LayoutInflater inflater, ViewGroup viewGroup, int viewType) {
+        return OrderItemPolicyChooseBinding.inflate(inflater, viewGroup, false);
     }
 
     @Override
-    public void onBindHolder(BaseViewHolder holder, OrderItemPolicyBinding binding, @Nullable OrderModel orderModel, int index) {
+    public void onBindHolder(BaseViewHolder holder, OrderItemPolicyChooseBinding binding, @Nullable OrderModel orderModel, int index) {
         if (orderModel == null) {
             return;
         }

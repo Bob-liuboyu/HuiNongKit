@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.project.common_resource.OrderModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/arch_dp_20"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#1B1B1B"
+            android:textSize="@dimen/arch_dp_14"
+            android:text="LKJAKDJLAJKSD" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/arch_dp_16"
+            android:drawableLeft="@mipmap/icon_id"
+            android:drawablePadding="8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#1B1B1B"
+            android:textSize="@dimen/arch_dp_14"
+            android:text="2013-3-31" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_3"
+            android:layout_marginTop="@dimen/arch_dp_10"
+            android:background="@drawable/base_dot_line" />
+    </LinearLayout>
+</layout>

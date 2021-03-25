@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.activity.BaseTitleBarActivity;
 import com.project.arch_repo.utils.DisplayUtils;
+import com.project.arch_repo.widget.CommonDialog;
+import com.project.arch_repo.widget.GrDialogUtils;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
@@ -35,7 +39,6 @@ public class CreateOrderActivity extends BaseTitleBarActivity {
         getTitleBar().setTitleBarTitle("理赔登记");
         int color = 0xFFFFFFFF;
         StatusBarUtils.compatStatusBarForM(this, false, color);
-
         binding = OrderActivityCreateBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         createMeasureWayItems();
@@ -99,24 +102,47 @@ public class CreateOrderActivity extends BaseTitleBarActivity {
     }
 
     private void setListener() {
-//        binding.tvChoose.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ARouter.getInstance().build(ArouterConfig.Order.ORDER_CHOOSE)
-//                        .navigation(CreateOrderActivity.this, RESULT_CHOOSE);
-//            }
-//        });
+        binding.tvChoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ARouter.getInstance().build(ArouterConfig.Order.ORDER_CHOOSE)
+                        .navigation(CreateOrderActivity.this, RESULT_CHOOSE);
+            }
+        });
+        binding.btnMeasure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ARouter.getInstance().build(ArouterConfig.Order.ORDER_PHOTO_PRE)
+                        .navigation();
+            }
+        });
+        binding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GrDialogUtils.createCommonDialog(CreateOrderActivity.this, "确认返回", "已拍摄的测重/测长照片将不会保存", new CommonDialog.OnDialogClickListener() {
+                    @Override
+                    public void onClickConfirm(View view) {
+                        finish();
+                    }
+
+                    @Override
+                    public void onClickCancel(View view) {
+
+                    }
+                }).show();
+            }
+        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (data == null) {
-//            return;
-//        }
-//        if (requestCode == RESULT_CHOOSE && resultCode == 1) {
-//            binding.tvPolicyNum.setText(data.getStringExtra("result"));
-//        }
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) {
+            return;
+        }
+        if (requestCode == RESULT_CHOOSE && resultCode == 1) {
+            binding.tvCode.setText(data.getStringExtra("result"));
+        }
     }
 
 }
