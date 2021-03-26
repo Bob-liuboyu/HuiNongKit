@@ -66,18 +66,18 @@ public class ResetPwdActivity extends BaseTitleBarActivity {
     }
 
     private boolean checkInputLegal() {
-//        if (TextUtils.isEmpty(binding.etPwd.getText()) || TextUtils.isEmpty(binding.etRePwd.getText())) {
-//            ToastUtils.showToast("请输入6-20位数字及字母!");
-//            return false;
-//        }
+        if (TextUtils.isEmpty(binding.etPwd.getText()) || TextUtils.isEmpty(binding.etRePwd.getText())) {
+            ToastUtils.showToast("请输入6-20位数字及字母!");
+            return false;
+        }
         if (!TextUtils.equals(binding.etRePwd.getText(), binding.etPwd.getText())) {
             ToastUtils.showToast("两次密码输入不一致!");
             return false;
         }
-//        if (!UserConfig.PATTERN_PWD.matcher(binding.etRePwd.getText()).matches()) {
-//            ToastUtils.showToast("请输入6-20位数字及字母!");
-//            return false;
-//        }
+        if (!UserConfig.PATTERN_PWD.matcher(binding.etRePwd.getText()).matches()) {
+            ToastUtils.showToast("请输入6-20位数字及字母!");
+            return false;
+        }
         return true;
     }
 

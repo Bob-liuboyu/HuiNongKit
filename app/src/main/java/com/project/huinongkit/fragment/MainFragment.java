@@ -9,12 +9,17 @@ import android.view.View;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.fragment.BaseFragment;
 import com.project.common_resource.OrderModel;
+import com.project.common_resource.response.LoginResDTO;
+import com.project.common_resource.response.PolicyListResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.huinongkit.adapter.OrderListAdapter;
 import com.project.huinongkit.databinding.MainFragmentMainBinding;
 import com.project.huinongkit.dialog.SelectFilterDialog;
 import com.project.huinongkit.model.SelectFilterModel;
+import com.project.huinongkit.source.impl.HomeRepositoryImpl;
+import com.xxf.arch.XXF;
 import com.xxf.arch.dialog.IResultDialog;
+import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
 import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
@@ -23,6 +28,9 @@ import com.xxf.view.recyclerview.adapter.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * @fileName: MainFragment
@@ -51,7 +59,19 @@ public class MainFragment extends BaseFragment {
     }
 
     private void initData() {
-
+        HomeRepositoryImpl.getInstance()
+                .getPolicyOrderList("","","","","","","")
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(XXF.<List<PolicyListResDTO>>bindToLifecycle(this))
+                .compose(XXF.<List<PolicyListResDTO>>bindToErrorNotice())
+                .compose(XXF.<List<PolicyListResDTO>>bindToProgressHud(
+                        new ProgressHUDTransformerImpl.Builder(this)
+                                .setLoadingNotice("登陆中...")))
+                .subscribe(new Consumer<List<PolicyListResDTO>>() {
+                    @Override
+                    public void accept(List<PolicyListResDTO> data) throws Exception {
+                    }
+                });
     }
 
     private void initView() {
