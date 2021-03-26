@@ -1,13 +1,11 @@
 package com.project.module_order.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -21,16 +19,23 @@ import com.huawei.hiar.exceptions.ARUnavailableClientSdkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceApkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceNotInstalledException;
 import com.project.arch_repo.base.activity.BaseActivity;
-import com.project.arch_repo.utils.DisplayUtils;
-import com.project.arch_repo.utils.GlideUtils;
+import com.project.common_resource.TakePhotoButtonItem;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
-import com.project.module_order.body3d.BodyActivity;
+import com.project.module_order.adapter.TakePhotoBtnAdapter;
 import com.project.module_order.body3d.rendering.BodyRenderManager;
 import com.project.module_order.common.ConnectAppMarketActivity;
 import com.project.module_order.common.DisplayRotationManager;
 import com.project.module_order.databinding.OrderActivityTakePhotoBinding;
+import com.project.module_order.utils.ImageUtils;
+import com.project.module_order.utils.SurfaceCameraUtils;
+import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
+import com.xxf.view.recyclerview.adapter.BaseViewHolder;
+import com.xxf.view.recyclerview.adapter.OnItemClickListener;
 import com.xxf.view.utils.StatusBarUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author liuboyu  E-mail:545777678@qq.com
@@ -44,7 +49,7 @@ public class TakePhotoActivity extends BaseActivity {
     private static final String TAG = TakePhotoActivity.class.getSimpleName();
 
     private ARSession mArSession;
-    
+
     private BodyRenderManager mBodyRenderManager;
 
     private DisplayRotationManager mDisplayRotationManager;
@@ -52,6 +57,9 @@ public class TakePhotoActivity extends BaseActivity {
     private String message = null;
 
     private boolean isRemindInstall = false;
+    private TakePhotoBtnAdapter mBtnAdapter;
+    private int currentBtnIndex = 0;
+    private Bitmap maskBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,29 +67,43 @@ public class TakePhotoActivity extends BaseActivity {
         int color = getResources().getColor(R.color.arch_black);
         StatusBarUtils.compatStatusBarForM(this, false, color);
         mBinding = OrderActivityTakePhotoBinding.inflate(getLayoutInflater());
+        maskBitmap = ImageUtils.getBitmap(this, R.drawable.ic_camera);
         setContentView(mBinding.getRoot());
         initView();
         initCamera();
     }
 
     private void initView() {
-        for (int i = 0; i < 3; i++) {
-            View view = View.inflate(this, R.layout.order_item_take_photo, null);
-            ImageView icon = view.findViewById(R.id.iv_icon);
-            TextView text = view.findViewById(R.id.tv_text);
-            icon.setImageResource(R.mipmap.icon_add_white);
-            text.setText("猪耳标签");
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DisplayUtils.dip2px(this, 75), DisplayUtils.dip2px(this, 75));
-            if (i != 0) {
-                params.leftMargin = DisplayUtils.dip2px(this, 14);
+        final List<TakePhotoButtonItem> list = new ArrayList();
+        list.add(new TakePhotoButtonItem("测重识别", true));
+        list.add(new TakePhotoButtonItem("猪脸识别", false));
+        list.add(new TakePhotoButtonItem("耳标识别", false));
+        mBinding.ivTemp.setText("测重识别");
+        mBinding.rvPhotos.setAdapter(mBtnAdapter = new TakePhotoBtnAdapter());
+        mBtnAdapter.bindData(true, list);
+        mBtnAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
+                for (TakePhotoButtonItem item : list) {
+                    item.setSelect(false);
+                }
+                list.get(index).setSelect(true);
+                mBtnAdapter.notifyDataSetChanged();
+                mBinding.ivTemp.setText(list.get(index).getName());
+                currentBtnIndex = index;
             }
-            view.setLayoutParams(params);
-
-            mBinding.llPhotos.addView(view);
-        }
+        });
+        mBinding.ivTake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap bitmap = SurfaceCameraUtils.takePhoto(TakePhotoActivity.this, mBinding.surfaceview, maskBitmap);
+                View view = mBinding.rvPhotos.getLayoutManager().findViewByPosition(currentBtnIndex);
+//                mBodyRenderManager.getDepthImage();
+            }
+        });
     }
 
-    private void initCamera(){
+    private void initCamera() {
         mDisplayRotationManager = new DisplayRotationManager(this);
         // Keep the OpenGL ES running context.
         mBinding.surfaceview.setPreserveEGLContextOnPause(true);
@@ -96,13 +118,6 @@ public class TakePhotoActivity extends BaseActivity {
 
         mBinding.surfaceview.setRenderer(mBodyRenderManager);
         mBinding.surfaceview.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-        mBinding.ivTake.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                takePhoto();
-//                mBodyRenderManager.getDepthImage();
-            }
-        });
     }
 
     @Override

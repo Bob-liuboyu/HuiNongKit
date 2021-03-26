@@ -19,7 +19,7 @@
             android:id="@+id/ll_title_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_50"
-            android:background="#80000000"
+            android:background="#00000000"
             android:baselineAligned="false"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -31,217 +31,226 @@
                 android:layout_margin="@dimen/arch_dp_15"
                 android:src="@mipmap/icon_back_white" />
 
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:singleLine="true"
-                android:text="(1/300)"
-                android:textColor="@android:color/white"
-                android:textSize="17dp"
-                android:textStyle="bold" />
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/ll_data"
+        <TextView
+            android:id="@+id/iv_temp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/ll_warning"
+            android:layout_above="@id/ll_bottom"
             android:layout_below="@id/ll_title_bar"
-            android:layout_margin="@dimen/arch_dp_15"
-            android:background="#40000000"
-            android:orientation="vertical"
-            android:padding="@dimen/arch_dp_15">
-
-            <TextView
-                android:id="@+id/tv_measure_result"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="猪身重量=114.6kg"
-                android:textColor="@color/arch_white"
-                android:textSize="23dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/arch_dp_15"
-                android:layout_marginBottom="@dimen/arch_dp_15"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/arch_dp_20"
-                    android:layout_height="@dimen/arch_dp_20"
-                    android:src="@mipmap/icon_clock" />
-
-                <TextView
-                    android:id="@+id/tv_data"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/arch_dp_10"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:text="2021-03-13 18:00:30"
-                    android:textColor="@color/arch_white"
-                    android:textSize="14dp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_3"
-                android:background="@drawable/base_dot_line_white" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/arch_dp_15"
-                android:layout_marginBottom="@dimen/arch_dp_15"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/arch_dp_20"
-                    android:layout_height="@dimen/arch_dp_20"
-                    android:src="@mipmap/icon_adress" />
-
-                <TextView
-                    android:id="@+id/tv_addr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/arch_dp_10"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textColor="@color/arch_white"
-                    android:textSize="14dp"
-                    android:text="北京" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_3"
-                android:background="@drawable/base_dot_line_white" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/arch_dp_15"
-                android:layout_marginBottom="@dimen/arch_dp_15"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/arch_dp_20"
-                    android:layout_height="@dimen/arch_dp_20"
-                    android:src="@mipmap/icon_earth" />
-
-                <TextView
-                    android:id="@+id/tv_pos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/arch_dp_10"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textColor="@color/arch_white"
-                    android:textSize="14dp"
-                    android:text="经纬度" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_3"
-                android:background="@drawable/base_dot_line_white" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/arch_dp_15"
-                android:layout_marginBottom="@dimen/arch_dp_15"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/arch_dp_20"
-                    android:layout_height="@dimen/arch_dp_20"
-                    android:src="@mipmap/icon_phone" />
-
-                <TextView
-                    android:id="@+id/tv_call"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/arch_dp_10"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textColor="@color/arch_white"
-                    android:textSize="14dp"
-                    android:text="15011447166" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_3"
-                android:background="@drawable/base_dot_line_white" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/arch_dp_15"
-                android:layout_marginBottom="@dimen/arch_dp_15"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/arch_dp_20"
-                    android:layout_height="@dimen/arch_dp_20"
-                    android:src="@mipmap/icon_card" />
-
-                <TextView
-                    android:id="@+id/tv_company"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/arch_dp_10"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textColor="@color/arch_white"
-                    android:textSize="14dp"
-                    android:text="百度" />
-
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/arch_dp_10"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textColor="@color/arch_white"
-                    android:textSize="14dp"
-                    android:text="刘伯羽" />
-            </LinearLayout>
-
-
-        </LinearLayout>
+            android:background="#80000000"
+            android:gravity="center"
+            android:textColor="@color/arch_white"
+            android:textSize="@dimen/arch_dp_30" />
 
         <LinearLayout
-            android:id="@+id/ll_warning"
+            android:id="@+id/ll_data_root"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/arch_dp_66"
+            android:layout_height="match_parent"
             android:layout_above="@id/ll_bottom"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="@dimen/arch_dp_15"
-            android:layout_marginBottom="@dimen/arch_dp_15"
-            android:background="#40d1031c"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_below="@id/ll_title_bar"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <ImageView
-                android:layout_width="@dimen/arch_dp_15"
-                android:layout_height="@dimen/arch_dp_15"
-                android:layout_marginRight="@dimen/arch_dp_10"
-                android:src="@mipmap/icon_warning" />
+            <LinearLayout
+                android:id="@+id/ll_data"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="@dimen/arch_dp_15"
+                android:layout_weight="1"
+                android:background="#40000000"
+                android:orientation="vertical"
+                android:padding="@dimen/arch_dp_15">
 
-            <TextView
-                android:id="@+id/tv_warning"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/arch_white"
-                android:textSize="@dimen/arch_dp_14"
-                android:text="载入失败，点击页面空白处重试" />
+                <TextView
+                    android:id="@+id/tv_measure_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="猪身重量=114.6kg"
+                    android:textColor="@color/arch_white"
+                    android:textSize="23dp" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/arch_dp_15"
+                    android:layout_marginBottom="@dimen/arch_dp_15"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/arch_dp_20"
+                        android:layout_height="@dimen/arch_dp_20"
+                        android:src="@mipmap/icon_clock" />
+
+                    <TextView
+                        android:id="@+id/tv_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/arch_dp_10"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="2021-03-13 18:00:30"
+                        android:textColor="@color/arch_white"
+                        android:textSize="14dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_3"
+                    android:background="@drawable/base_dot_line_white" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/arch_dp_15"
+                    android:layout_marginBottom="@dimen/arch_dp_15"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/arch_dp_20"
+                        android:layout_height="@dimen/arch_dp_20"
+                        android:src="@mipmap/icon_adress" />
+
+                    <TextView
+                        android:id="@+id/tv_addr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/arch_dp_10"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="北京"
+                        android:textColor="@color/arch_white"
+                        android:textSize="14dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_3"
+                    android:background="@drawable/base_dot_line_white" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/arch_dp_15"
+                    android:layout_marginBottom="@dimen/arch_dp_15"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/arch_dp_20"
+                        android:layout_height="@dimen/arch_dp_20"
+                        android:src="@mipmap/icon_earth" />
+
+                    <TextView
+                        android:id="@+id/tv_pos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/arch_dp_10"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="经纬度"
+                        android:textColor="@color/arch_white"
+                        android:textSize="14dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_3"
+                    android:background="@drawable/base_dot_line_white" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/arch_dp_15"
+                    android:layout_marginBottom="@dimen/arch_dp_15"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/arch_dp_20"
+                        android:layout_height="@dimen/arch_dp_20"
+                        android:src="@mipmap/icon_phone" />
+
+                    <TextView
+                        android:id="@+id/tv_call"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/arch_dp_10"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="15011447166"
+                        android:textColor="@color/arch_white"
+                        android:textSize="14dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_3"
+                    android:background="@drawable/base_dot_line_white" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/arch_dp_15"
+                    android:layout_marginBottom="@dimen/arch_dp_15"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/arch_dp_20"
+                        android:layout_height="@dimen/arch_dp_20"
+                        android:src="@mipmap/icon_card" />
+
+                    <TextView
+                        android:id="@+id/tv_company"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/arch_dp_10"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="百度"
+                        android:textColor="@color/arch_white"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/arch_dp_10"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="刘伯羽"
+                        android:textColor="@color/arch_white"
+                        android:textSize="14dp" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_warning"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/arch_dp_66"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="@dimen/arch_dp_15"
+                android:layout_marginBottom="@dimen/arch_dp_15"
+                android:background="#40d1031c"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/arch_dp_15"
+                    android:layout_height="@dimen/arch_dp_15"
+                    android:layout_marginRight="@dimen/arch_dp_10"
+                    android:src="@mipmap/icon_warning" />
+
+                <TextView
+                    android:id="@+id/tv_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="载入失败，点击页面空白处重试"
+                    android:textColor="@color/arch_white"
+                    android:textSize="@dimen/arch_dp_14" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -253,14 +262,23 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/ll_photos"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginLeft="@dimen/arch_dp_31"
-                android:layout_marginRight="@dimen/arch_dp_31"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" />
+                android:layout_weight="1">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_photos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/arch_dp_31"
+                    android:layout_marginRight="@dimen/arch_dp_31"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"

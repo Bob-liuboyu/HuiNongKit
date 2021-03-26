@@ -371,20 +371,7 @@ public class BodyActivity extends Activity {
 //        return bmp;
 //    }
 
-    private Bitmap getBitmap(Context context, int resId) {
-        Bitmap bitmap = null;
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            Drawable vectorDrawable = context.getDrawable(resId);
-            bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
-                    vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
-            vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            vectorDrawable.draw(canvas);
-        } else {
-            bitmap = BitmapFactory.decodeResource(context.getResources(), resId);
-        }
-        return bitmap;
-    }
+
 
 
 }

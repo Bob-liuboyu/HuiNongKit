@@ -1,7 +1,12 @@
 package com.project.module_order.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 
 public class ImageUtils {
 
@@ -29,5 +34,20 @@ public class ImageUtils {
         matrix.postTranslate(bitmap.getWidth(), 0);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
                 bitmap.getHeight(), matrix, false);
+    }
+
+    public static Bitmap getBitmap(Context context, int resId) {
+        Bitmap bitmap = null;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            Drawable vectorDrawable = context.getDrawable(resId);
+            bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                    vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            vectorDrawable.draw(canvas);
+        } else {
+            bitmap = BitmapFactory.decodeResource(context.getResources(), resId);
+        }
+        return bitmap;
     }
 }

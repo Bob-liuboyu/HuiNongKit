@@ -9,7 +9,6 @@ import android.view.View;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.fragment.BaseFragment;
 import com.project.common_resource.OrderModel;
-import com.project.common_resource.response.LoginResDTO;
 import com.project.common_resource.response.PolicyListResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.huinongkit.adapter.OrderListAdapter;
@@ -48,7 +47,7 @@ public class MainFragment extends BaseFragment {
         mBinding = MainFragmentMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         initView();
-        initData();
+//        initData();
     }
 
     public static MainFragment newInstance() {
