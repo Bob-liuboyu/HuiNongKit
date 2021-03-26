@@ -13,16 +13,20 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class ResponseDTO<T> {
-    private static final String FIELD_CODE = "error";
+    private static final String FIELD_CODE = "code";
     private static final String FIELD_MESSAGE = "message";
     private static final String FIELD_RESULT = "data";
+    private static final String FIELD_SUCCESS = "success";
 
 
     @SerializedName(value = FIELD_MESSAGE)
     public String message;
 
     @SerializedName(value = FIELD_CODE)
-    public int error;
+    public int code;
+
+    @SerializedName(value = FIELD_SUCCESS)
+    public boolean success;
 
     //注意 空
     @SerializedName(value = FIELD_RESULT)
@@ -32,7 +36,8 @@ public class ResponseDTO<T> {
     public String toString() {
         return "ResponseDTO{" +
                 "message='" + message + '\'' +
-                ", error=" + error +
+                ", code=" + code +
+                ", success=" + success +
                 ", data=" + data +
                 '}';
     }

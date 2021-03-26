@@ -2,16 +2,26 @@ package com.project.user;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.activity.BaseActivity;
+import com.project.arch_repo.utils.StringUtils;
 import com.project.arch_repo.widget.CommonDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
+import com.project.common_resource.response.LoginResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.user.databinding.UserActivityLoginBinding;
+import com.project.user.source.impl.LoginRepositoryImpl;
+import com.xxf.arch.XXF;
+import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
+import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.utils.StatusBarUtils;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * @fileName: LoginActivity
@@ -44,6 +54,7 @@ public class LoginActivity extends BaseActivity {
                 ARouter.getInstance().build(ArouterConfig.User.RESET_PWD)
                         .navigation();
                 finish();
+//                login();
             }
         });
         binding.tvForgetPwd.setOnClickListener(new View.OnClickListener() {
@@ -62,5 +73,32 @@ public class LoginActivity extends BaseActivity {
                 }).show();
             }
         });
+    }
+
+    private void login() {
+        String phone = binding.etPhone.getText().toString();
+        String pwd = binding.etPwd.getText().toString();
+        if (TextUtils.isEmpty(phone) || !StringUtils.isMobilPhoneNumber(phone)) {
+            ToastUtils.showToast("请输入正确的手机号");
+            return;
+        }
+        if (TextUtils.isEmpty(pwd)) {
+            ToastUtils.showToast("请输入密码");
+            return;
+        }
+
+        LoginRepositoryImpl.getInstance()
+                .login(phone, pwd)
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(XXF.<LoginResDTO>bindToLifecycle(this))
+                .compose(XXF.<LoginResDTO>bindToErrorNotice())
+                .compose(XXF.<LoginResDTO>bindToProgressHud(
+                        new ProgressHUDTransformerImpl.Builder(this)
+                                .setLoadingNotice("登陆中...")))
+                .subscribe(new Consumer<LoginResDTO>() {
+                    @Override
+                    public void accept(LoginResDTO loginUserInfoDTO) throws Exception {
+                    }
+                });
     }
 }
