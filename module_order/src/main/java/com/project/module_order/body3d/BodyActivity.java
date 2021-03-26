@@ -135,7 +135,6 @@ public class BodyActivity extends Activity {
 
         mBodyRenderManager = new BodyRenderManager(this);
         mBodyRenderManager.setDisplayRotationManage(mDisplayRotationManager);
-        mBodyRenderManager.setTextView(mTextView);
 
         mSurfaceView.setRenderer(mBodyRenderManager);
         mSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);

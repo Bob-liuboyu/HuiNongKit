@@ -167,14 +167,14 @@ public class CreateOrderActivity extends BaseTitleBarActivity {
     void showRationaleForCamera(PermissionRequest request) {
         // NOTE: Show a rationale to explain why the permission is needed, e.g. with a dialog.
         // Call proceed() or cancel() on the provided PermissionRequest to continue or abort
-        showRationaleDialog("permissions_rationale", request);
+        showRationaleDialog("使用此功能需要您的拍照、储存卡权限", request);
     }
 
     @OnPermissionDenied({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     void onCameraDenied() {
         // NOTE: Deal with a denied permission, e.g. by showing specific UI
         // or disabling certain functionality
-        Toast.makeText(this, "permission_camera_denied", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "权限被拒绝", Toast.LENGTH_SHORT).show();
     }
 
     @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})

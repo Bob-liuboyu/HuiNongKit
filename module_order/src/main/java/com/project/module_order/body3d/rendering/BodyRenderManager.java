@@ -98,8 +98,6 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
 
     private Activity mActivity;
 
-    private TextView mTextView;
-
     private TextureDisplay mTextureDisplay = new TextureDisplay();
 
     private TextDisplay mTextDisplay = new TextDisplay();
@@ -150,19 +148,6 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
         mDisplayRotationManager = displayRotationManager;
     }
 
-    /**
-     * Set TextView, which is called in the UI thread to display data correctly.
-     *
-     * @param textView TextView.
-     */
-    public void setTextView(TextView textView) {
-        if (textView == null) {
-            Log.e(TAG, "Set textView error, text view is null!");
-            return;
-        }
-        mTextView = textView;
-    }
-
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         // Clear the color and set the window color.
@@ -171,37 +156,6 @@ public class BodyRenderManager implements GLSurfaceView.Renderer {
             bodyRelatedDisplay.init();
         }
         mTextureDisplay.init();
-        mTextDisplay.setListener(new TextDisplay.OnTextInfoChangeListener() {
-            @Override
-            public void textInfoChanged(String text, float positionX, float positionY) {
-                showBodyTypeTextView(text, positionX, positionY);
-            }
-        });
-    }
-
-    /**
-     * The OpenGL thread calls back the UI thread to display text.
-     *
-     * @param text      Gesture information displayed on the screen
-     * @param positionX The left padding in pixels.
-     * @param positionY The right padding in pixels.
-     */
-    private void showBodyTypeTextView(final String text, final float positionX, final float positionY) {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mTextView.setTextColor(Color.WHITE);
-
-                // Set the font size.
-                mTextView.setTextSize(10f);
-                if (text != null) {
-                    mTextView.setText(text);
-                    mTextView.setPadding((int) positionX, (int) positionY, 0, 0);
-                } else {
-                    mTextView.setText("");
-                }
-            }
-        });
     }
 
     @Override
