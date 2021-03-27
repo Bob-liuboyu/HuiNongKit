@@ -1,31 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        android:id="@+id/ll_rootView"
-        android:layout_width="@dimen/arch_dp_75"
-        android:layout_height="@dimen/arch_dp_75"
+    <FrameLayout
+        android:layout_width="@dimen/arch_dp_80"
         android:layout_marginRight="@dimen/arch_dp_14"
-        android:background="@drawable/base_bg_item_photo_line_selector"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="@dimen/arch_dp_80">
+
+        <FrameLayout
+            android:id="@+id/ll_rootView"
+            android:layout_width="@dimen/arch_dp_75"
+            android:layout_height="@dimen/arch_dp_75"
+            android:layout_gravity="bottom"
+            android:background="@drawable/base_bg_item_photo_line_selector">
+
+            <LinearLayout
+                android:id="@+id/ll_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_icon"
+                    android:layout_width="@dimen/arch_dp_22"
+                    android:layout_height="@dimen/arch_dp_22"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@mipmap/icon_add_white" />
+
+                <TextView
+                    android:id="@+id/tv_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/arch_dp_10"
+                    android:gravity="center"
+                    android:text="猪耳标签"
+                    android:textColor="@color/arch_white"
+                    android:textSize="@dimen/arch_dp_13" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+
+        </FrameLayout>
 
         <ImageView
-            android:id="@+id/iv_icon"
-            android:layout_width="@dimen/arch_dp_22"
-            android:layout_height="@dimen/arch_dp_22"
-            android:layout_gravity="center_horizontal"
-            android:src="@mipmap/icon_add_white" />
-
-        <TextView
-            android:id="@+id/tv_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/arch_dp_10"
-            android:gravity="center"
-            android:text="猪耳标签"
-            android:textColor="@color/arch_white"
-            android:textSize="@dimen/arch_dp_13" />
-
-    </LinearLayout>
+            android:id="@+id/iv_delete"
+            android:layout_width="@dimen/arch_dp_18"
+            android:layout_height="@dimen/arch_dp_18"
+            android:layout_gravity="right"
+            android:elevation="1dp"
+            android:visibility="gone"
+            android:src="@mipmap/icon_delete" />
+    </FrameLayout>
 </layout>

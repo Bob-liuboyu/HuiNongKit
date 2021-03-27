@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -60,6 +62,7 @@ public class TakePhotoActivity extends BaseActivity {
     private TakePhotoBtnAdapter mBtnAdapter;
     private int currentBtnIndex = 0;
     private Bitmap maskBitmap;
+    private List<TakePhotoButtonItem> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +77,7 @@ public class TakePhotoActivity extends BaseActivity {
     }
 
     private void initView() {
-        final List<TakePhotoButtonItem> list = new ArrayList();
+        list = new ArrayList();
         list.add(new TakePhotoButtonItem("测重识别", true));
         list.add(new TakePhotoButtonItem("猪脸识别", false));
         list.add(new TakePhotoButtonItem("耳标识别", false));
@@ -98,9 +101,77 @@ public class TakePhotoActivity extends BaseActivity {
             public void onClick(View v) {
                 Bitmap bitmap = SurfaceCameraUtils.takePhoto(TakePhotoActivity.this, mBinding.surfaceview, maskBitmap);
                 View view = mBinding.rvPhotos.getLayoutManager().findViewByPosition(currentBtnIndex);
-//                mBodyRenderManager.getDepthImage();
+                View btnLayout = view.findViewById(R.id.ll_button);
+                ImageView img = view.findViewById(R.id.iv_photo);
+                ImageView delete = view.findViewById(R.id.iv_delete);
+                delete.setVisibility(View.VISIBLE);
+                btnLayout.setVisibility(View.GONE);
+                img.setVisibility(View.VISIBLE);
+                img.setImageBitmap(bitmap);
+                list.get(currentBtnIndex).setUrl(bitmap.toString());
+                checkNextButton();
+                canNext();
             }
         });
+
+        mBtnAdapter.setDeletePhotoListener(new TakePhotoBtnAdapter.DeletePhotoListener() {
+            @Override
+            public void onDelete(int pos) {
+                View view = mBinding.rvPhotos.getLayoutManager().findViewByPosition(currentBtnIndex);
+                View btnLayout = view.findViewById(R.id.ll_button);
+                ImageView img = view.findViewById(R.id.iv_photo);
+                ImageView delete = view.findViewById(R.id.iv_delete);
+                View llRootView = view.findViewById(R.id.ll_rootView);
+
+                img.setImageBitmap(null);
+                img.setVisibility(View.GONE);
+                btnLayout.setVisibility(View.VISIBLE);
+                delete.setVisibility(View.INVISIBLE);
+                llRootView.setSelected(true);
+                list.get(currentBtnIndex).setUrl("");
+                canNext();
+            }
+        });
+        mBinding.ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    /**
+     * 切换到下一个部位
+     */
+    private void checkNextButton() {
+        for (TakePhotoButtonItem item : list) {
+            item.setSelect(false);
+        }
+        if (currentBtnIndex < list.size() - 1) {
+            currentBtnIndex = currentBtnIndex + 1;
+            list.get(currentBtnIndex).setSelect(true);
+            mBtnAdapter.notifyDataSetChanged();
+            mBinding.ivTemp.setText(list.get(currentBtnIndex).getName());
+        }
+    }
+
+    private void canNext() {
+        if (list == null) {
+            return;
+        }
+
+        boolean canNext = true;
+        for (TakePhotoButtonItem item : list) {
+            if (item != null && TextUtils.isEmpty(item.getUrl())) {
+                canNext = false;
+            }
+        }
+
+        if (canNext) {
+            mBinding.tvNext.setEnabled(true);
+        } else {
+            mBinding.tvNext.setEnabled(false);
+        }
     }
 
     private void initCamera() {

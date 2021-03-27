@@ -310,9 +310,10 @@
                     android:id="@+id/tv_next"
                     android:layout_width="80dp"
                     android:layout_height="@dimen/arch_dp_30"
-                    android:background="@drawable/base_btn_bg_rect"
+                    android:background="@drawable/base_rect_btn_bg_selector"
                     android:gravity="center"
                     android:text="下一只"
+                    android:enabled="false"
                     android:textColor="#ffffff"
                     android:textSize="@dimen/arch_dp_13" />
             </LinearLayout>

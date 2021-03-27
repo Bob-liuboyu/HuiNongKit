@@ -25,8 +25,9 @@ import java.io.IOException;
 public class SurfaceCameraUtils {
     public static final String TAG = "SurfaceCameraUtils";
 
-    public static Bitmap takePhoto(final Context context, final GLSurfaceView surfaceView,final Bitmap maskBitmap) {
+    public static Bitmap takePhoto(final Context context, final GLSurfaceView surfaceView, final Bitmap maskBitmap) {
         final String filename = generateFilename();
+
         /*ArSceneView view = fragment.getArSceneView();*/
         // Create a bitmap the size of the scene view.
         final Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(),
@@ -42,7 +43,7 @@ public class SurfaceCameraUtils {
                     if (copyResult == PixelCopy.SUCCESS) {
                         try {
                             result[0] = ImageMaskUtil.createWaterMaskLeftTop(context, bitmap, maskBitmap, 100, 100);
-                            saveBitmapToDisk(result[0], filename);
+                            saveBitmapToDisk(bitmap, filename);
                             return;
                         } catch (Exception e) {
                             Log.e(TAG, e.getMessage());
@@ -55,7 +56,7 @@ public class SurfaceCameraUtils {
                 }
             }, new Handler(handlerThread.getLooper()));
         }
-        return result[0];
+        return bitmap;
     }
 
     /**
@@ -79,7 +80,7 @@ public class SurfaceCameraUtils {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputData);
             outputData.writeTo(outputStream);
             outputStream.flush();
-            outputStream.close();
+            Log.e(TAG, "saveBitmapToDisk = " + filename);
         } catch (IOException ex) {
             Log.e(TAG, "IOException = " + ex);
             throw new IOException("Failed to save bitmap to disk", ex);

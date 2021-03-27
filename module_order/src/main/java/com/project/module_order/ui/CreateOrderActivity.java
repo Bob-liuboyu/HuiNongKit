@@ -63,27 +63,27 @@ public class CreateOrderActivity extends BaseTitleBarActivity {
         int padding15 = DisplayUtils.dip2px(this, 15);
         int padding3 = DisplayUtils.dip2px(this, 3);
 
-        TextView item1 = new TextView(this);
-        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        item1.setText("测重");
-        item1.setPadding(padding15, padding3, padding15, padding3);
-        item1.setGravity(Gravity.CENTER);
-        item1.setBackgroundResource(R.drawable.filter_select_status);
-        item1.setTextColor(getResources().getColor(R.color.filter_select_text));
-        item1.setLayoutParams(params1);
-
-        TextView item2 = new TextView(this);
-        LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params2.leftMargin = DisplayUtils.dip2px(this, 15);
-        item2.setPadding(padding15, padding3, padding15, padding3);
-        item2.setBackgroundResource(R.drawable.filter_select_status);
-        item2.setTextColor(getResources().getColor(R.color.filter_select_text));
-        item2.setText("测长");
-        item2.setGravity(Gravity.CENTER);
-        item2.setLayoutParams(params2);
-
-        binding.llMeasureWay.addView(item1);
-        binding.llMeasureWay.addView(item2);
+        for (int i = 0; i < 2; i++) {
+            final TextView item = new TextView(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.rightMargin = DisplayUtils.dip2px(this, 15);
+            item.setPadding(padding15, padding3, padding15, padding3);
+            item.setBackgroundResource(R.drawable.filter_select_status);
+            item.setTextColor(getResources().getColorStateList(R.color.filter_select_text));
+            item.setText("测长");
+            item.setGravity(Gravity.CENTER);
+            item.setLayoutParams(params);
+            binding.llMeasureWay.addView(item);
+            item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for (int j = 0; j < binding.llMeasureWay.getChildCount(); j++) {
+                        binding.llMeasureWay.getChildAt(j).setSelected(false);
+                    }
+                    item.setSelected(true);
+                }
+            });
+        }
     }
 
 
@@ -91,27 +91,27 @@ public class CreateOrderActivity extends BaseTitleBarActivity {
         int padding15 = DisplayUtils.dip2px(this, 15);
         int padding3 = DisplayUtils.dip2px(this, 3);
 
-        TextView item1 = new TextView(this);
-        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        item1.setText("母猪");
-        item1.setPadding(padding15, padding3, padding15, padding3);
-        item1.setGravity(Gravity.CENTER);
-        item1.setBackgroundResource(R.drawable.filter_select_status);
-        item1.setTextColor(getResources().getColor(R.color.filter_select_text));
-        item1.setLayoutParams(params1);
-
-        TextView item2 = new TextView(this);
-        LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params2.leftMargin = DisplayUtils.dip2px(this, 15);
-        item2.setPadding(padding15, padding3, padding15, padding3);
-        item2.setText("公猪");
-        item2.setBackgroundResource(R.drawable.filter_select_status);
-        item2.setTextColor(getResources().getColor(R.color.filter_select_text));
-        item2.setGravity(Gravity.CENTER);
-        item2.setLayoutParams(params2);
-
-        binding.llPolicyCategory.addView(item1);
-        binding.llPolicyCategory.addView(item2);
+        for (int i = 0; i < 2; i++) {
+            final TextView item = new TextView(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.leftMargin = DisplayUtils.dip2px(this, 15);
+            item.setPadding(padding15, padding3, padding15, padding3);
+            item.setText("公猪");
+            item.setBackgroundResource(R.drawable.filter_select_status);
+            item.setTextColor(getResources().getColorStateList(R.color.filter_select_text));
+            item.setGravity(Gravity.CENTER);
+            item.setLayoutParams(params);
+            binding.llPolicyCategory.addView(item);
+            item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for (int j = 0; j < binding.llPolicyCategory.getChildCount(); j++) {
+                        binding.llPolicyCategory.getChildAt(j).setSelected(false);
+                    }
+                    item.setSelected(true);
+                }
+            });
+        }
     }
 
     private void setListener() {

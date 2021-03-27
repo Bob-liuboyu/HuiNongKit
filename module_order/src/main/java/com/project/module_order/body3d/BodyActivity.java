@@ -17,16 +17,8 @@
 package com.project.module_order.body3d;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
@@ -37,15 +29,12 @@ import android.os.HandlerThread;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.PixelCopy;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
-import com.google.ar.core.Frame;
 import com.huawei.hiar.ARBodyTrackingConfig;
 import com.huawei.hiar.ARConfigBase;
 import com.huawei.hiar.AREnginesApk;
@@ -56,34 +45,17 @@ import com.huawei.hiar.exceptions.ARUnavailableClientSdkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceApkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceNotInstalledException;
 import com.project.arch_repo.utils.ImageMaskUtil;
-import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
 import com.project.module_order.body3d.rendering.BodyRenderManager;
 import com.project.module_order.common.ConnectAppMarketActivity;
 import com.project.module_order.common.DisplayRotationManager;
-import com.project.module_order.ui.HelloArActivity;
-import com.xxf.arch.utils.ToastUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ShortBuffer;
 
-import static android.opengl.GLES10.GL_CLAMP_TO_EDGE;
-import static android.opengl.GLES10.GL_NEAREST;
-import static android.opengl.GLES10.GL_TEXTURE_2D;
-import static android.opengl.GLES10.GL_TEXTURE_MAG_FILTER;
-import static android.opengl.GLES10.GL_TEXTURE_MIN_FILTER;
-import static android.opengl.GLES10.GL_TEXTURE_WRAP_S;
-import static android.opengl.GLES10.GL_TEXTURE_WRAP_T;
-import static android.opengl.GLES10.glBindTexture;
-import static android.opengl.GLES10.glGenTextures;
-import static android.opengl.GLES10.glTexImage2D;
-import static android.opengl.GLES11.glTexParameteri;
-import static android.opengl.GLES30.GL_R16UI;
-import static android.opengl.GLES30.GL_RED_INTEGER;
-import static javax.microedition.khronos.opengles.GL10.GL_UNSIGNED_SHORT;
+import static com.project.module_order.utils.ImageUtils.getBitmap;
 
 /**
  * The sample code demonstrates the capability of HUAWEI AR Engine to identify

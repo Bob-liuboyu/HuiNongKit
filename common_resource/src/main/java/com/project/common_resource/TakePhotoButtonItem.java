@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class TakePhotoButtonItem implements Serializable {
     private String name;
     private boolean select;
+    private String url;
 
     public TakePhotoButtonItem(String name, boolean select) {
         this.name = name;
@@ -18,6 +19,14 @@ public class TakePhotoButtonItem implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public void setName(String name) {
