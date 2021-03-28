@@ -63,7 +63,7 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
                 View view = mBinding.recyclerView.getLayoutManager().findViewByPosition(index);
                 TextView textView = view.findViewById(R.id.tv_num);
-                setResult(1, new Intent().putExtra("result", textView.getText().toString()));
+                setResult(RESULT_OK, new Intent().putExtra("result", textView.getText().toString()));
                 finish();
             }
         });

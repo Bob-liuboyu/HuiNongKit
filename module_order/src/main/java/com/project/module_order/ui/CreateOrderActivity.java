@@ -15,20 +15,24 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.project.arch_repo.base.activity.BaseTitleBarActivity;
+import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DateTimeUtils;
 import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.widget.CommonDialog;
 import com.project.arch_repo.widget.DatePickerDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
+import com.project.common_resource.OrderPhotoListModel;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
 import com.project.module_order.databinding.OrderActivityCreateBinding;
 import com.xxf.arch.dialog.IResultDialog;
+import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.utils.StatusBarUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
@@ -45,20 +49,37 @@ import permissions.dispatcher.RuntimePermissions;
  */
 @RuntimePermissions
 @Route(path = ArouterConfig.Order.ORDER_CREATE)
-public class CreateOrderActivity extends BaseTitleBarActivity {
+public class CreateOrderActivity extends BaseActivity {
 
     protected OrderActivityCreateBinding binding;
     protected OrderPhotosListAdapter mAdapter;
+    //选择
     protected static final int RESULT_CHOOSE = 100;
+    //开始测量
+    protected static final int RESULT_MEASURE = 101;
+    protected List<OrderPhotoListModel> result = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getTitleBar().setTitleBarTitle("理赔登记");
         int color = 0xFFFFFFFF;
         StatusBarUtils.compatStatusBarForM(this, false, color);
         binding = OrderActivityCreateBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        binding.tvTitle.setText("理赔登记");
+        binding.tvRightText.setText("提交");
+        binding.tvRightText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtils.showToast("提交理赔");
+            }
+        });
+        binding.ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         createMeasureWayItems();
         createPolicyCategoryItems();
         setListener();
@@ -169,15 +190,26 @@ public class CreateOrderActivity extends BaseTitleBarActivity {
         if (data == null) {
             return;
         }
-        if (requestCode == RESULT_CHOOSE && resultCode == 1) {
-            binding.tvCode.setText(data.getStringExtra("result"));
+        if (resultCode == RESULT_OK) {
+            if (requestCode == RESULT_CHOOSE) {
+                binding.tvCode.setText(data.getStringExtra("result"));
+            } else if (requestCode == RESULT_MEASURE) {
+                List<OrderPhotoListModel> forResult = (List<OrderPhotoListModel>) data.getSerializableExtra("result");
+                if (forResult != null && forResult.size() > 0) {
+                    result.addAll(forResult);
+                    mAdapter = new OrderPhotosListAdapter();
+                    binding.recyclerView.setAdapter(mAdapter);
+                    mAdapter.bindData(true, result);
+                    binding.tvTitlePhotos.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 
     @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     public void showCamera() {
         ARouter.getInstance().build(ArouterConfig.Order.ORDER_TAKE_PHOTO)
-                .navigation();
+                .navigation(CreateOrderActivity.this, RESULT_MEASURE);
     }
 
     @OnShowRationale({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})

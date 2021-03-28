@@ -78,6 +78,7 @@
                 android:visibility="@{titleBar.getTitleBarRightIcon().get()!=null ?View.VISIBLE:View.GONE}" />
 
             <CheckedTextView
+                android:id="@+id/tv_right_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -87,7 +88,7 @@
                 android:onClick="@{(view)->titleBar.getTitleBarRightTextListener()}"
                 android:paddingRight="@dimen/arch_dp_15"
                 android:text='@{titleBar.getTitleBarRightText()}'
-                android:textColor="@android:color/white"
+                android:textColor="#333333"
                 android:textSize="13sp"
                 android:visibility='@{TextUtils.isEmpty(titleBar.getTitleBarRightText().get())?View.GONE:View.VISIBLE}'
                 tools:text="menu" />

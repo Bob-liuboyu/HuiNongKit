@@ -6,7 +6,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#80000000">
 
         <android.opengl.GLSurfaceView
             android:id="@+id/surfaceview"
@@ -31,6 +32,17 @@
                 android:layout_margin="@dimen/arch_dp_15"
                 android:src="@mipmap/icon_back_white" />
 
+            <TextView
+                android:id="@+id/tv_commit"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingRight="25dp"
+                android:text="完成"
+                android:textColor="#ffffff"
+                android:textSize="14dp" />
+
         </RelativeLayout>
 
         <TextView
@@ -38,7 +50,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/ll_bottom"
-            android:layout_below="@id/ll_title_bar"
             android:background="#80000000"
             android:gravity="center"
             android:textColor="@color/arch_white"

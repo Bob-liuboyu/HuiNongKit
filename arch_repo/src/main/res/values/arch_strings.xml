@@ -12,6 +12,7 @@
     <string name="arch_str_get_it">知道啦</string>
     <string name="arch_str_make_key">生成私钥</string>
     <string name="arch_str_confirm">确认</string>
+    <string name="arch_str_commit">提交</string>
     <string name="arch_str_cancel">取消</string>
     <string name="arch_str_pwd_tips">请输入您的身份密码</string>
     <string name="arch_str_tips">温馨提示</string>

@@ -20,6 +20,8 @@ import com.huawei.hiar.exceptions.ARUnavailableClientSdkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceApkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceNotInstalledException;
 import com.project.arch_repo.base.activity.BaseActivity;
+import com.project.common_resource.OrderPhotoListModel;
+import com.project.common_resource.PhotoModel;
 import com.project.common_resource.TakePhotoButtonItem;
 import com.project.common_resource.TakePhotoModel;
 import com.project.config_repo.ArouterConfig;
@@ -36,8 +38,10 @@ import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 import com.xxf.view.recyclerview.adapter.OnItemClickListener;
 import com.xxf.view.utils.StatusBarUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author liuboyu  E-mail:545777678@qq.com
@@ -63,6 +67,11 @@ public class TakePhotoActivity extends BaseActivity {
     private int currentBtnIndex = 0;
     private Bitmap maskBitmap;
     private List<TakePhotoButtonItem> list;
+    /**
+     * 每只猪的照片
+     */
+    private List<PhotoModel> photos = new ArrayList<>();
+    private List<OrderPhotoListModel> result = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +108,9 @@ public class TakePhotoActivity extends BaseActivity {
         mBinding.ivTake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TakePhotoModel model = SurfaceCameraUtils.takePhoto(TakePhotoActivity.this, mBinding.surfaceview, maskBitmap);
+                PhotoModel photoModel = new PhotoModel();
 
+                TakePhotoModel model = SurfaceCameraUtils.takePhoto(TakePhotoActivity.this, mBinding.surfaceview, maskBitmap);
                 // 先显示，后保存
                 View view = mBinding.rvPhotos.getLayoutManager().findViewByPosition(currentBtnIndex);
                 View btnLayout = view.findViewById(R.id.ll_button);
@@ -113,6 +123,16 @@ public class TakePhotoActivity extends BaseActivity {
                 list.get(currentBtnIndex).setUrl(model.getPath());
                 checkNextButton();
                 canNext();
+
+                photoModel.setUrl(model.getPath());
+                photoModel.setAddr("物资学院路3");
+                photoModel.setCompany("百度3");
+                photoModel.setDate("2021-02-33");
+                photoModel.setName("刘伯羽3");
+                photoModel.setNum("15011447166");
+                photoModel.setPos("12312312312,q2312313");
+                photoModel.setResult(new Random().nextInt(100) + "kg");
+                photos.add(photoModel);
 
             }
         });
@@ -148,6 +168,27 @@ public class TakePhotoActivity extends BaseActivity {
                 finish();
             }
         });
+
+        mBinding.tvNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        mBinding.tvCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commitPhotos();
+            }
+        });
+    }
+
+    private void commitPhotos() {
+        result.add(new OrderPhotoListModel(new Random().nextInt(100) + "kg", photos));
+        Intent intent = new Intent(TakePhotoActivity.this, CreateOrderActivity.class);
+        intent.putExtra("result", (Serializable) result);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     /**
