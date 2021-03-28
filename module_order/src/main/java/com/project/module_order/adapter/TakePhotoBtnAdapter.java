@@ -40,6 +40,14 @@ public class TakePhotoBtnAdapter extends BaseBindableAdapter<OrderItemTakePhotoB
                 }
             }
         });
+        binding.ivPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onClickPhoto(index);
+                }
+            }
+        });
     }
 
     public void setDeletePhotoListener(DeletePhotoListener listener) {
@@ -48,5 +56,6 @@ public class TakePhotoBtnAdapter extends BaseBindableAdapter<OrderItemTakePhotoB
 
     public interface DeletePhotoListener {
         void onDelete(int pos);
+        void onClickPhoto(int pos);
     }
 }

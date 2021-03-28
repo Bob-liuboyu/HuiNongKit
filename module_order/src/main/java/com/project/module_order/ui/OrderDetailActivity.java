@@ -117,7 +117,7 @@ public class OrderDetailActivity extends CreateOrderActivity {
                 bundle.putSerializable("list", (Serializable) models);
                 bundle.putInt("index", index);
 
-                Intent intent = new Intent(OrderDetailActivity.this, PrePhotoActivity.class);
+                Intent intent = new Intent(OrderDetailActivity.this, PrePhotosActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
 

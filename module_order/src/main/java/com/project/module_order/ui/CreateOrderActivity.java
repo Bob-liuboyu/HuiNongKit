@@ -16,14 +16,19 @@ import android.widget.Toast;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.activity.BaseTitleBarActivity;
+import com.project.arch_repo.utils.DateTimeUtils;
 import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.widget.CommonDialog;
+import com.project.arch_repo.widget.DatePickerDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
 import com.project.module_order.databinding.OrderActivityCreateBinding;
+import com.xxf.arch.dialog.IResultDialog;
 import com.xxf.view.utils.StatusBarUtils;
+
+import java.util.Date;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
@@ -144,6 +149,18 @@ public class CreateOrderActivity extends BaseTitleBarActivity {
                 }).show();
             }
         });
+        binding.tvDateStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDataPicker("起始日期", binding.tvDateStart);
+            }
+        });
+        binding.tvDateEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDataPicker("结束日期", binding.tvDateEnd);
+            }
+        });
     }
 
     @Override
@@ -206,6 +223,25 @@ public class CreateOrderActivity extends BaseTitleBarActivity {
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         CreateOrderActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    private void showDataPicker(String title, final TextView textView) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, title, new IResultDialog.OnDialogClickListener<Date>() {
+            @Override
+            public boolean onCancel(@NonNull DialogInterface dialog, @Nullable Date cancelResult) {
+                return false;
+            }
+
+            @Override
+            public boolean onConfirm(@NonNull DialogInterface dialog, @Nullable Date confirmResult) {
+                String time = DateTimeUtils.formatDateSimple(confirmResult.getTime());
+                textView.setText(time);
+                textView.setSelected(true);
+                return false;
+            }
+        });
+        datePickerDialog.initData(new Date());
+        datePickerDialog.show();
     }
 
 }

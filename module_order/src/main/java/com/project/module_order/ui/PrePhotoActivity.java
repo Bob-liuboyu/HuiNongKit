@@ -1,21 +1,16 @@
 package com.project.module_order.ui;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.project.arch_repo.base.activity.BaseActivity;
-import com.project.arch_repo.utils.GlideUtils;
-import com.project.common_resource.OrderPhotoListModel;
 import com.project.config_repo.ArouterConfig;
-import com.project.module_order.adapter.OrderPhotoListAdapter;
 import com.project.module_order.databinding.OrderActivityPrePhotoBinding;
-import com.xxf.arch.utils.ToastUtils;
-import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
-import com.xxf.view.recyclerview.adapter.BaseViewHolder;
-import com.xxf.view.recyclerview.adapter.OnItemClickListener;
 
-import java.util.List;
+import java.io.File;
 
 /**
  * @author liuboyu  E-mail:545777678@qq.com
@@ -25,9 +20,8 @@ import java.util.List;
 @Route(path = ArouterConfig.Order.ORDER_PHOTO_PRE)
 public class PrePhotoActivity extends BaseActivity {
     private OrderActivityPrePhotoBinding mBinding;
-    private List<OrderPhotoListModel> list;
-    private int index;
-    private OrderPhotoListAdapter mAdapter;
+    @Autowired
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,55 +32,13 @@ public class PrePhotoActivity extends BaseActivity {
     }
 
     private void initView() {
-        list = (List<OrderPhotoListModel>) getIntent().getSerializableExtra("list");
-        index = getIntent().getIntExtra("index", 0);
-        if (list == null || list.get(index) == null) {
-            return;
-        }
-        mBinding.recyclerView.setAdapter(mAdapter = new OrderPhotoListAdapter());
-        updataPage(index);
-        mAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
-                mBinding.setModel(mAdapter.getItem(index));
-                GlideUtils.loadImage(mBinding.ivPhoto, mAdapter.getItem(index).getUrl());
-            }
-        });
+        mBinding.ivPhoto.setImageURI(Uri.fromFile(new File(url)));
         mBinding.ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        mBinding.tvPre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (index - 1 < 0) {
-                    ToastUtils.showToast("已经是第一张了");
-                    return;
-                }
-                index--;
-                updataPage(index);
-            }
-        });
-        mBinding.tvNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (index + 1 > list.size()) {
-                    ToastUtils.showToast("已经是最后一张了");
-                    return;
-                }
-                index++;
-                updataPage(index);
-            }
-        });
     }
 
-
-    private void updataPage(int index) {
-        mBinding.tvTitle.setText("(" + index + "/" + list.size() + ")");
-        mAdapter.bindData(true, list.get(index).getPhotos());
-        mBinding.setModel(mAdapter.getItem(0));
-        GlideUtils.loadImage(mBinding.ivPhoto, mAdapter.getItem(0).getUrl());
-    }
 }

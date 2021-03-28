@@ -37,6 +37,9 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".ui.PrePhotosActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.PrePhotoActivity"
             android:screenOrientation="portrait" />
 

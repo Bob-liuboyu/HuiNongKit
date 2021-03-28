@@ -11,8 +11,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.huawei.hiar.ARBodyTrackingConfig;
-import com.huawei.hiar.ARConfigBase;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.huawei.hiar.AREnginesApk;
 import com.huawei.hiar.ARSession;
 import com.huawei.hiar.exceptions.ARCameraNotAvailableException;
@@ -22,6 +21,7 @@ import com.huawei.hiar.exceptions.ARUnavailableServiceApkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceNotInstalledException;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.common_resource.TakePhotoButtonItem;
+import com.project.common_resource.TakePhotoModel;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
 import com.project.module_order.adapter.TakePhotoBtnAdapter;
@@ -99,7 +99,9 @@ public class TakePhotoActivity extends BaseActivity {
         mBinding.ivTake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bitmap bitmap = SurfaceCameraUtils.takePhoto(TakePhotoActivity.this, mBinding.surfaceview, maskBitmap);
+                TakePhotoModel model = SurfaceCameraUtils.takePhoto(TakePhotoActivity.this, mBinding.surfaceview, maskBitmap);
+
+                // 先显示，后保存
                 View view = mBinding.rvPhotos.getLayoutManager().findViewByPosition(currentBtnIndex);
                 View btnLayout = view.findViewById(R.id.ll_button);
                 ImageView img = view.findViewById(R.id.iv_photo);
@@ -107,10 +109,11 @@ public class TakePhotoActivity extends BaseActivity {
                 delete.setVisibility(View.VISIBLE);
                 btnLayout.setVisibility(View.GONE);
                 img.setVisibility(View.VISIBLE);
-                img.setImageBitmap(bitmap);
-                list.get(currentBtnIndex).setUrl(bitmap.toString());
+                img.setImageBitmap(model.getBitmap());
+                list.get(currentBtnIndex).setUrl(model.getPath());
                 checkNextButton();
                 canNext();
+
             }
         });
 
@@ -128,8 +131,15 @@ public class TakePhotoActivity extends BaseActivity {
                 btnLayout.setVisibility(View.VISIBLE);
                 delete.setVisibility(View.INVISIBLE);
                 llRootView.setSelected(true);
-                list.get(currentBtnIndex).setUrl("");
                 canNext();
+            }
+
+            @Override
+            public void onClickPhoto(int pos) {
+                ARouter.getInstance()
+                        .build(ArouterConfig.Order.ORDER_PHOTO_PRE)
+                        .withString("url", list.get(pos).getUrl())
+                        .navigation();
             }
         });
         mBinding.ivBack.setOnClickListener(new View.OnClickListener() {
@@ -204,9 +214,9 @@ public class TakePhotoActivity extends BaseActivity {
                     return;
                 }
                 mArSession = new ARSession(this);
-                ARBodyTrackingConfig config = new ARBodyTrackingConfig(mArSession);
-                config.setEnableItem(ARConfigBase.ENABLE_DEPTH | ARConfigBase.ENABLE_MASK);
-                mArSession.configure(config);
+//                ARBodyTrackingConfig config = new ARBodyTrackingConfig(mArSession);
+//                config.setEnableItem(ARConfigBase.ENABLE_DEPTH | ARConfigBase.ENABLE_MASK);
+//                mArSession.configure(config);
                 mBodyRenderManager.setArSession(mArSession);
             } catch (Exception capturedException) {
                 exception = capturedException;

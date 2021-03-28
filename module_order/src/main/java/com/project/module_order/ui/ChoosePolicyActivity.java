@@ -3,11 +3,13 @@ package com.project.module_order.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.project.arch_repo.base.activity.BaseTitleBarActivity;
 import com.project.common_resource.OrderModel;
 import com.project.config_repo.ArouterConfig;
+import com.project.module_order.R;
 import com.project.module_order.adapter.ChoosePolicyListAdapter;
 import com.project.module_order.databinding.OrderActivityChoosePolicyBinding;
 import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
@@ -59,7 +61,9 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
-                setResult(1, new Intent().putExtra("result", munes.get(index).getId()));
+                View view = mBinding.recyclerView.getLayoutManager().findViewByPosition(index);
+                TextView textView = view.findViewById(R.id.tv_num);
+                setResult(1, new Intent().putExtra("result", textView.getText().toString()));
                 finish();
             }
         });
