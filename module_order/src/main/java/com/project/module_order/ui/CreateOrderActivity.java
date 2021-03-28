@@ -201,6 +201,8 @@ public class CreateOrderActivity extends BaseActivity {
                     binding.recyclerView.setAdapter(mAdapter);
                     mAdapter.bindData(true, result);
                     binding.tvTitlePhotos.setVisibility(View.VISIBLE);
+                    binding.llCount.setVisibility(View.VISIBLE);
+                    binding.tvCount.setText(result.size() + "只");
                 }
             }
         }

@@ -1,13 +1,17 @@
 package com.project.module_order.adapter;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.arch_repo.base.recyclerview.BaseBindableAdapter;
 import com.project.arch_repo.utils.DisplayUtils;
 import com.project.common_resource.OrderPhotoListModel;
 import com.project.module_order.databinding.OrderItemPolicyListPhotosBinding;
+import com.project.module_order.ui.PrePhotosActivity;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 
 /**
@@ -43,8 +47,16 @@ public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyL
                 binding.tvIndex.setText((index + 1) + "");
             }
         });
-
-
+        binding.shadowView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("data", model);
+                Intent intent = new Intent(getContext(), PrePhotosActivity.class);
+                intent.putExtras(bundle);
+                getContext().startActivity(intent);
+            }
+        });
     }
 
     public void setWidth(int width) {

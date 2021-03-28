@@ -33,8 +33,6 @@ public class OrderPhotoListAdapter extends BaseBindableAdapter<OrderItemPolicyLi
         params.height = width;
         binding.ivPhoto.setLayoutParams(params);
         GlideUtils.loadImage(binding.ivPhoto, model.getUrl());
-
-
     }
 
     public void setWidth(int width) {

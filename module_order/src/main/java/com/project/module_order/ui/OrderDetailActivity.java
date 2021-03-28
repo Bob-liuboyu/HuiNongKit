@@ -1,6 +1,5 @@
 package com.project.module_order.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -9,11 +8,7 @@ import com.project.common_resource.OrderPhotoListModel;
 import com.project.common_resource.PhotoModel;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
-import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
-import com.xxf.view.recyclerview.adapter.BaseViewHolder;
-import com.xxf.view.recyclerview.adapter.OnItemClickListener;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -109,23 +104,5 @@ public class OrderDetailActivity extends CreateOrderActivity {
         binding.recyclerView.setAdapter(mAdapter);
         mAdapter.bindData(true, models);
         binding.tvTitlePhotos.setVisibility(View.VISIBLE);
-        mAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("list", (Serializable) models);
-                bundle.putInt("index", index);
-
-                Intent intent = new Intent(OrderDetailActivity.this, PrePhotosActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-
-//                ARouter.getInstance().build(ArouterConfig.Order.ORDER_PHOTO_PRE)
-//                        .withObject("list", models)
-//                        .withInt("index", index)
-//                        .navigation();
-            }
-        });
     }
 }
