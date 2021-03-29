@@ -22,6 +22,7 @@ import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.widget.CommonDialog;
 import com.project.arch_repo.widget.DatePickerDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
+import com.project.common_resource.OrderModel;
 import com.project.common_resource.OrderPhotoListModel;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
@@ -194,7 +195,11 @@ public class CreateOrderActivity extends BaseActivity {
         }
         if (resultCode == RESULT_OK) {
             if (requestCode == RESULT_CHOOSE) {
-                binding.tvCode.setText(data.getStringExtra("result"));
+                OrderModel result = (OrderModel) data.getSerializableExtra("result");
+                binding.tvCode.setText(result.getId());
+                binding.tvName.setText(result.getName());
+                binding.tvDateStart.setText(result.getStartData());
+                binding.tvDateEnd.setText(result.getEndData());
             } else if (requestCode == RESULT_MEASURE) {
                 List<OrderPhotoListModel> forResult = (List<OrderPhotoListModel>) data.getSerializableExtra("result");
                 if (forResult != null && forResult.size() > 0) {

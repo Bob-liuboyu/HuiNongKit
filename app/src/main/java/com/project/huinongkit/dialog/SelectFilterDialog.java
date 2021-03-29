@@ -18,7 +18,7 @@ import com.project.arch_repo.utils.DateTimeUtils;
 import com.project.arch_repo.widget.DatePickerDialog;
 import com.project.huinongkit.R;
 import com.project.huinongkit.databinding.MainDialogSelectFilterBinding;
-import com.project.huinongkit.model.SelectFilterModel;
+import com.project.common_resource.SelectFilterModel;
 import com.xxf.arch.dialog.IResultDialog;
 
 import java.util.Date;
@@ -30,12 +30,14 @@ import java.util.Date;
  * @description: 筛选dialog
  */
 public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
-    MainDialogSelectFilterBinding binding;
+    private MainDialogSelectFilterBinding binding;
     private FragmentActivity activity;
+    private SelectFilterModel mFilterModel;
 
-    public SelectFilterDialog(@NonNull Context context, FragmentActivity activity, @Nullable OnDialogClickListener<SelectFilterModel> onDialogClickListener) {
+    public SelectFilterDialog(@NonNull Context context, FragmentActivity activity, SelectFilterModel filterModel, @Nullable OnDialogClickListener<SelectFilterModel> onDialogClickListener) {
         super(context, onDialogClickListener);
         this.activity = activity;
+        this.mFilterModel = filterModel;
     }
 
     @Override
@@ -51,14 +53,14 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         binding.okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirm(new SelectFilterModel("ok", "ok"));
+                confirm(mFilterModel);
             }
         });
 
         binding.okCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancel(new SelectFilterModel("cancel", "cancel"));
+                cancel(mFilterModel);
             }
         });
 
@@ -67,6 +69,7 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
             public void onClick(View v) {
                 binding.tvStatusDone.setSelected(true);
                 binding.tvStatusTodo.setSelected(false);
+                mFilterModel.setStatus("tvStatusDone");
             }
         });
 
@@ -75,6 +78,7 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
             public void onClick(View v) {
                 binding.tvStatusDone.setSelected(false);
                 binding.tvStatusTodo.setSelected(true);
+                mFilterModel.setStatus("tvStatusTodo");
             }
         });
 
@@ -96,6 +100,8 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         DatePickerDialog datePickerDialog = new DatePickerDialog(activity, "起始日期", new OnDialogClickListener<Date>() {
             @Override
             public boolean onCancel(@NonNull DialogInterface dialog, @Nullable Date cancelResult) {
+                binding.tvDateStart.setText("");
+                binding.tvDateStart.setSelected(false);
                 return false;
             }
 
@@ -104,6 +110,7 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
                 String time = DateTimeUtils.formatDateSimple(confirmResult.getTime());
                 binding.tvDateStart.setText(time);
                 binding.tvDateStart.setSelected(true);
+                mFilterModel.setStartDate(time);
                 return false;
             }
         });
@@ -115,6 +122,8 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         new DatePickerDialog(activity, "结束日期", new IResultDialog.OnDialogClickListener<Date>() {
             @Override
             public boolean onCancel(@NonNull DialogInterface dialog, @Nullable Date cancelResult) {
+                binding.tvDateEnd.setText("");
+                binding.tvDateEnd.setSelected(false);
                 return false;
             }
 
@@ -123,6 +132,7 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
                 String time = DateTimeUtils.formatDateSimple(confirmResult.getTime());
                 binding.tvDateEnd.setText(time);
                 binding.tvDateEnd.setSelected(true);
+                mFilterModel.setEndDate(time);
                 return false;
             }
         }).show();
@@ -141,5 +151,24 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         window.getDecorView().setBackgroundColor(Color.TRANSPARENT);
         window.getAttributes().windowAnimations = R.style.arch_AnimBottomDialog;
         window.setDimAmount(0.5f);
+
+    }
+
+    private void initData() {
+        if (mFilterModel == null) {
+            mFilterModel = new SelectFilterModel();
+        }
+        binding.tvDateStart.setText(mFilterModel.getStartDate());
+        binding.tvDateEnd.setText(mFilterModel.getEndDate());
+        if (mFilterModel.getStatus().equals("tvStatusDone")) {
+            binding.tvStatusTodo.setSelected(false);
+            binding.tvStatusDone.setSelected(true);
+        } else if (mFilterModel.getStatus().equals("tvStatusTodo")) {
+            binding.tvStatusTodo.setSelected(true);
+            binding.tvStatusDone.setSelected(false);
+        } else {
+            binding.tvStatusTodo.setSelected(false);
+            binding.tvStatusDone.setSelected(false);
+        }
     }
 }
