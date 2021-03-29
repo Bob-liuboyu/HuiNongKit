@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -211,6 +212,15 @@ public class CreateOrderActivity extends BaseActivity {
 
     @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     public void showCamera() {
+        String name = binding.tvName.getText().toString();
+        String code = binding.tvCode.getText().toString();
+        String startTime = binding.tvDateStart.getText().toString();
+        String endTime = binding.tvDateEnd.getText().toString();
+        if (TextUtils.isEmpty(name) | TextUtils.isEmpty(code) |
+                TextUtils.isEmpty(startTime) | TextUtils.isEmpty(endTime)) {
+            ToastUtils.showToast("请先填写信息后在进行测量！");
+            return;
+        }
         ARouter.getInstance().build(ArouterConfig.Order.ORDER_TAKE_PHOTO)
                 .navigation(CreateOrderActivity.this, RESULT_MEASURE);
     }
@@ -231,7 +241,7 @@ public class CreateOrderActivity extends BaseActivity {
 
     @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     void onCameraNeverAskAgain() {
-        Toast.makeText(this, "permission_camera_never_askagain", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "请到设置中开启拍照、储存卡权限", Toast.LENGTH_SHORT).show();
     }
 
     private void showRationaleDialog(String message, final PermissionRequest request) {

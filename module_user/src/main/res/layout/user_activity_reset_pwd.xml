@@ -33,6 +33,7 @@
                 android:hint="请输入新密码（6-20位数字及字母）"
                 android:maxLength="20"
                 android:paddingLeft="10dp"
+                android:inputType="textPassword"
                 android:textColor="#374F66"
                 android:textSize="17sp" />
 
@@ -45,6 +46,7 @@
                 android:id="@+id/et_re_pwd"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
+                android:inputType="textPassword"
                 android:background="@null"
                 android:layout_marginTop="@dimen/arch_dp_26"
                 android:hint="请输入新密码（6-20位数字及字母）"
