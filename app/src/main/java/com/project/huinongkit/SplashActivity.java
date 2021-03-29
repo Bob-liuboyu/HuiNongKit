@@ -1,6 +1,7 @@
 package com.project.huinongkit;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
@@ -29,7 +30,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int color = 0xFFFFFFFF;
+        int color = Color.parseColor("#1d3077");
         StatusBarUtils.compatStatusBarForM(this, false, color);
         binding = MainActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

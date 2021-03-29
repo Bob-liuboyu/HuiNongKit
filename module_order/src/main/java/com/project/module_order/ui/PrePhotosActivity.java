@@ -16,6 +16,8 @@ import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 import com.xxf.view.recyclerview.adapter.OnItemClickListener;
 import com.xxf.view.utils.StatusBarUtils;
 
+import java.util.List;
+
 
 /**
  * @author liuboyu  E-mail:545777678@qq.com
@@ -24,7 +26,8 @@ import com.xxf.view.utils.StatusBarUtils;
  */
 public class PrePhotosActivity extends BaseActivity {
     private OrderActivityPrePhotosBinding mBinding;
-    private OrderPhotoListModel data;
+    private List<OrderPhotoListModel> list;
+    private int index;
     private OrderPhotoListAdapter mAdapter;
     private int currentIndex;
 
@@ -39,16 +42,15 @@ public class PrePhotosActivity extends BaseActivity {
     }
 
     private void initView() {
-        data = (OrderPhotoListModel) getIntent().getSerializableExtra("data");
-
-        if (data == null) {
+        list = (List<OrderPhotoListModel>) getIntent().getSerializableExtra("list");
+        index = getIntent().getIntExtra("index", 0);
+        if (list == null || list.get(index) == null) {
             return;
         }
-        mBinding.tvTitle.setText("图片详情");
+        mBinding.tvTitle.setText("图片详情" + "(" + (index + 1) + "/" + list.size() + ")");
         mAdapter = new OrderPhotoListAdapter();
 
-        mAdapter.bindData(true, data.getPhotos());
-        GlideUtils.loadImage(mBinding.ivPhoto, mAdapter.getItem(0).getUrl());
+        updataPage(index);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
@@ -63,7 +65,7 @@ public class PrePhotosActivity extends BaseActivity {
                 int rightWidth = mBinding.tvNext.getWidth();
                 int width = (screenWidth - DisplayUtils.dip2px(mBinding.recyclerView.getContext(), 15 * 2) - leftWidth - rightWidth) / 3;
                 mAdapter.setWidth(width);
-                mAdapter.bindData(true, data.getPhotos());
+                mAdapter.bindData(true, list.get(index).getPhotos());
                 mBinding.recyclerView.setAdapter(mAdapter);
             }
         });
@@ -76,24 +78,32 @@ public class PrePhotosActivity extends BaseActivity {
         mBinding.tvPre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentIndex - 1 < 0) {
-                    ToastUtils.showToast("已经是第一张了");
+                if (index - 1 < 0) {
+                    ToastUtils.showToast("已经是第一只了");
                     return;
                 }
-                currentIndex--;
-                GlideUtils.loadImage(mBinding.ivPhoto, mAdapter.getItem(currentIndex).getUrl());
+                index--;
+                updataPage(index);
             }
         });
         mBinding.tvNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentIndex + 1 > data.getPhotos().size()) {
-                    ToastUtils.showToast("已经是最后一张了");
+                if (index + 1 >= list.size()) {
+                    ToastUtils.showToast("已经是最后一只了");
                     return;
                 }
-                currentIndex++;
-                GlideUtils.loadImage(mBinding.ivPhoto, mAdapter.getItem(currentIndex).getUrl());
+                index++;
+                updataPage(index);
             }
         });
+    }
+
+
+    private void updataPage(int index) {
+        mBinding.tvTitle.setText("(" + (index + 1) + "/" + list.size() + ")");
+        mAdapter.bindData(true, list.get(index).getPhotos());
+        mBinding.setModel(mAdapter.getItem(0));
+        GlideUtils.loadImage(mBinding.ivPhoto, mAdapter.getItem(0).getUrl());
     }
 }

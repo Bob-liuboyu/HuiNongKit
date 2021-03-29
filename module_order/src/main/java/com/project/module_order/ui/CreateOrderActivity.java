@@ -71,7 +71,8 @@ public class CreateOrderActivity extends BaseActivity {
         binding.tvRightText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.showToast("提交理赔");
+                ToastUtils.showToast("提交理赔成功");
+                finish();
             }
         });
         binding.ivBack.setOnClickListener(new View.OnClickListener() {

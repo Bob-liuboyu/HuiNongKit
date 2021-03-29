@@ -11,8 +11,11 @@ import com.project.arch_repo.base.recyclerview.BaseBindableAdapter;
 import com.project.arch_repo.utils.DisplayUtils;
 import com.project.common_resource.OrderPhotoListModel;
 import com.project.module_order.databinding.OrderItemPolicyListPhotosBinding;
+import com.project.module_order.ui.OrderDetailActivity;
 import com.project.module_order.ui.PrePhotosActivity;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
+
+import java.io.Serializable;
 
 /**
  * @fileName: OrderListAdater
@@ -50,8 +53,17 @@ public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyL
         binding.shadowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("data", model);
+//                Intent intent = new Intent(getContext(), PrePhotosActivity.class);
+//                intent.putExtras(bundle);
+//                getContext().startActivity(intent);
+
+
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("data", model);
+                bundle.putSerializable("list", (Serializable) getData());
+                bundle.putInt("index", index);
+
                 Intent intent = new Intent(getContext(), PrePhotosActivity.class);
                 intent.putExtras(bundle);
                 getContext().startActivity(intent);
