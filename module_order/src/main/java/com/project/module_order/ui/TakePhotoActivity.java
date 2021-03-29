@@ -172,7 +172,9 @@ public class TakePhotoActivity extends BaseActivity {
         mBinding.tvNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                result.add(new OrderPhotoListModel(new Random().nextInt(100) + "kg", photos));
+                photos.clear();
+                reset();
             }
         });
         mBinding.tvCommit.setOnClickListener(new View.OnClickListener() {
@@ -189,6 +191,16 @@ public class TakePhotoActivity extends BaseActivity {
         intent.putExtra("result", (Serializable) result);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    private void reset() {
+        for (TakePhotoButtonItem takePhotoButtonItem : list) {
+            takePhotoButtonItem.setSelect(false);
+            takePhotoButtonItem.setUrl("");
+        }
+        list.get(0).setSelect(true);
+        currentBtnIndex = 0;
+        mBtnAdapter.notifyDataSetChanged();
     }
 
     /**

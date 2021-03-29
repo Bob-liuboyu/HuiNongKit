@@ -1,6 +1,7 @@
 package com.project.module_order.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,14 @@ public class TakePhotoBtnAdapter extends BaseBindableAdapter<OrderItemTakePhotoB
                 }
             }
         });
+
+        if(TextUtils.isEmpty(orderModel.getUrl())){
+            binding.ivPhoto.setVisibility(View.GONE);
+            binding.llButton.setVisibility(View.VISIBLE);
+        }else{
+            binding.ivPhoto.setVisibility(View.VISIBLE);
+            binding.llButton.setVisibility(View.GONE);
+        }
     }
 
     public void setDeletePhotoListener(DeletePhotoListener listener) {
