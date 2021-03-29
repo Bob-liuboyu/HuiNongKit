@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.google.ar.core.Config;
+import com.huawei.hiar.ARBodyTrackingConfig;
+import com.huawei.hiar.ARConfigBase;
 import com.huawei.hiar.AREnginesApk;
 import com.huawei.hiar.ARSession;
 import com.huawei.hiar.exceptions.ARCameraNotAvailableException;
@@ -267,9 +270,10 @@ public class TakePhotoActivity extends BaseActivity {
                     return;
                 }
                 mArSession = new ARSession(this);
-//                ARBodyTrackingConfig config = new ARBodyTrackingConfig(mArSession);
-//                config.setEnableItem(ARConfigBase.ENABLE_DEPTH | ARConfigBase.ENABLE_MASK);
-//                mArSession.configure(config);
+                ARBodyTrackingConfig config = new ARBodyTrackingConfig(mArSession);
+                config.setEnableItem(ARConfigBase.ENABLE_DEPTH | ARConfigBase.ENABLE_MASK);
+                config.setFocusMode(ARConfigBase.FocusMode.AUTO_FOCUS);
+                mArSession.configure(config);
                 mBodyRenderManager.setArSession(mArSession);
             } catch (Exception capturedException) {
                 exception = capturedException;

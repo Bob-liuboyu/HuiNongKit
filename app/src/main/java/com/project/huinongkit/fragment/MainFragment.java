@@ -4,7 +4,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.fragment.BaseFragment;
@@ -65,7 +68,7 @@ public class MainFragment extends BaseFragment {
                 .compose(XXF.<List<PolicyListResDTO>>bindToErrorNotice())
                 .compose(XXF.<List<PolicyListResDTO>>bindToProgressHud(
                         new ProgressHUDTransformerImpl.Builder(this)
-                                .setLoadingNotice("登陆中...")))
+                                .setLoadingNotice("努力加载中...")))
                 .subscribe(new Consumer<List<PolicyListResDTO>>() {
                     @Override
                     public void accept(List<PolicyListResDTO> data) throws Exception {
@@ -115,10 +118,20 @@ public class MainFragment extends BaseFragment {
 
                     @Override
                     public boolean onConfirm(@NonNull DialogInterface dialog, @Nullable SelectFilterModel confirmResult) {
-                        ToastUtils.showToast(confirmResult.getStart());
+//                        initData();
                         return false;
                     }
                 }).show();
+            }
+        });
+        mBinding.mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+//                    initData();
+                    return true;
+                }
+                return false;
             }
         });
     }
