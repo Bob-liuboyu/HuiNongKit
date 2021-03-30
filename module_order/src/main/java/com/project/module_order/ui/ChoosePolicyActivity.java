@@ -41,16 +41,16 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
 
     private void initView() {
         final List<OrderModel> munes = new ArrayList<>();
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "评价医生","刘伯羽","2021-3-29","2021-31"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "诊脉记录","刘伯羽","2021-3-29","2021-31"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "医疗记录","刘伯羽","2021-3-29","2021-31"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "购药记录","刘伯羽","2021-3-29","2021-31"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "优惠信息","刘伯羽","2021-3-29","2021-31"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "健康提示","刘伯羽","2021-3-29","2021-31"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "同步查询","刘伯羽","2021-3-29","2021-31"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "活动发布","刘伯羽","2021-3-29","2021-31"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "经验交流","刘伯羽","2021-3-29","2021-31"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "联系客服","刘伯羽","2021-3-29","2021-31"));
+        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "评价医生","刘伯羽","2021-3-29","2021-3-1"));
+        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "诊脉记录","刘伯羽","2021-3-29","2021-3-1"));
+        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "医疗记录","刘伯羽","2021-3-29","2021-3-1"));
+        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "购药记录","刘伯羽","2021-3-29","2021-3-1"));
+        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "优惠信息","刘伯羽","2021-3-29","2021-3-1"));
+        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "健康提示","刘伯羽","2021-3-29","2021-3-1"));
+        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "同步查询","刘伯羽","2021-3-29","2021-3-1"));
+        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "活动发布","刘伯羽","2021-3-29","2021-3-1"));
+        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "经验交流","刘伯羽","2021-3-29","2021-3-1"));
+        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "联系客服","刘伯羽","2021-3-29","2021-3-1"));
 
         mBinding.recyclerView.setAdapter(mAdapter = new ChoosePolicyListAdapter());
         mAdapter.bindData(true, munes);

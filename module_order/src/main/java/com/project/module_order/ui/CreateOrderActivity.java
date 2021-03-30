@@ -181,7 +181,7 @@ public class CreateOrderActivity extends BaseActivity {
         binding.tvDateStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(binding.tvDateStart.getText().toString())) {
+                if (!TextUtils.isEmpty(binding.tvDateStart.getText().toString())) {
                     Date parse = null;
                     try {
                         parse = sdf.parse(binding.tvDateStart.getText().toString());
@@ -197,7 +197,7 @@ public class CreateOrderActivity extends BaseActivity {
         binding.tvDateEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(binding.tvDateEnd.getText().toString())) {
+                if (!TextUtils.isEmpty(binding.tvDateEnd.getText().toString())) {
                     Date parse = null;
                     try {
                         parse = sdf.parse(binding.tvDateEnd.getText().toString());

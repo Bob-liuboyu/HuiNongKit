@@ -45,7 +45,7 @@
 
         <activity
             android:name=".ui.TakePhotoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
 
     </application>
 </manifest>
