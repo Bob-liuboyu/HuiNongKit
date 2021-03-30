@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,13 @@ import android.view.WindowManager;
 import com.project.arch_repo.R;
 import com.project.arch_repo.base.dialog.BaseDialog;
 import com.project.arch_repo.databinding.ArchDialogDatapickerBinding;
+import com.project.common_resource.SelectFilterModel;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * @author liuboyu  E-mail:545777678@qq.com
@@ -31,12 +36,14 @@ public class DatePickerDialog extends BaseDialog<Date> {
     /**
      * 选择监听
      */
-    private Date initDate;
     private String title;
+    private Date date;
 
-    public DatePickerDialog(@NonNull Context context,String title, @Nullable OnDialogClickListener<Date> onDialogClickListener) {
+
+    public DatePickerDialog(@NonNull Context context, String title, Date date, @Nullable OnDialogClickListener<Date> onDialogClickListener) {
         super(context, onDialogClickListener);
         this.title = title;
+        this.date = date;
     }
 
     @Override
@@ -61,6 +68,11 @@ public class DatePickerDialog extends BaseDialog<Date> {
         window.getDecorView().setBackgroundColor(Color.TRANSPARENT);
         window.getAttributes().windowAnimations = R.style.arch_AnimBottomDialog;
         window.setDimAmount(0.5f);
+
+        if (date != null) {
+            __initDate2UI(date);
+        }
+
     }
 
 
@@ -70,7 +82,7 @@ public class DatePickerDialog extends BaseDialog<Date> {
     private void initView() {
         mBinding.mDatePicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         mBinding.tvTitle.setText(title);
-        __initDate2UI();
+        __initDate2UI(new Date());
         mBinding.tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,25 +115,12 @@ public class DatePickerDialog extends BaseDialog<Date> {
     }
 
 
-    private void __initDate2UI() {
-        if (mBinding == null || initDate == null) {
-            return;
-        }
+    private void __initDate2UI(Date date) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(initDate);
+        calendar.setTime(date);
         mBinding.mDatePicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), null);
         mBinding.mTimePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
         mBinding.mTimePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
     }
 
-    /**
-     * 初始化显示日期
-     *
-     * @param initDate
-     */
-    public DatePickerDialog initData(Date initDate) {
-        this.initDate = initDate;
-        __initDate2UI();
-        return this;
-    }
 }

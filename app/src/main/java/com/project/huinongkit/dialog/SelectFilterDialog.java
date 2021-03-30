@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -20,8 +21,12 @@ import com.project.huinongkit.R;
 import com.project.huinongkit.databinding.MainDialogSelectFilterBinding;
 import com.project.common_resource.SelectFilterModel;
 import com.xxf.arch.dialog.IResultDialog;
+import com.xxf.arch.utils.ToastUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * @fileName: SelectFilterDialog
@@ -33,11 +38,16 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
     private MainDialogSelectFilterBinding binding;
     private FragmentActivity activity;
     private SelectFilterModel mFilterModel;
+    private SimpleDateFormat sdf;
 
     public SelectFilterDialog(@NonNull Context context, FragmentActivity activity, SelectFilterModel filterModel, @Nullable OnDialogClickListener<SelectFilterModel> onDialogClickListener) {
         super(context, onDialogClickListener);
         this.activity = activity;
         this.mFilterModel = filterModel;
+        if (this.mFilterModel == null) {
+            this.mFilterModel = new SelectFilterModel();
+        }
+        sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
     }
 
     @Override
@@ -53,7 +63,7 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         binding.okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirm(mFilterModel);
+                commit();
             }
         });
 
@@ -85,19 +95,37 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         binding.tvDateStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showStartDataPicker();
+                if (!TextUtils.isEmpty(mFilterModel.getStartDate())) {
+                    try {
+                        Date parse = sdf.parse(mFilterModel.getStartDate());
+                        showStartDataPicker(parse);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    showStartDataPicker(new Date());
+                }
             }
         });
         binding.tvDateEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEndDataPicker();
+                if (!TextUtils.isEmpty(mFilterModel.getEndDate())) {
+                    try {
+                        Date parse = sdf.parse(mFilterModel.getEndDate());
+                        showEndDataPicker(parse);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    showEndDataPicker(new Date());
+                }
             }
         });
     }
 
-    private void showStartDataPicker() {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(activity, "起始日期", new OnDialogClickListener<Date>() {
+    private void showStartDataPicker(Date date) {
+        new DatePickerDialog(activity, "起始日期", date, new OnDialogClickListener<Date>() {
             @Override
             public boolean onCancel(@NonNull DialogInterface dialog, @Nullable Date cancelResult) {
                 binding.tvDateStart.setText("");
@@ -113,13 +141,11 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
                 mFilterModel.setStartDate(time);
                 return false;
             }
-        });
-        datePickerDialog.initData(new Date());
-        datePickerDialog.show();
+        }).show();
     }
 
-    private void showEndDataPicker() {
-        new DatePickerDialog(activity, "结束日期", new IResultDialog.OnDialogClickListener<Date>() {
+    private void showEndDataPicker(Date date) {
+        new DatePickerDialog(activity, "结束日期", date, new IResultDialog.OnDialogClickListener<Date>() {
             @Override
             public boolean onCancel(@NonNull DialogInterface dialog, @Nullable Date cancelResult) {
                 binding.tvDateEnd.setText("");
@@ -155,9 +181,6 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
     }
 
     private void initData() {
-        if (mFilterModel == null) {
-            mFilterModel = new SelectFilterModel();
-        }
         binding.tvDateStart.setText(mFilterModel.getStartDate());
         binding.tvDateEnd.setText(mFilterModel.getEndDate());
         if (mFilterModel.getStatus().equals("tvStatusDone")) {
@@ -170,5 +193,30 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
             binding.tvStatusTodo.setSelected(false);
             binding.tvStatusDone.setSelected(false);
         }
+    }
+
+    private void commit() {
+        if ((!binding.tvStatusTodo.isSelected() && !binding.tvStatusDone.isSelected())
+                || TextUtils.isEmpty(mFilterModel.getStartDate())
+                || TextUtils.isEmpty(mFilterModel.getEndDate())) {
+            ToastUtils.showToast("搜索条件有误，请重新填写");
+            return;
+        }
+
+        Date start = null;
+        Date end = null;
+        try {
+            start = sdf.parse(mFilterModel.getStartDate());
+            end = sdf.parse(mFilterModel.getEndDate());
+            if (end.compareTo(start) <= 0) {
+                ToastUtils.showToast("结束时间必须大于开始时间");
+                return;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        confirm(mFilterModel);
+
     }
 }

@@ -32,9 +32,12 @@ import com.xxf.arch.dialog.IResultDialog;
 import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.utils.StatusBarUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
@@ -60,6 +63,7 @@ public class CreateOrderActivity extends BaseActivity {
     //开始测量
     protected static final int RESULT_MEASURE = 101;
     protected List<OrderPhotoListModel> result = new ArrayList<>();
+    private SimpleDateFormat sdf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,7 @@ public class CreateOrderActivity extends BaseActivity {
         int color = 0xFFFFFFFF;
         StatusBarUtils.compatStatusBarForM(this, false, color);
         binding = OrderActivityCreateBinding.inflate(getLayoutInflater());
+        sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         setContentView(binding.getRoot());
         binding.tvTitle.setText("理赔登记");
         binding.tvRightText.setText("提交");
@@ -176,13 +181,33 @@ public class CreateOrderActivity extends BaseActivity {
         binding.tvDateStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDataPicker("起始日期", binding.tvDateStart);
+                if (TextUtils.isEmpty(binding.tvDateStart.getText().toString())) {
+                    Date parse = null;
+                    try {
+                        parse = sdf.parse(binding.tvDateStart.getText().toString());
+                        showDataPicker("起始日期", binding.tvDateStart, parse);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    showDataPicker("起始日期", binding.tvDateStart, new Date());
+                }
             }
         });
         binding.tvDateEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDataPicker("结束日期", binding.tvDateEnd);
+                if (TextUtils.isEmpty(binding.tvDateEnd.getText().toString())) {
+                    Date parse = null;
+                    try {
+                        parse = sdf.parse(binding.tvDateEnd.getText().toString());
+                        showDataPicker("结束日期", binding.tvDateEnd, parse);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    showDataPicker("结束日期", binding.tvDateEnd, new Date());
+                }
             }
         });
     }
@@ -275,8 +300,8 @@ public class CreateOrderActivity extends BaseActivity {
         CreateOrderActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
-    private void showDataPicker(String title, final TextView textView) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, title, new IResultDialog.OnDialogClickListener<Date>() {
+    private void showDataPicker(String title, final TextView textView, final Date date) {
+        new DatePickerDialog(this, title, date, new IResultDialog.OnDialogClickListener<Date>() {
             @Override
             public boolean onCancel(@NonNull DialogInterface dialog, @Nullable Date cancelResult) {
                 return false;
@@ -289,9 +314,7 @@ public class CreateOrderActivity extends BaseActivity {
                 textView.setSelected(true);
                 return false;
             }
-        });
-        datePickerDialog.initData(new Date());
-        datePickerDialog.show();
+        }).show();
     }
 
 }
