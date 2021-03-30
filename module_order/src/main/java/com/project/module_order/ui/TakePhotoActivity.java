@@ -23,6 +23,7 @@ import com.huawei.hiar.exceptions.ARUnavailableClientSdkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceApkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceNotInstalledException;
 import com.project.arch_repo.base.activity.BaseActivity;
+import com.project.arch_repo.widget.ImagePopupWindow;
 import com.project.common_resource.OrderPhotoListModel;
 import com.project.common_resource.PhotoModel;
 import com.project.common_resource.TakePhotoButtonItem;
@@ -183,7 +184,8 @@ public class TakePhotoActivity extends BaseActivity {
         mBinding.tvCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                commitPhotos();
+//                commitPhotos();
+                showPopupWindow();
             }
         });
     }
@@ -365,5 +367,10 @@ public class TakePhotoActivity extends BaseActivity {
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+    }
+
+    private void showPopupWindow() {
+        ImagePopupWindow popupWindow = new ImagePopupWindow(this);
+        popupWindow.showAsDropDown(mBinding.tvCommit, 100, 0);
     }
 }
