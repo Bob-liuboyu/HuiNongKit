@@ -94,7 +94,6 @@ public class TakePhotoActivity extends BaseActivity {
         list.add(new TakePhotoButtonItem("测重识别", true));
         list.add(new TakePhotoButtonItem("猪脸识别", false));
         list.add(new TakePhotoButtonItem("耳标识别", false));
-        mBinding.ivTemp.setText("测重识别");
         mBinding.rvPhotos.setAdapter(mBtnAdapter = new TakePhotoBtnAdapter());
         mBtnAdapter.bindData(true, list);
         mBtnAdapter.setOnItemClickListener(new OnItemClickListener() {
@@ -105,7 +104,6 @@ public class TakePhotoActivity extends BaseActivity {
                 }
                 list.get(index).setSelect(true);
                 mBtnAdapter.notifyDataSetChanged();
-                mBinding.ivTemp.setText(list.get(index).getName());
                 currentBtnIndex = index;
             }
         });
@@ -219,7 +217,6 @@ public class TakePhotoActivity extends BaseActivity {
             currentBtnIndex = currentBtnIndex + 1;
             list.get(currentBtnIndex).setSelect(true);
             mBtnAdapter.notifyDataSetChanged();
-            mBinding.ivTemp.setText(list.get(currentBtnIndex).getName());
         }
     }
 
