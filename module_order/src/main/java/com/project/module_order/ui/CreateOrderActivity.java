@@ -25,6 +25,8 @@ import com.project.arch_repo.widget.DatePickerDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
 import com.project.common_resource.OrderModel;
 import com.project.common_resource.OrderPhotoListModel;
+import com.project.common_resource.global.GlobalDataManager;
+import com.project.common_resource.response.LoginResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
@@ -65,6 +67,14 @@ public class CreateOrderActivity extends BaseActivity {
     protected static final int RESULT_MEASURE = 101;
     protected List<OrderPhotoListModel> result = new ArrayList<>();
     private SimpleDateFormat sdf;
+    /**
+     * 测量方式
+     */
+    private List<LoginResDTO.SettingsBean.CategoryBean> category;
+    private List<LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean> measureWays;
+
+    private LoginResDTO.SettingsBean.CategoryBean currentCategory;
+    private LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean currentMeasureWay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,40 +82,42 @@ public class CreateOrderActivity extends BaseActivity {
         int color = 0xFFFFFFFF;
         StatusBarUtils.compatStatusBarForM(this, false, color);
         binding = OrderActivityCreateBinding.inflate(getLayoutInflater());
-        sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         setContentView(binding.getRoot());
-        binding.tvTitle.setText("理赔登记");
-        binding.tvRightText.setText("提交");
-        binding.tvRightText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ToastUtils.showToast("提交理赔成功");
-                finish();
-            }
-        });
-        binding.ivBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        initView();
         createMeasureWayItems();
         createPolicyCategoryItems();
         setListener();
     }
 
+    private void initView() {
+        sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        category = GlobalDataManager.getInstance().getSettings().getCategory();
+        binding.tvTitle.setText("理赔登记");
+        binding.tvRightText.setText("提交");
+        if (category != null) {
+            currentCategory = category.get(0);
+        }
+        if (currentCategory != null && currentCategory.getMeasure_ways() != null && currentCategory.getMeasure_ways().size() > 0) {
+            measureWays = currentCategory.getMeasure_ways();
+            currentMeasureWay = measureWays.get(0);
+        }
+    }
+
     private void createMeasureWayItems() {
+        if (measureWays == null) {
+            return;
+        }
         int padding15 = DisplayUtils.dip2px(this, 15);
         int padding3 = DisplayUtils.dip2px(this, 3);
 
-        for (int i = 0; i < 2; i++) {
+        for (final LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean way : measureWays) {
             final TextView item = new TextView(this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.rightMargin = DisplayUtils.dip2px(this, 15);
             item.setPadding(padding15, padding3, padding15, padding3);
             item.setBackgroundResource(R.drawable.filter_select_status);
             item.setTextColor(getResources().getColorStateList(R.color.filter_select_text));
-            item.setText("测长");
+            item.setText(way.getMeasureName());
             item.setGravity(Gravity.CENTER);
             item.setLayoutParams(params);
             binding.llMeasureWay.addView(item);
@@ -116,6 +128,7 @@ public class CreateOrderActivity extends BaseActivity {
                         binding.llMeasureWay.getChildAt(j).setSelected(false);
                     }
                     item.setSelected(true);
+                    currentMeasureWay = way;
                 }
             });
         }
@@ -123,15 +136,18 @@ public class CreateOrderActivity extends BaseActivity {
 
 
     private void createPolicyCategoryItems() {
+        if (category == null) {
+            return;
+        }
         int padding15 = DisplayUtils.dip2px(this, 15);
         int padding3 = DisplayUtils.dip2px(this, 3);
 
-        for (int i = 0; i < 2; i++) {
+        for (final LoginResDTO.SettingsBean.CategoryBean bean : category) {
             final TextView item = new TextView(this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.leftMargin = DisplayUtils.dip2px(this, 15);
             item.setPadding(padding15, padding3, padding15, padding3);
-            item.setText("公猪");
+            item.setText(bean.getClaimName());
             item.setBackgroundResource(R.drawable.filter_select_status);
             item.setTextColor(getResources().getColorStateList(R.color.filter_select_text));
             item.setGravity(Gravity.CENTER);
@@ -144,6 +160,7 @@ public class CreateOrderActivity extends BaseActivity {
                         binding.llPolicyCategory.getChildAt(j).setSelected(false);
                     }
                     item.setSelected(true);
+                    currentCategory = bean;
                 }
             });
         }
@@ -209,6 +226,19 @@ public class CreateOrderActivity extends BaseActivity {
                 } else {
                     showDataPicker("结束日期", binding.tvDateEnd, new Date());
                 }
+            }
+        });
+        binding.tvRightText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtils.showToast("提交理赔成功");
+                finish();
+            }
+        });
+        binding.ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

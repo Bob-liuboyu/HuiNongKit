@@ -73,6 +73,7 @@
                         android:layout_marginLeft="@dimen/arch_dp_15"
                         android:layout_marginTop="@dimen/arch_dp_50"
                         android:layout_weight="1">
+
                         <LinearLayout
                             android:id="@+id/ll_data"
                             android:layout_width="match_parent"
@@ -247,9 +248,9 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_marginTop="@dimen/arch_dp_15"
+                        android:layout_height="100dp"
                         android:layout_marginLeft="@dimen/arch_dp_15"
-                        android:layout_height="100dp">
+                        android:layout_marginTop="@dimen/arch_dp_15">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/rv_photos"
@@ -265,10 +266,10 @@
 
                 <LinearLayout
                     android:id="@+id/ll_warning"
-                    android:layout_marginTop="@dimen/arch_dp_50"
                     android:layout_width="@dimen/arch_dp_66"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="@dimen/arch_dp_50"
                     android:layout_marginRight="@dimen/arch_dp_15"
                     android:layout_marginBottom="@dimen/arch_dp_15"
                     android:background="#40d1031c"
@@ -302,11 +303,10 @@
                 android:background="@drawable/base_bg_gradient_black"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom"
-                    android:gravity="bottom|center"
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/arch_dp_40">
 
@@ -314,21 +314,22 @@
                         android:id="@+id/iv_take"
                         android:layout_width="64dp"
                         android:layout_height="64dp"
-                        android:layout_marginTop="@dimen/arch_dp_30"
-                        android:layout_marginBottom="@dimen/arch_dp_30"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
                         android:src="@mipmap/icon_take" />
 
                     <TextView
                         android:id="@+id/tv_next"
                         android:layout_width="80dp"
                         android:layout_height="@dimen/arch_dp_30"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerInParent="true"
                         android:background="@drawable/base_rect_btn_bg_selector"
                         android:enabled="false"
-                        android:gravity="center"
                         android:text="下一只"
                         android:textColor="#ffffff"
                         android:textSize="@dimen/arch_dp_13" />
-                </LinearLayout>
+                </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
 

@@ -3,7 +3,6 @@ package com.project.user;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -55,7 +54,10 @@ public class LoginActivity extends BaseActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login();
+//                login();
+                ARouter.getInstance().build(ArouterConfig.Order.ORDER_TAKE_PHOTO)
+                        .navigation();
+                finish();
             }
         });
         binding.tvForgetPwd.setOnClickListener(new View.OnClickListener() {
