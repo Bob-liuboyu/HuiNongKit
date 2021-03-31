@@ -3,14 +3,18 @@ package com.project.user;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.google.gson.Gson;
 import com.project.arch_repo.base.activity.BaseActivity;
+import com.project.arch_repo.utils.SharedPreferencesUtils;
 import com.project.arch_repo.utils.StringUtils;
 import com.project.arch_repo.widget.CommonDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
+import com.project.common_resource.global.GlobalDataManager;
 import com.project.common_resource.response.LoginResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.user.databinding.UserActivityLoginBinding;
@@ -51,10 +55,7 @@ public class LoginActivity extends BaseActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ARouter.getInstance().build(ArouterConfig.User.RESET_PWD)
-                        .navigation();
-                finish();
-//                login();
+                login();
             }
         });
         binding.tvForgetPwd.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +99,33 @@ public class LoginActivity extends BaseActivity {
                 .subscribe(new Consumer<LoginResDTO>() {
                     @Override
                     public void accept(LoginResDTO loginUserInfoDTO) throws Exception {
+                        if (loginUserInfoDTO == null || loginUserInfoDTO.getSettings() == null || loginUserInfoDTO.getUserinfo() == null || TextUtils.isEmpty(loginUserInfoDTO.getToken())) {
+                            return;
+                        }
+                        saveData(loginUserInfoDTO);
+                        if (loginUserInfoDTO.getSettings().isNeedResetPwd()) {
+                            ARouter.getInstance().build(ArouterConfig.User.RESET_PWD)
+                                    .navigation();
+                        } else {
+                            ARouter.getInstance().build(ArouterConfig.Main.MAIN)
+                                    .navigation();
+                        }
+                        finish();
                     }
                 });
+    }
+
+    /**
+     * 保存数据到本地
+     *
+     * @param loginUserInfoDTO
+     */
+    private void saveData(LoginResDTO loginUserInfoDTO) {
+        GlobalDataManager.getInstance().updateInfo(loginUserInfoDTO);
+        SharedPreferencesUtils.setBooleanValue(getActivity(), "login", true);
+        Gson gson = new Gson();
+        SharedPreferencesUtils.setStringValue(getApplicationContext(), "user_info", gson.toJson(loginUserInfoDTO.getUserinfo()));
+        SharedPreferencesUtils.setStringValue(getApplicationContext(), "settings", gson.toJson(loginUserInfoDTO.getSettings()));
+        SharedPreferencesUtils.setStringValue(getApplicationContext(), "token", loginUserInfoDTO.getToken());
     }
 }

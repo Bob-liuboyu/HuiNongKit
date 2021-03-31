@@ -69,4 +69,20 @@ public class GrDialogUtils {
         return dialog;
     }
 
+    /**
+     * 创建一个普通对话框
+     *
+     * @param context
+     * @return
+     */
+    public static CommonDialog createCommonDialog(Context context, String title, String desc, String confirm, String cancel, CommonDialog.OnDialogClickListener listener) {
+        CommonDialog dialog = new CommonDialog(context);
+        dialog.setDialogListener(listener);
+        dialog.setTitleBar(title);
+        dialog.setDesc(desc);
+        dialog.setConfirm(confirm);
+        dialog.setCancel(cancel);
+        return dialog;
+    }
+
 }

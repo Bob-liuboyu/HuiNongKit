@@ -3,10 +3,15 @@ package com.project.huinongkit;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.google.gson.Gson;
 import com.project.arch_repo.base.activity.BaseActivity;
+import com.project.arch_repo.utils.SharedPreferencesUtils;
+import com.project.common_resource.global.GlobalDataManager;
+import com.project.common_resource.response.LoginResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.huinongkit.databinding.MainActivitySplashBinding;
 import com.xxf.view.utils.StatusBarUtils;
@@ -65,8 +70,24 @@ public class SplashActivity extends BaseActivity {
      */
     @SuppressLint("WrongConstant")
     private void goLogin() {
-        ARouter.getInstance().build(ArouterConfig.User.LOGIN)
-                .navigation();
+        boolean login = SharedPreferencesUtils.getBooleanValue(getActivity(), "login", false);
+        Gson gson = new Gson();
+        String user_info = SharedPreferencesUtils.getStringValue(getApplicationContext(), "user_info", "");
+        String settings = SharedPreferencesUtils.getStringValue(getApplicationContext(), "settings", "");
+        String token = SharedPreferencesUtils.getStringValue(getApplicationContext(), "token", "");
+
+        LoginResDTO.UserinfoBean userinfoBean = gson.fromJson(user_info, LoginResDTO.UserinfoBean.class);
+        LoginResDTO.SettingsBean settingsBean = gson.fromJson(settings, LoginResDTO.SettingsBean.class);
+        if (login && userinfoBean != null && settingsBean != null && !TextUtils.isEmpty(token)) {
+            ARouter.getInstance().build(ArouterConfig.Main.MAIN)
+                    .navigation();
+            GlobalDataManager.getInstance().updateSettings(settingsBean);
+            GlobalDataManager.getInstance().updateUserInfo(userinfoBean);
+            GlobalDataManager.getInstance().updateUserToken(token);
+        } else {
+            ARouter.getInstance().build(ArouterConfig.User.LOGIN)
+                    .navigation();
+        }
         finish();
     }
 }

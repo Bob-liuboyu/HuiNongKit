@@ -2,14 +2,25 @@ package com.project.huinongkit.fragment;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
+
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.fragment.BaseFragment;
+import com.project.arch_repo.utils.SharedPreferencesUtils;
+import com.project.arch_repo.widget.CommonDialog;
+import com.project.arch_repo.widget.GrDialogUtils;
 import com.project.common_resource.UserInfoModel;
+import com.project.common_resource.global.GlobalDataManager;
+import com.project.common_resource.response.LoginResDTO;
+import com.project.config_repo.ArouterConfig;
 import com.project.huinongkit.databinding.MainFragmentMineBinding;
+import com.project.user.LoginActivity;
 
 /**
  * @fileName: MainFragment
@@ -30,13 +41,32 @@ public class MineFragment extends BaseFragment {
     }
 
     private void initView() {
-        UserInfoModel userInfoModel = new UserInfoModel();
-        userInfoModel.setCompany("北京神州慧达信息技术有限公司");
-        userInfoModel.setId("1234");
-        userInfoModel.setName("刘伯羽");
-        mBinding.setModel(userInfoModel);
-        mBinding.tvVersion.setText("版本号：" + getAppVersionCode(getActivity()));
-        mBinding.tvSupport.setText("技术支持：400-5678-8980");
+        LoginResDTO.UserinfoBean userInfo = GlobalDataManager.getInstance().getUserInfo();
+        LoginResDTO.SettingsBean settings = GlobalDataManager.getInstance().getSettings();
+        mBinding.setModel(userInfo);
+
+        mBinding.tvVersion.setText("版本号：" + settings.getVersion());
+        mBinding.tvSupport.setText("技术支持：" + settings.getPhone_support());
+        mBinding.tvExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GrDialogUtils.createCommonDialog(getActivity(), "退出登陆", "确认退出登陆吗？", "推出", "取消", new CommonDialog.OnDialogClickListener() {
+                    @Override
+                    public void onClickConfirm(View view) {
+                        GlobalDataManager.getInstance().updateInfo(null);
+                        SharedPreferencesUtils.setBooleanValue(getActivity(),"login",false);
+                        ARouter.getInstance().build(ArouterConfig.User.LOGIN)
+                                .navigation();
+                        getActivity().finish();
+                    }
+
+                    @Override
+                    public void onClickCancel(View view) {
+
+                    }
+                }).show();
+            }
+        });
     }
 
     public static MineFragment newInstance() {
@@ -48,24 +78,5 @@ public class MineFragment extends BaseFragment {
 
     private void initData() {
 
-    }
-
-    /**
-     * 获取版本号
-     *
-     * @return 当前应用的版本号
-     */
-    public static String getAppVersionCode(Context context) {
-        int versioncode = 0;
-        String versionName;
-        try {
-            PackageManager pm = context.getPackageManager();
-            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
-//             versionName = pi.versionName;
-            versioncode = pi.versionCode;
-        } catch (Exception e) {
-            Log.e("VersionInfo", "Exception", e);
-        }
-        return versioncode + "";
     }
 }
