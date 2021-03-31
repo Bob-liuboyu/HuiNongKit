@@ -5,7 +5,7 @@ import java.util.List;
 
 public class LoginResDTO implements Serializable {
     private SettingsBean settings;
-    private UserinfoBean userinfo;
+    private UserinfoBean userInfo;
     private String token;
 
     public SettingsBean getSettings() {
@@ -16,12 +16,12 @@ public class LoginResDTO implements Serializable {
         this.settings = settings;
     }
 
-    public UserinfoBean getUserinfo() {
-        return userinfo;
+    public UserinfoBean getUserInfo() {
+        return userInfo;
     }
 
-    public void setUserinfo(UserinfoBean userinfo) {
-        this.userinfo = userinfo;
+    public void setUserInfo(UserinfoBean userInfo) {
+        this.userInfo = userInfo;
     }
 
     public String getToken() {

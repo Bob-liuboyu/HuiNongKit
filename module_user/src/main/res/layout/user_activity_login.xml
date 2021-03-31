@@ -64,7 +64,6 @@
                     android:background="@null"
                     android:hint="请输入密码"
                     android:inputType="textPassword"
-                    android:maxLength="6"
                     android:paddingLeft="10dp"
                     android:textColor="#374F66"
                     android:textSize="17sp" />

@@ -10,7 +10,6 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.gson.Gson;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.SharedPreferencesUtils;
-import com.project.arch_repo.utils.StringUtils;
 import com.project.arch_repo.widget.CommonDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
 import com.project.common_resource.global.GlobalDataManager;
@@ -45,6 +44,8 @@ public class LoginActivity extends BaseActivity {
         binding = UserActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setListener();
+        binding.etPhone.setText("admin");
+        binding.etPwd.setText("admin12345");
     }
 
     public void setListener() {
@@ -54,10 +55,7 @@ public class LoginActivity extends BaseActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                login();
-                ARouter.getInstance().build(ArouterConfig.Order.ORDER_TAKE_PHOTO)
-                        .navigation();
-                finish();
+                login();
             }
         });
         binding.tvForgetPwd.setOnClickListener(new View.OnClickListener() {
@@ -81,10 +79,11 @@ public class LoginActivity extends BaseActivity {
     private void login() {
         String phone = binding.etPhone.getText().toString();
         String pwd = binding.etPwd.getText().toString();
-        if (TextUtils.isEmpty(phone) || !StringUtils.isMobilPhoneNumber(phone)) {
-            ToastUtils.showToast("请输入正确的手机号");
-            return;
-        }
+        // FIXME: 2021-03-31 
+//        if (TextUtils.isEmpty(phone) || !StringUtils.isMobilPhoneNumber(phone)) {
+//            ToastUtils.showToast("请输入正确的手机号");
+//            return;
+//        }
         if (TextUtils.isEmpty(pwd)) {
             ToastUtils.showToast("请输入密码");
             return;
@@ -101,12 +100,13 @@ public class LoginActivity extends BaseActivity {
                 .subscribe(new Consumer<LoginResDTO>() {
                     @Override
                     public void accept(LoginResDTO loginUserInfoDTO) throws Exception {
-                        if (loginUserInfoDTO == null || loginUserInfoDTO.getSettings() == null || loginUserInfoDTO.getUserinfo() == null || TextUtils.isEmpty(loginUserInfoDTO.getToken())) {
+                        if (loginUserInfoDTO == null || loginUserInfoDTO.getSettings() == null || loginUserInfoDTO.getUserInfo() == null || TextUtils.isEmpty(loginUserInfoDTO.getToken())) {
                             return;
                         }
                         saveData(loginUserInfoDTO);
                         if (loginUserInfoDTO.getSettings().isNeedResetPwd()) {
                             ARouter.getInstance().build(ArouterConfig.User.RESET_PWD)
+                                    .withString("phone",binding.etPhone.getText().toString())
                                     .navigation();
                         } else {
                             ARouter.getInstance().build(ArouterConfig.Main.MAIN)
@@ -126,7 +126,7 @@ public class LoginActivity extends BaseActivity {
         GlobalDataManager.getInstance().updateInfo(loginUserInfoDTO);
         SharedPreferencesUtils.setBooleanValue(getActivity(), "login", true);
         Gson gson = new Gson();
-        SharedPreferencesUtils.setStringValue(getApplicationContext(), "user_info", gson.toJson(loginUserInfoDTO.getUserinfo()));
+        SharedPreferencesUtils.setStringValue(getApplicationContext(), "user_info", gson.toJson(loginUserInfoDTO.getUserInfo()));
         SharedPreferencesUtils.setStringValue(getApplicationContext(), "settings", gson.toJson(loginUserInfoDTO.getSettings()));
         SharedPreferencesUtils.setStringValue(getApplicationContext(), "token", loginUserInfoDTO.getToken());
     }

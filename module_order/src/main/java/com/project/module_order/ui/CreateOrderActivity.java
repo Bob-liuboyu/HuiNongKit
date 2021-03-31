@@ -132,6 +132,9 @@ public class CreateOrderActivity extends BaseActivity {
                 }
             });
         }
+        if (binding.llMeasureWay.getChildCount() > 0) {
+            binding.llMeasureWay.getChildAt(0).setSelected(true);
+        }
     }
 
 
@@ -163,6 +166,9 @@ public class CreateOrderActivity extends BaseActivity {
                     currentCategory = bean;
                 }
             });
+        }
+        if (binding.llPolicyCategory.getChildCount() > 0) {
+            binding.llPolicyCategory.getChildAt(0).setSelected(true);
         }
     }
 

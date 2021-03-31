@@ -45,10 +45,11 @@ public class LoginRepositoryImpl implements ILoginDataSource {
     }
 
     @Override
-    public Observable<Boolean> updatePwd(String phone, String password) {
+    public Observable<Boolean> updatePwd(String phone, String password, String token) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("phone", phone);
         jsonObject.addProperty("password", password);
+        jsonObject.addProperty("token", token);
         return XXF.getApiService(UserApiService.class)
                 .updatePwd(jsonObject)
                 .map(new Function<ResponseDTO, Boolean>() {

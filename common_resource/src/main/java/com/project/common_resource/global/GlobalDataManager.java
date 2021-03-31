@@ -11,7 +11,7 @@ import com.project.common_resource.response.LoginResDTO;
 public class GlobalDataManager {
 
     private LoginResDTO.SettingsBean settings;
-    private LoginResDTO.UserinfoBean userinfo;
+    private LoginResDTO.UserinfoBean userInfo;
     private String token;
 
     private GlobalDataManager() {
@@ -26,7 +26,7 @@ public class GlobalDataManager {
     }
 
     public void updateUserInfo(LoginResDTO.UserinfoBean userinfo) {
-        this.userinfo = userinfo;
+        this.userInfo = userinfo;
     }
 
     public void updateUserToken(String token) {
@@ -49,12 +49,12 @@ public class GlobalDataManager {
             return;
         }
         updateSettings(resp.getSettings());
-        updateUserInfo(resp.getUserinfo());
+        updateUserInfo(resp.getUserInfo());
         updateUserToken(resp.getToken());
     }
 
     public LoginResDTO.UserinfoBean getUserInfo() {
-        return userinfo;
+        return userInfo;
     }
 
     public String getToken() {

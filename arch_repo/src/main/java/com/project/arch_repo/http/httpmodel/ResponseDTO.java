@@ -13,6 +13,12 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class ResponseDTO<T> {
+
+    public static int CODE_SUCCESS = 200;
+    public static final int CODE_TOKEN_OVER_TIME = 200004;
+    public static final int CODE_BODY_NULL = -1;
+
+
     private static final String FIELD_CODE = "code";
     private static final String FIELD_MESSAGE = "message";
     private static final String FIELD_RESULT = "data";

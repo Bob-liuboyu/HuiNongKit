@@ -7,10 +7,11 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.activity.BaseTitleBarActivity;
-import com.project.common_resource.response.LoginResDTO;
+import com.project.common_resource.global.GlobalDataManager;
 import com.project.config_repo.ArouterConfig;
 import com.project.user.databinding.UserActivityResetPwdBinding;
 import com.project.user.source.impl.LoginRepositoryImpl;
@@ -34,6 +35,7 @@ import io.reactivex.functions.Consumer;
 public class ResetPwdActivity extends BaseTitleBarActivity {
 
     private UserActivityResetPwdBinding binding;
+    @Autowired
     public String phone;
 
     @Override
@@ -56,13 +58,15 @@ public class ResetPwdActivity extends BaseTitleBarActivity {
         //长度限制
         binding.etPwd.setFilters(new InputFilter[]{new InputFilter.LengthFilter(UserConfig.MAX_LENTH_PWD)});
         binding.etRePwd.setFilters(new InputFilter[]{new InputFilter.LengthFilter(UserConfig.MAX_LENTH_PWD)});
-
         binding.btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submit();
             }
         });
+        // FIXME: 2021-03-31
+        binding.etPwd.setText("liuboyu0625");
+        binding.etRePwd.setText("liuboyu0625");
     }
 
     private boolean checkInputLegal() {
@@ -83,28 +87,33 @@ public class ResetPwdActivity extends BaseTitleBarActivity {
 
     @SuppressLint("CheckResult")
     private void submit() {
-        ARouter.getInstance().build(ArouterConfig.Main.MAIN)
-                .navigation();
-        finish();
+//        ARouter.getInstance().build(ArouterConfig.Main.MAIN)
+//                .navigation();
+//        finish();
 
-//        if (!checkInputLegal()) {
-//            return;
-//        }
-//        String pwd = binding.etRePwd.getText().toString().trim();
-//
-//        LoginRepositoryImpl.getInstance()
-//                .updatePwd(phone, pwd)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .compose(XXF.<Boolean>bindToLifecycle(this))
-//                .compose(XXF.<Boolean>bindToErrorNotice())
-//                .compose(XXF.<Boolean>bindToProgressHud(
-//                        new ProgressHUDTransformerImpl.Builder(this)
-//                                .setLoadingNotice("正在修改密码...")))
-//                .subscribe(new Consumer<Boolean>() {
-//                    @Override
-//                    public void accept(Boolean b) throws Exception {
-//
-//                    }
-//                });
+        if (!checkInputLegal()) {
+            return;
+        }
+        String pwd = binding.etRePwd.getText().toString().trim();
+        String token = GlobalDataManager.getInstance().getToken();
+        LoginRepositoryImpl.getInstance()
+                .updatePwd(phone, pwd, "1")
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(XXF.<Boolean>bindToLifecycle(this))
+                .compose(XXF.<Boolean>bindToErrorNotice())
+                .compose(XXF.<Boolean>bindToProgressHud(
+                        new ProgressHUDTransformerImpl.Builder(this)
+                                .setLoadingNotice("正在修改密码...")))
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean b) throws Exception {
+                        if (b) {
+                            ToastUtils.showToast("密码修改成功！");
+                            ARouter.getInstance().build(ArouterConfig.Main.MAIN)
+                                    .navigation();
+                            finish();
+                        }
+                    }
+                });
     }
 }
