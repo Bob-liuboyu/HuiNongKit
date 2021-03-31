@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -242,6 +243,10 @@ public class CreateOrderActivity extends BaseActivity {
 
     @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     public void showCamera() {
+        if (!isHuawei()) {
+            ToastUtils.showToast("当前应用只支持华为设备！");
+            return;
+        }
         String name = binding.tvName.getText().toString();
         String code = binding.tvCode.getText().toString();
         String startTime = binding.tvDateStart.getText().toString();
@@ -315,6 +320,16 @@ public class CreateOrderActivity extends BaseActivity {
                 return false;
             }
         }).show();
+    }
+
+    public boolean isHuawei() {
+
+        if (Build.BRAND == null) {
+            return false;
+        } else {
+            return Build.BRAND.toLowerCase().equals("huawei") || Build.BRAND.toLowerCase().equals("honor");
+        }
+
     }
 
 }
