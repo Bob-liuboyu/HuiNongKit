@@ -20,4 +20,8 @@ public class ImagePopupWindow extends PopupWindow {
         setTouchable(true);
     }
 
+    public void setSrc(int source) {
+        binding.img.setImageResource(source);
+    }
+
 }

@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.google.ar.core.Config;
 import com.huawei.hiar.ARBodyTrackingConfig;
 import com.huawei.hiar.ARConfigBase;
 import com.huawei.hiar.AREnginesApk;
@@ -23,6 +22,7 @@ import com.huawei.hiar.exceptions.ARUnavailableClientSdkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceApkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceNotInstalledException;
 import com.project.arch_repo.base.activity.BaseActivity;
+import com.project.arch_repo.utils.SharedPreferencesUtils;
 import com.project.arch_repo.widget.ImagePopupWindow;
 import com.project.common_resource.OrderPhotoListModel;
 import com.project.common_resource.PhotoModel;
@@ -87,6 +87,7 @@ public class TakePhotoActivity extends BaseActivity {
         setContentView(mBinding.getRoot());
         initView();
         initCamera();
+        showPigTips();
     }
 
     private void initView() {
@@ -105,6 +106,9 @@ public class TakePhotoActivity extends BaseActivity {
                 list.get(index).setSelect(true);
                 mBtnAdapter.notifyDataSetChanged();
                 currentBtnIndex = index;
+                if (list.get(currentBtnIndex).getName().contains("脸")) {
+                    showPigFaceTips();
+                }
             }
         });
         mBinding.ivTake.setOnClickListener(new View.OnClickListener() {
@@ -182,8 +186,17 @@ public class TakePhotoActivity extends BaseActivity {
         mBinding.tvCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                commitPhotos();
-                showPopupWindow();
+                commitPhotos();
+            }
+        });
+        mBinding.ivQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (list.get(currentBtnIndex).getName().contains("脸")) {
+                    showPopupWindow(R.mipmap.sample_pig_face);
+                } else {
+                    showPopupWindow(R.mipmap.sample_pig);
+                }
             }
         });
     }
@@ -194,6 +207,22 @@ public class TakePhotoActivity extends BaseActivity {
         intent.putExtra("result", (Serializable) result);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    private void showPigTips() {
+        boolean tips = SharedPreferencesUtils.getBooleanValue(this, "showTipsBody", false);
+        if (!tips) {
+            SharedPreferencesUtils.setBooleanValue(this, "showTipsBody", true);
+            showPopupWindow(R.mipmap.sample_pig);
+        }
+    }
+
+    private void showPigFaceTips() {
+        boolean tips = SharedPreferencesUtils.getBooleanValue(this, "showPigFace", false);
+        if (!tips) {
+            SharedPreferencesUtils.setBooleanValue(this, "showPigFace", true);
+            showPopupWindow(R.mipmap.sample_pig_face);
+        }
     }
 
     private void reset() {
@@ -366,8 +395,9 @@ public class TakePhotoActivity extends BaseActivity {
         }
     }
 
-    private void showPopupWindow() {
+    private void showPopupWindow(int source) {
         ImagePopupWindow popupWindow = new ImagePopupWindow(this);
+        popupWindow.setSrc(source);
         popupWindow.showAsDropDown(mBinding.tvCommit, 100, 0);
     }
 }

@@ -32,15 +32,15 @@
                 android:layout_margin="@dimen/arch_dp_15"
                 android:src="@mipmap/icon_back_white" />
 
-            <TextView
-                android:id="@+id/tv_commit"
-                android:layout_width="80dp"
-                android:layout_height="@dimen/arch_dp_30"
+            <ImageView
+                android:id="@+id/iv_question"
+                android:layout_width="@dimen/arch_dp_22"
+                android:layout_height="@dimen/arch_dp_22"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
+                android:src="@mipmap/icon_more"
                 android:layout_marginRight="@dimen/arch_dp_15"
                 android:gravity="center"
-                android:text="完成"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/arch_dp_13" />
 
@@ -68,8 +68,10 @@
                     android:orientation="vertical">
 
                     <ScrollView
+                        android:id="@+id/mScrollView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:visibility="invisible"
                         android:layout_marginLeft="@dimen/arch_dp_15"
                         android:layout_marginTop="@dimen/arch_dp_50"
                         android:layout_weight="1">
@@ -267,6 +269,7 @@
                 <LinearLayout
                     android:id="@+id/ll_warning"
                     android:layout_width="@dimen/arch_dp_66"
+                    android:visibility="gone"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="@dimen/arch_dp_50"
@@ -300,15 +303,30 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="@dimen/arch_dp_50"
-                android:background="@drawable/base_bg_gradient_black"
+                android:gravity="center"
                 android:orientation="vertical">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
+                    android:gravity="center"
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/arch_dp_40">
+
+                    <TextView
+                        android:id="@+id/tv_commit"
+                        android:layout_width="80dp"
+                        android:layout_height="@dimen/arch_dp_30"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/base_rect_btn_bg_selector"
+                        android:enabled="false"
+                        android:gravity="center"
+                        android:layout_marginBottom="@dimen/arch_dp_50"
+                        android:text="拍完了"
+                        android:textColor="#ffffff"
+                        android:textSize="@dimen/arch_dp_13" />
 
                     <ImageView
                         android:id="@+id/iv_take"
@@ -326,10 +344,12 @@
                         android:layout_centerInParent="true"
                         android:background="@drawable/base_rect_btn_bg_selector"
                         android:enabled="false"
+                        android:gravity="center"
+                        android:layout_marginTop="@dimen/arch_dp_50"
                         android:text="下一只"
                         android:textColor="#ffffff"
                         android:textSize="@dimen/arch_dp_13" />
-                </RelativeLayout>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
