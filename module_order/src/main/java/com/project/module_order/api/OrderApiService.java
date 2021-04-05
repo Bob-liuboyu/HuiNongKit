@@ -1,9 +1,8 @@
-package com.project.user.api;
+package com.project.module_order.api;
 
 import com.google.gson.JsonObject;
 import com.project.arch_repo.http.GlobalGsonConvertInterceptor;
 import com.project.arch_repo.http.httpmodel.ResponseDTO;
-import com.project.common_resource.response.LoginResDTO;
 import com.project.config_repo.ApiConfig;
 import com.xxf.arch.annotation.BaseUrl;
 import com.xxf.arch.annotation.GsonInterceptor;
@@ -20,23 +19,14 @@ import retrofit2.http.POST;
  */
 @BaseUrl(ApiConfig.BaseUrl)
 @GsonInterceptor(GlobalGsonConvertInterceptor.class)
-public interface UserApiService {
+public interface OrderApiService {
 
     /**
-     * 登陆
+     * 创建订单
      *
      * @param body
      * @return
      */
-    @POST("user/login")
-    Observable<ResponseDTO<LoginResDTO>> login(@Body JsonObject body);
-
-    /**
-     * 修改密码
-     *
-     * @param body
-     * @return
-     */
-    @POST("user/updatePwd")
-    Observable<ResponseDTO<Boolean>> updatePwd(@Body JsonObject body);
+    @POST("claim/submit")
+    Observable<ResponseDTO> submit(@Body JsonObject body);
 }

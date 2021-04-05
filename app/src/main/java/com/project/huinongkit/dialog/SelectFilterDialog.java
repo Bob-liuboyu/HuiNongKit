@@ -79,7 +79,7 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
             public void onClick(View v) {
                 binding.tvStatusDone.setSelected(true);
                 binding.tvStatusTodo.setSelected(false);
-                mFilterModel.setStatus("tvStatusDone");
+                mFilterModel.setClaimStatus("tvStatusDone");
             }
         });
 
@@ -88,16 +88,16 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
             public void onClick(View v) {
                 binding.tvStatusDone.setSelected(false);
                 binding.tvStatusTodo.setSelected(true);
-                mFilterModel.setStatus("tvStatusTodo");
+                mFilterModel.setClaimStatus("tvStatusTodo");
             }
         });
 
         binding.tvDateStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(mFilterModel.getStartDate())) {
+                if (!TextUtils.isEmpty(mFilterModel.getSubmitStartDate())) {
                     try {
-                        Date parse = sdf.parse(mFilterModel.getStartDate());
+                        Date parse = sdf.parse(mFilterModel.getSubmitStartDate());
                         showStartDataPicker(parse);
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -110,9 +110,9 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         binding.tvDateEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(mFilterModel.getEndDate())) {
+                if (!TextUtils.isEmpty(mFilterModel.getSubmitEndDate())) {
                     try {
-                        Date parse = sdf.parse(mFilterModel.getEndDate());
+                        Date parse = sdf.parse(mFilterModel.getSubmitEndDate());
                         showEndDataPicker(parse);
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -138,7 +138,7 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
                 String time = DateTimeUtils.formatDateSimple(confirmResult.getTime());
                 binding.tvDateStart.setText(time);
                 binding.tvDateStart.setSelected(true);
-                mFilterModel.setStartDate(time);
+                mFilterModel.setSubmitStartDate(time);
                 return false;
             }
         }).show();
@@ -158,7 +158,7 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
                 String time = DateTimeUtils.formatDateSimple(confirmResult.getTime());
                 binding.tvDateEnd.setText(time);
                 binding.tvDateEnd.setSelected(true);
-                mFilterModel.setEndDate(time);
+                mFilterModel.setSubmitEndDate(time);
                 return false;
             }
         }).show();
@@ -181,12 +181,12 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
     }
 
     private void initData() {
-        binding.tvDateStart.setText(mFilterModel.getStartDate());
-        binding.tvDateEnd.setText(mFilterModel.getEndDate());
-        if (mFilterModel.getStatus().equals("tvStatusDone")) {
+        binding.tvDateStart.setText(mFilterModel.getSubmitStartDate());
+        binding.tvDateEnd.setText(mFilterModel.getSubmitEndDate());
+        if (mFilterModel.getClaimStatus().equals("tvStatusDone")) {
             binding.tvStatusTodo.setSelected(false);
             binding.tvStatusDone.setSelected(true);
-        } else if (mFilterModel.getStatus().equals("tvStatusTodo")) {
+        } else if (mFilterModel.getClaimStatus().equals("tvStatusTodo")) {
             binding.tvStatusTodo.setSelected(true);
             binding.tvStatusDone.setSelected(false);
         } else {
@@ -197,8 +197,8 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
 
     private void commit() {
         if ((!binding.tvStatusTodo.isSelected() && !binding.tvStatusDone.isSelected())
-                || TextUtils.isEmpty(mFilterModel.getStartDate())
-                || TextUtils.isEmpty(mFilterModel.getEndDate())) {
+                || TextUtils.isEmpty(mFilterModel.getSubmitStartDate())
+                || TextUtils.isEmpty(mFilterModel.getSubmitEndDate())) {
             ToastUtils.showToast("搜索条件有误，请重新填写");
             return;
         }
@@ -206,8 +206,8 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         Date start = null;
         Date end = null;
         try {
-            start = sdf.parse(mFilterModel.getStartDate());
-            end = sdf.parse(mFilterModel.getEndDate());
+            start = sdf.parse(mFilterModel.getSubmitStartDate());
+            end = sdf.parse(mFilterModel.getSubmitEndDate());
             if (end.compareTo(start) <= 0) {
                 ToastUtils.showToast("结束时间必须大于开始时间");
                 return;

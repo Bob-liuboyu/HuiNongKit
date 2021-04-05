@@ -11,48 +11,87 @@ import java.io.Serializable;
  * @description:
  */
 public class SelectFilterModel implements Serializable {
-    private String status;
-    private String startDate;
-    private String endDate;
 
-    public String getStatus() {
-        return status;
-    }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    /**
+     * phone : 13051680882
+     * insureId : as
+     * claimStatus : as
+     * claimType : as
+     * submitStartDate : as
+     * submitEndDate : as
+     */
 
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
+    private String phone;
+    private String insureId;
+    private String claimStatus;
+    private String claimType;
+    private String submitStartDate;
+    private String submitEndDate;
+    private String word;
 
     /**
      * 是否都选了
+     *
      * @return
      */
     public boolean fill() {
-        return TextUtils.isEmpty(getStatus()) && TextUtils.isEmpty(getStartDate()) && TextUtils.isEmpty(getEndDate());
+        return TextUtils.isEmpty(getClaimStatus()) && TextUtils.isEmpty(getSubmitStartDate()) && TextUtils.isEmpty(getSubmitEndDate());
     }
 
-    @Override
-    public String toString() {
-        return "FilterModel{" +
-                "status='" + status + '\'' +
-                ", startDate='" + startDate + '\'' +
-                ", endDate='" + endDate + '\'' +
-                '}';
+    public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getInsureId() {
+        return insureId;
+    }
+
+    public void setInsureId(String insureId) {
+        this.insureId = insureId;
+    }
+
+    public String getClaimStatus() {
+        return claimStatus;
+    }
+
+    public void setClaimStatus(String claimStatus) {
+        this.claimStatus = claimStatus;
+    }
+
+    public String getClaimType() {
+        return claimType;
+    }
+
+    public void setClaimType(String claimType) {
+        this.claimType = claimType;
+    }
+
+    public String getSubmitStartDate() {
+        return submitStartDate;
+    }
+
+    public void setSubmitStartDate(String submitStartDate) {
+        this.submitStartDate = submitStartDate;
+    }
+
+    public String getSubmitEndDate() {
+        return submitEndDate;
+    }
+
+    public void setSubmitEndDate(String submitEndDate) {
+        this.submitEndDate = submitEndDate;
     }
 }
