@@ -60,11 +60,16 @@
                 android:src="@mipmap/icon_shaixuan" />
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+
+        <com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+            />
+
+        <include
+            android:id="@+id/layout_empty"
+            android:visibility="gone"
+            layout="@layout/layout_empty" />
     </LinearLayout>
 </layout>

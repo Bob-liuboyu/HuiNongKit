@@ -3,6 +3,7 @@ package com.project.huinongkit.source.impl;
 import com.google.gson.JsonObject;
 import com.project.arch_repo.function.ResponseDTOSimpleFunction;
 import com.project.arch_repo.http.httpmodel.ResponseDTO;
+import com.project.common_resource.SelectFilterModel;
 import com.project.common_resource.response.LoginResDTO;
 import com.project.common_resource.response.PolicyListResDTO;
 import com.project.huinongkit.api.HomeApiService;
@@ -41,15 +42,13 @@ public class HomeRepositoryImpl implements IHomeDataSource {
 
 
     @Override
-    public Observable<List<PolicyListResDTO>> getPolicyOrderList(String name, String phone, String insureId, String claimStatus, String claimType, String submitStartDate, String submitEndDate) {
+    public Observable<List<PolicyListResDTO>> getPolicyOrderList(SelectFilterModel model) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("name", name);
-        jsonObject.addProperty("phone", phone);
-        jsonObject.addProperty("insureId", insureId);
-        jsonObject.addProperty("claimStatus", claimStatus);
-        jsonObject.addProperty("claimType", claimType);
-        jsonObject.addProperty("submitStartDate", submitStartDate);
-        jsonObject.addProperty("submitEndDate", submitEndDate);
+        jsonObject.addProperty("search", model.getSearch());
+        jsonObject.addProperty("claimStatus", model.getClaimStatus());
+        jsonObject.addProperty("claimType", model.getClaimType());
+        jsonObject.addProperty("submitEndDate", model.getSubmitEndDate());
+        jsonObject.addProperty("submitStartDate", model.getSubmitStartDate());
         return XXF.getApiService(HomeApiService.class)
                 .getPolicyOrderList(jsonObject)
                 .map(new ResponseDTOSimpleFunction<List<PolicyListResDTO>>());

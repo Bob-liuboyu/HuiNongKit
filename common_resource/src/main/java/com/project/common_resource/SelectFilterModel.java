@@ -1,7 +1,5 @@
 package com.project.common_resource;
 
-import android.text.TextUtils;
-
 import java.io.Serializable;
 
 /**
@@ -14,53 +12,25 @@ public class SelectFilterModel implements Serializable {
 
 
     /**
-     * phone : 13051680882
-     * insureId : as
+     * search : DH123131
      * claimStatus : as
      * claimType : as
      * submitStartDate : as
      * submitEndDate : as
      */
 
-    private String phone;
-    private String insureId;
+    private String search;
     private String claimStatus;
     private String claimType;
-    private String submitStartDate;
     private String submitEndDate;
-    private String word;
+    private String submitStartDate;
 
-    /**
-     * 是否都选了
-     *
-     * @return
-     */
-    public boolean fill() {
-        return TextUtils.isEmpty(getClaimStatus()) && TextUtils.isEmpty(getSubmitStartDate()) && TextUtils.isEmpty(getSubmitEndDate());
+    public String getSearch() {
+        return search;
     }
 
-    public String getWord() {
-        return word;
-    }
-
-    public void setWord(String word) {
-        this.word = word;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getInsureId() {
-        return insureId;
-    }
-
-    public void setInsureId(String insureId) {
-        this.insureId = insureId;
+    public void setSearch(String search) {
+        this.search = search;
     }
 
     public String getClaimStatus() {

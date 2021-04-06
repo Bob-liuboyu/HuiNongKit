@@ -1,10 +1,16 @@
 package com.project.huinongkit.fragment;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.text.style.URLSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -16,13 +22,16 @@ import com.project.common_resource.OrderModel;
 import com.project.common_resource.SelectFilterModel;
 import com.project.common_resource.response.PolicyListResDTO;
 import com.project.config_repo.ArouterConfig;
+import com.project.huinongkit.R;
 import com.project.huinongkit.adapter.OrderListAdapter;
 import com.project.huinongkit.databinding.MainFragmentMainBinding;
 import com.project.huinongkit.dialog.SelectFilterDialog;
 import com.project.huinongkit.source.impl.HomeRepositoryImpl;
+import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 import com.xxf.arch.XXF;
 import com.xxf.arch.dialog.IResultDialog;
 import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
+import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 import com.xxf.view.recyclerview.adapter.OnItemClickListener;
@@ -44,6 +53,7 @@ public class MainFragment extends BaseFragment {
     private MainFragmentMainBinding mBinding;
     private OrderListAdapter mAdapter;
     private SelectFilterModel mFilterModel;
+    private int currentPageIndex;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,7 +61,7 @@ public class MainFragment extends BaseFragment {
         mBinding = MainFragmentMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         initView();
-//        initData();
+        initData(mFilterModel = new SelectFilterModel());
     }
 
     public static MainFragment newInstance() {
@@ -61,9 +71,12 @@ public class MainFragment extends BaseFragment {
         return fragment;
     }
 
-    private void initData() {
+    private void initData(SelectFilterModel model) {
+        if (model == null) {
+            return;
+        }
         HomeRepositoryImpl.getInstance()
-                .getPolicyOrderList("", "", "", "", "", "", "")
+                .getPolicyOrderList(model)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(XXF.<List<PolicyListResDTO>>bindToLifecycle(this))
                 .compose(XXF.<List<PolicyListResDTO>>bindToErrorNotice())
@@ -73,25 +86,26 @@ public class MainFragment extends BaseFragment {
                 .subscribe(new Consumer<List<PolicyListResDTO>>() {
                     @Override
                     public void accept(List<PolicyListResDTO> data) throws Exception {
+                        if (currentPageIndex == 0) {
+                            mAdapter.bindData(true, data);
+                        } else {
+                            mAdapter.addItems(data);
+                        }
+                        if (mAdapter.getDataSize() <= 0) {
+                            mBinding.layoutEmpty.setVisibility(View.VISIBLE);
+                            mBinding.recyclerView.setVisibility(View.GONE);
+                        } else {
+                            mBinding.layoutEmpty.setVisibility(View.GONE);
+                            mBinding.recyclerView.setVisibility(View.VISIBLE);
+                        }
+                        mBinding.recyclerView.setPullLoadMoreCompleted();
                     }
                 });
     }
 
     private void initView() {
-        List<OrderModel> munes = new ArrayList<>();
-        munes.add(new OrderModel(new Random(10000).nextInt() + "", "评价医生"));
-        munes.add(new OrderModel(new Random(10000).nextInt() + "", "诊脉记录"));
-        munes.add(new OrderModel(new Random(10000).nextInt() + "", "医疗记录"));
-        munes.add(new OrderModel(new Random(10000).nextInt() + "", "购药记录"));
-        munes.add(new OrderModel(new Random(10000).nextInt() + "", "优惠信息"));
-        munes.add(new OrderModel(new Random(10000).nextInt() + "", "健康提示"));
-        munes.add(new OrderModel(new Random(10000).nextInt() + "", "同步查询"));
-        munes.add(new OrderModel(new Random(10000).nextInt() + "", "活动发布"));
-        munes.add(new OrderModel(new Random(10000).nextInt() + "", "经验交流"));
-        munes.add(new OrderModel(new Random(10000).nextInt() + "", "联系客服"));
-
         mBinding.recyclerView.setAdapter(mAdapter = new OrderListAdapter());
-        mAdapter.bindData(true, munes);
+        mBinding.recyclerView.setLinearLayout();
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
@@ -99,30 +113,26 @@ public class MainFragment extends BaseFragment {
                         .navigation();
             }
         });
-
-        mBinding.mEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
+        TextView emptyTextView = mBinding.layoutEmpty.findViewById(R.id.tv_empty_text);
+        SpannableString spannableString = new SpannableString("暂无数据，点击 \"+\" 开始理赔登记");
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#0073BC")), 9, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(20, true), 9, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 9, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        emptyTextView.setText(spannableString);
         mBinding.ivFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SelectFilterDialog(getActivity(), getActivity(),mFilterModel, new IResultDialog.OnDialogClickListener<SelectFilterModel>() {
+                new SelectFilterDialog(getActivity(), getActivity(), mFilterModel, new IResultDialog.OnDialogClickListener<SelectFilterModel>() {
                     @Override
                     public boolean onCancel(@NonNull DialogInterface dialog, @Nullable SelectFilterModel cancelResult) {
                         mFilterModel = cancelResult;
-                        Log.e("xxxxxxx", "cancelResult = " + cancelResult.toString());
                         return false;
                     }
 
                     @Override
                     public boolean onConfirm(@NonNull DialogInterface dialog, @Nullable SelectFilterModel confirmResult) {
-//                        initData();
                         mFilterModel = confirmResult;
-                        Log.e("xxxxxxx", "onConfirm = " + confirmResult.toString());
+                        initData(mFilterModel);
                         return false;
                     }
                 }).show();
@@ -132,10 +142,24 @@ public class MainFragment extends BaseFragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-//                    initData();
+                    mFilterModel.setSearch(mBinding.mEditText.getText().toString());
+                    initData(mFilterModel);
                     return true;
                 }
                 return false;
+            }
+        });
+        mBinding.recyclerView.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
+            @Override
+            public void onRefresh() {
+                currentPageIndex = 0;
+                initData(mFilterModel);
+            }
+
+            @Override
+            public void onLoadMore() {
+                currentPageIndex = currentPageIndex + 1;
+                initData(mFilterModel);
             }
         });
     }

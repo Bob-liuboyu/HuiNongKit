@@ -1,5 +1,6 @@
 package com.project.huinongkit.source;
 
+import com.project.common_resource.SelectFilterModel;
 import com.project.common_resource.response.PolicyListResDTO;
 
 import java.util.List;
@@ -8,15 +9,9 @@ import io.reactivex.Observable;
 
 public interface IHomeDataSource {
     /**
-     * 首页订单列表
-     * @param name
-     * @param phone
-     * @param insureId
-     * @param claimStatus
-     * @param claimType
-     * @param submitStartDate
-     * @param submitEndDate
+     * 首页理赔单列表
+     * @param model
      * @return
      */
-    Observable<List<PolicyListResDTO>> getPolicyOrderList(String name , String phone, String insureId, String claimStatus, String claimType, String submitStartDate, String submitEndDate);
+    Observable<List<PolicyListResDTO>> getPolicyOrderList(SelectFilterModel model);
 }

@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="com.project.common_resource.OrderModel" />
+            type="com.project.common_resource.response.PolicyListResDTO" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -48,7 +48,7 @@
                     android:gravity="center|left"
                     android:paddingRight="@dimen/arch_dp_15"
                     android:singleLine="true"
-                    android:text="北京神州慧达信息技术有限公司"
+                    android:text="@{model.insureName}"
                     android:textColor="@color/arch_color_base"
                     android:textSize="15sp" />
 
@@ -88,7 +88,7 @@
                     android:gravity="center|left"
                     android:paddingRight="@dimen/arch_dp_15"
                     android:singleLine="true"
-                    android:text="LKJLKKLJLAKJLJLK"
+                    android:text="@{model.claimId}"
                     android:textColor="#1B1B1B"
                     android:textSize="15sp" />
 
@@ -99,7 +99,7 @@
                     android:drawableLeft="@mipmap/icon_pig_girl"
                     android:drawablePadding="@dimen/arch_dp_3"
                     android:gravity="center"
-                    android:text="能繁母猪"
+                    android:text="@{model.claimTypeName}"
                     android:textColor="#AAAAAA"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -116,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/arch_dp_8"
-                android:text="2021-3-23"
+                android:text="@{model.claimSubmitDate}"
                 android:textColor="#999999"
                 android:textSize="@dimen/arch_dp_14" />
         </LinearLayout>
