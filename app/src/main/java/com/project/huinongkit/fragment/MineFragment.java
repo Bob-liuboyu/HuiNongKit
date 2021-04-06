@@ -50,7 +50,7 @@ public class MineFragment extends BaseFragment {
         mBinding.tvExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GrDialogUtils.createCommonDialog(getActivity(), "退出登陆", "确认退出登陆吗？", "推出", "取消", new CommonDialog.OnDialogClickListener() {
+                GrDialogUtils.createCommonDialog(getActivity(), "退出登陆", "确认退出登陆吗？", "退出", "取消", new CommonDialog.OnDialogClickListener() {
                     @Override
                     public void onClickConfirm(View view) {
                         GlobalDataManager.getInstance().updateInfo(null);

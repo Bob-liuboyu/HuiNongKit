@@ -67,6 +67,7 @@ public class CreateOrderActivity extends BaseActivity {
     protected static final int RESULT_MEASURE = 101;
     protected List<OrderPhotoListModel> result = new ArrayList<>();
     private SimpleDateFormat sdf;
+    private boolean isFromChoose;
     /**
      * 测量方式
      */
@@ -205,6 +206,10 @@ public class CreateOrderActivity extends BaseActivity {
         binding.tvDateStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //自动填写的数据，不允许修改
+                if (isFromChoose) {
+                    return;
+                }
                 if (!TextUtils.isEmpty(binding.tvDateStart.getText().toString())) {
                     Date parse = null;
                     try {
@@ -221,6 +226,10 @@ public class CreateOrderActivity extends BaseActivity {
         binding.tvDateEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //自动填写的数据，不允许修改
+                if (isFromChoose) {
+                    return;
+                }
                 if (!TextUtils.isEmpty(binding.tvDateEnd.getText().toString())) {
                     Date parse = null;
                     try {
@@ -262,6 +271,7 @@ public class CreateOrderActivity extends BaseActivity {
                 binding.tvName.setText(result.getName());
                 binding.tvDateStart.setText(result.getStartData());
                 binding.tvDateEnd.setText(result.getEndData());
+                isFromChoose = true;
             } else if (requestCode == RESULT_MEASURE) {
                 List<OrderPhotoListModel> forResult = (List<OrderPhotoListModel>) data.getSerializableExtra("result");
                 if (forResult != null && forResult.size() > 0) {
