@@ -44,6 +44,7 @@ import com.huawei.hiar.exceptions.ARUnSupportedConfigurationException;
 import com.huawei.hiar.exceptions.ARUnavailableClientSdkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceApkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceNotInstalledException;
+import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.utils.ImageMaskUtil;
 import com.project.module_order.R;
 import com.project.module_order.body3d.rendering.BodyRenderManager;
@@ -93,7 +94,7 @@ public class BodyActivity extends Activity {
         mTextView = findViewById(R.id.bodyTextView);
         mSurfaceView = findViewById(R.id.bodySurfaceview);
         mDisplayRotationManager = new DisplayRotationManager(this);
-        maskBitmap = getBitmap(this, R.drawable.ic_camera);
+        maskBitmap = getBitmap(this, R.drawable.ic_camera, DisplayUtils.dip2px(this, 200), DisplayUtils.dip2px(this, 200));
 //        maskBitmap = BitmapFactory.decodeStream(getClass().getResourceAsStream("/res/drawable/ic_camera.png"));;
         // Keep the OpenGL ES running context.
         mSurfaceView.setPreserveEGLContextOnPause(true);
@@ -342,8 +343,6 @@ public class BodyActivity extends Activity {
 //        canvas.restore();
 //        return bmp;
 //    }
-
-
 
 
 }

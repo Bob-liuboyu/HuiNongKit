@@ -10,6 +10,7 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.view.PixelCopy;
 
+import com.project.arch_repo.utils.ImageMaskUtil;
 import com.project.common_resource.TakePhotoModel;
 
 import java.io.ByteArrayOutputStream;
@@ -82,7 +83,7 @@ public class SurfaceCameraUtils {
                     if (copyResult == PixelCopy.SUCCESS) {
                         try {
 //                            result[0] = ImageMaskUtil.createWaterMaskLeftTop(context, bitmap, maskBitmap, 100, 100);
-                            saveBitmapToDisk(bitmap, filename);
+                            saveBitmapToDisk(ImageMaskUtil.createWaterMaskLeftTop(context, bitmap, maskBitmap, 100, 100), filename);
                             return;
                         } catch (Exception e) {
                             Log.e(TAG, e.getMessage());

@@ -38,10 +38,10 @@
 
         <activity
             android:name=".ui.PrePhotosActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".ui.PrePhotoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
 
         <activity
             android:name=".ui.TakePhotoActivity"

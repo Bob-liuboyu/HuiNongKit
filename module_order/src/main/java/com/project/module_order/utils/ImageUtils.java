@@ -12,6 +12,7 @@ public class ImageUtils {
 
     /**
      * 旋转图片
+     *
      * @param bitmap
      * @param rotation
      * @Return
@@ -25,6 +26,7 @@ public class ImageUtils {
 
     /**
      * 镜像翻转图片
+     *
      * @param bitmap
      * @Return
      */
@@ -36,12 +38,17 @@ public class ImageUtils {
                 bitmap.getHeight(), matrix, false);
     }
 
-    public static Bitmap getBitmap(Context context, int resId) {
+    public static Bitmap getBitmap(Context context, int resId, int w, int h) {
         Bitmap bitmap = null;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             Drawable vectorDrawable = context.getDrawable(resId);
-            bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
-                    vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            if (w == 0 || h == 0) {
+                bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                        vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            } else {
+                bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            }
+
             Canvas canvas = new Canvas(bitmap);
             vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
             vectorDrawable.draw(canvas);

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.huawei.hiar.exceptions.ARUnavailableClientSdkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceApkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceNotInstalledException;
 import com.project.arch_repo.base.activity.BaseActivity;
+import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.utils.SharedPreferencesUtils;
 import com.project.arch_repo.widget.ImagePopupWindow;
 import com.project.common_resource.OrderPhotoListModel;
@@ -83,11 +85,16 @@ public class TakePhotoActivity extends BaseActivity {
         int color = getResources().getColor(R.color.arch_black);
         StatusBarUtils.compatStatusBarForM(this, false, color);
         mBinding = OrderActivityTakePhotoBinding.inflate(getLayoutInflater());
-        maskBitmap = ImageUtils.getBitmap(this, R.drawable.ic_camera);
+        maskBitmap = ImageUtils.getBitmap(this, R.drawable.ic_camera, DisplayUtils.dip2px(this, 200), DisplayUtils.dip2px(this, 200));
         setContentView(mBinding.getRoot());
         initView();
         initCamera();
-        showPigTips();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showPigTips();
+            }
+        }, 200);
     }
 
     private void initView() {
@@ -398,6 +405,6 @@ public class TakePhotoActivity extends BaseActivity {
     private void showPopupWindow(int source) {
         ImagePopupWindow popupWindow = new ImagePopupWindow(this);
         popupWindow.setSrc(source);
-        popupWindow.showAsDropDown(mBinding.tvCommit, 100, 0);
+        popupWindow.showAsDropDown(mBinding.ivQuestion, 100, 0);
     }
 }

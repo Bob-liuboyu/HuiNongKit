@@ -8,7 +8,9 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.config_repo.ArouterConfig;
+import com.project.module_order.R;
 import com.project.module_order.databinding.OrderActivityPrePhotoBinding;
+import com.xxf.view.utils.StatusBarUtils;
 
 import java.io.File;
 
@@ -26,6 +28,8 @@ public class PrePhotoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int color = getResources().getColor(R.color.arch_black);
+        StatusBarUtils.compatStatusBarForM(this, false, color);
         mBinding = OrderActivityPrePhotoBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         initView();

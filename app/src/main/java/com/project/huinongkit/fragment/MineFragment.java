@@ -45,8 +45,10 @@ public class MineFragment extends BaseFragment {
         LoginResDTO.SettingsBean settings = GlobalDataManager.getInstance().getSettings();
         mBinding.setModel(userInfo);
 
-        mBinding.tvVersion.setText("版本号：" + settings.getVersion());
-        mBinding.tvSupport.setText("技术支持：" + settings.getPhone_support());
+        if (settings != null) {
+            mBinding.tvVersion.setText("版本号：" + settings.getVersion());
+            mBinding.tvSupport.setText("技术支持：" + settings.getPhone_support());
+        }
         mBinding.tvExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +56,7 @@ public class MineFragment extends BaseFragment {
                     @Override
                     public void onClickConfirm(View view) {
                         GlobalDataManager.getInstance().updateInfo(null);
-                        SharedPreferencesUtils.setBooleanValue(getActivity(),"login",false);
+                        SharedPreferencesUtils.setBooleanValue(getActivity(), "login", false);
                         ARouter.getInstance().build(ArouterConfig.User.LOGIN)
                                 .navigation();
                         getActivity().finish();
