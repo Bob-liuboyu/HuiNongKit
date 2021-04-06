@@ -6,7 +6,7 @@
 
         <variable
             name="model"
-            type="com.project.common_resource.OrderModel" />
+            type="com.project.common_resource.response.InsureListResDTO" />
     </data>
 
     <LinearLayout
@@ -23,20 +23,20 @@
             android:singleLine="true"
             android:textColor="#1B1B1B"
             android:textSize="@dimen/arch_dp_14"
-            android:text="LKJAKDJLAJKSD" />
+            android:text="@{model.insureId}" />
 
         <TextView
             android:id="@+id/tv_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/arch_dp_16"
-            android:drawableLeft="@mipmap/icon_id"
+            android:drawableLeft="@mipmap/icon_date_selected"
             android:drawablePadding="8dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="#1B1B1B"
             android:textSize="@dimen/arch_dp_14"
-            android:text="2013-3-31" />
+            />
 
 
         <View

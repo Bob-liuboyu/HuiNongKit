@@ -26,6 +26,7 @@ import com.project.arch_repo.widget.GrDialogUtils;
 import com.project.common_resource.OrderModel;
 import com.project.common_resource.OrderPhotoListModel;
 import com.project.common_resource.global.GlobalDataManager;
+import com.project.common_resource.response.InsureListResDTO;
 import com.project.common_resource.response.LoginResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
@@ -266,11 +267,11 @@ public class CreateOrderActivity extends BaseActivity {
         }
         if (resultCode == RESULT_OK) {
             if (requestCode == RESULT_CHOOSE) {
-                OrderModel result = (OrderModel) data.getSerializableExtra("result");
-                binding.tvCode.setText(result.getId());
-                binding.tvName.setText(result.getName());
-                binding.tvDateStart.setText(result.getStartData());
-                binding.tvDateEnd.setText(result.getEndData());
+                InsureListResDTO result = (InsureListResDTO) data.getSerializableExtra("result");
+                binding.tvCode.setText(result.getInsureId());
+                binding.tvName.setText(result.getInsureName());
+                binding.tvDateStart.setText(result.getInsureStartTime());
+                binding.tvDateEnd.setText(result.getInsureEndTime());
                 isFromChoose = true;
             } else if (requestCode == RESULT_MEASURE) {
                 List<OrderPhotoListModel> forResult = (List<OrderPhotoListModel>) data.getSerializableExtra("result");

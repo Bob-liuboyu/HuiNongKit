@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.project.arch_repo.function.ResponseDTOSimpleFunction;
 import com.project.arch_repo.http.httpmodel.ResponseDTO;
 import com.project.common_resource.SelectFilterModel;
+import com.project.common_resource.global.GlobalDataManager;
 import com.project.common_resource.response.LoginResDTO;
 import com.project.common_resource.response.PolicyListResDTO;
 import com.project.huinongkit.api.HomeApiService;
@@ -43,12 +44,14 @@ public class HomeRepositoryImpl implements IHomeDataSource {
 
     @Override
     public Observable<List<PolicyListResDTO>> getPolicyOrderList(SelectFilterModel model) {
+        String token = GlobalDataManager.getInstance().getToken();
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("search", model.getSearch());
         jsonObject.addProperty("claimStatus", model.getClaimStatus());
         jsonObject.addProperty("claimType", model.getClaimType());
         jsonObject.addProperty("submitEndDate", model.getSubmitEndDate());
         jsonObject.addProperty("submitStartDate", model.getSubmitStartDate());
+        jsonObject.addProperty("token", token);
         return XXF.getApiService(HomeApiService.class)
                 .getPolicyOrderList(jsonObject)
                 .map(new ResponseDTOSimpleFunction<List<PolicyListResDTO>>());

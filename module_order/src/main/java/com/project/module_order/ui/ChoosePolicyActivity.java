@@ -1,15 +1,32 @@
 package com.project.module_order.ui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.project.arch_repo.base.activity.BaseTitleBarActivity;
 import com.project.common_resource.OrderModel;
+import com.project.common_resource.global.GlobalDataManager;
+import com.project.common_resource.response.InsureListResDTO;
+import com.project.common_resource.response.PolicyListResDTO;
 import com.project.config_repo.ArouterConfig;
+import com.project.module_order.R;
 import com.project.module_order.adapter.ChoosePolicyListAdapter;
 import com.project.module_order.databinding.OrderActivityChoosePolicyBinding;
+import com.project.module_order.source.impl.OrderRepositoryImpl;
+import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
+import com.xxf.arch.XXF;
+import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
 import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 import com.xxf.view.recyclerview.adapter.OnItemClickListener;
@@ -17,6 +34,8 @@ import com.xxf.view.utils.StatusBarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * @author liuboyu  E-mail:545777678@qq.com
@@ -27,6 +46,8 @@ import java.util.List;
 public class ChoosePolicyActivity extends BaseTitleBarActivity {
     private OrderActivityChoosePolicyBinding mBinding;
     private ChoosePolicyListAdapter mAdapter;
+    private int currentPageIndex;
+    private String currentWord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,29 +58,77 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
         mBinding = OrderActivityChoosePolicyBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         initView();
+        initData(currentWord);
     }
 
     private void initView() {
-        final List<OrderModel> munes = new ArrayList<>();
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "评价医生","刘伯羽","2021-3-29","2021-3-1"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "诊脉记录","刘伯羽","2021-3-29","2021-3-1"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "医疗记录","刘伯羽","2021-3-29","2021-3-1"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "购药记录","刘伯羽","2021-3-29","2021-3-1"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "优惠信息","刘伯羽","2021-3-29","2021-3-1"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "健康提示","刘伯羽","2021-3-29","2021-3-1"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "同步查询","刘伯羽","2021-3-29","2021-3-1"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "活动发布","刘伯羽","2021-3-29","2021-3-1"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "经验交流","刘伯羽","2021-3-29","2021-3-1"));
-        munes.add(new OrderModel("LKAJLKDFALKJSDLFJALKFJAKLS", "联系客服","刘伯羽","2021-3-29","2021-3-1"));
-
+        TextView emptyTextView = mBinding.layoutEmpty.findViewById(R.id.tv_empty_text);
+        emptyTextView.setText("没有可用的理赔登记信息");
+        mBinding.recyclerView.setLinearLayout();
         mBinding.recyclerView.setAdapter(mAdapter = new ChoosePolicyListAdapter());
-        mAdapter.bindData(true, munes);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
-                setResult(RESULT_OK, new Intent().putExtra("result", munes.get(index)));
+                if (mAdapter == null || mAdapter.getItemCount() <= 0) {
+                    return;
+                }
+                setResult(RESULT_OK, new Intent().putExtra("result", mAdapter.getItem(index)));
                 finish();
             }
         });
+
+        mBinding.mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    currentWord = mBinding.mEditText.getText().toString();
+                    initData(currentWord);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mBinding.recyclerView.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
+            @Override
+            public void onRefresh() {
+                currentPageIndex = 0;
+                initData(currentWord);
+            }
+
+            @Override
+            public void onLoadMore() {
+                currentPageIndex = currentPageIndex + 1;
+                initData(currentWord);
+            }
+        });
+    }
+
+    private void initData(String search) {
+        OrderRepositoryImpl.getInstance()
+                .getInsureList(search)
+                .compose(XXF.<List<InsureListResDTO>>bindToLifecycle(this))
+                .compose(XXF.<List<InsureListResDTO>>bindToErrorNotice())
+                .compose(XXF.<List<InsureListResDTO>>bindToProgressHud(
+                        new ProgressHUDTransformerImpl.Builder(this)
+                                .setLoadingNotice("努力加载中...")))
+                .subscribe(new Consumer<List<InsureListResDTO>>() {
+                    @Override
+                    public void accept(List<InsureListResDTO> data) throws Exception {
+                        if (currentPageIndex == 0) {
+                            mAdapter.bindData(true, data);
+                        } else {
+                            mAdapter.addItems(data);
+                        }
+                        if (mAdapter.getDataSize() <= 0) {
+                            mBinding.layoutEmpty.setVisibility(View.VISIBLE);
+                            mBinding.recyclerView.setVisibility(View.GONE);
+                        } else {
+                            mBinding.layoutEmpty.setVisibility(View.GONE);
+                            mBinding.recyclerView.setVisibility(View.VISIBLE);
+                        }
+                        mBinding.recyclerView.setPullLoadMoreCompleted();
+                    }
+                });
     }
 }

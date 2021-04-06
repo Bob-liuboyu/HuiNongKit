@@ -61,15 +61,22 @@
                 android:textSize="14dp" />
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+
+        <com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/arch_dp_34"
-            android:layout_marginRight="@dimen/arch_dp_34"
+            android:paddingLeft="@dimen/arch_dp_34"
             android:layout_marginBottom="@dimen/arch_dp_15"
             android:background="@color/arch_white"
-            android:orientation="vertical"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+            />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="-200dp"
+            android:id="@+id/layout_empty"
+            android:visibility="gone"
+            layout="@layout/layout_empty" />
     </LinearLayout>
 </layout>
