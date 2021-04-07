@@ -41,5 +41,5 @@ public interface OrderApiService {
      * @return
      */
     @POST("claim/getInsureList")
-    Observable<ResponseDTO<List<InsureListResDTO>>> getInsureList(@Body JsonObject body);
+    Observable<ResponseDTO<InsureListResDTO>> getInsureList(@Body JsonObject body);
 }

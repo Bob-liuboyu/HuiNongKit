@@ -46,7 +46,7 @@ import io.reactivex.functions.Consumer;
 public class ChoosePolicyActivity extends BaseTitleBarActivity {
     private OrderActivityChoosePolicyBinding mBinding;
     private ChoosePolicyListAdapter mAdapter;
-    private int currentPageIndex;
+    private int currentPageIndex = 1;
     private String currentWord;
 
     @Override
@@ -92,7 +92,7 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
         mBinding.recyclerView.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
             @Override
             public void onRefresh() {
-                currentPageIndex = 0;
+                currentPageIndex = 1;
                 initData(currentWord);
             }
 
@@ -106,16 +106,20 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
 
     private void initData(String search) {
         OrderRepositoryImpl.getInstance()
-                .getInsureList(search)
-                .compose(XXF.<List<InsureListResDTO>>bindToLifecycle(this))
-                .compose(XXF.<List<InsureListResDTO>>bindToErrorNotice())
-                .compose(XXF.<List<InsureListResDTO>>bindToProgressHud(
+                .getInsureList(currentPageIndex, search)
+                .compose(XXF.<InsureListResDTO>bindToLifecycle(this))
+                .compose(XXF.<InsureListResDTO>bindToErrorNotice())
+                .compose(XXF.<InsureListResDTO>bindToProgressHud(
                         new ProgressHUDTransformerImpl.Builder(this)
                                 .setLoadingNotice("努力加载中...")))
-                .subscribe(new Consumer<List<InsureListResDTO>>() {
+                .subscribe(new Consumer<InsureListResDTO>() {
                     @Override
-                    public void accept(List<InsureListResDTO> data) throws Exception {
-                        if (currentPageIndex == 0) {
+                    public void accept(InsureListResDTO result) throws Exception {
+                        if(result == null || result.getResultList() == null || result.getResultList().size() == 0){
+                            return;
+                        }
+                        List<InsureListResDTO.ResultListBean> data = result.getResultList();
+                        if (currentPageIndex == 1) {
                             mAdapter.bindData(true, data);
                         } else {
                             mAdapter.addItems(data);

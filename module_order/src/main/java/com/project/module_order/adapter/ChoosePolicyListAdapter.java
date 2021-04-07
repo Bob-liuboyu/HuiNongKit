@@ -16,14 +16,14 @@ import com.xxf.view.recyclerview.adapter.BaseViewHolder;
  * @date: 2021/3/13 2:34 PM
  * @description: 首页订单列表
  */
-public class ChoosePolicyListAdapter extends BaseBindableAdapter<OrderItemPolicyChooseBinding, InsureListResDTO> {
+public class ChoosePolicyListAdapter extends BaseBindableAdapter<OrderItemPolicyChooseBinding, InsureListResDTO.ResultListBean> {
     @Override
     protected OrderItemPolicyChooseBinding onCreateBinding(LayoutInflater inflater, ViewGroup viewGroup, int viewType) {
         return OrderItemPolicyChooseBinding.inflate(inflater, viewGroup, false);
     }
 
     @Override
-    public void onBindHolder(BaseViewHolder holder, OrderItemPolicyChooseBinding binding, @Nullable InsureListResDTO orderModel, int index) {
+    public void onBindHolder(BaseViewHolder holder, OrderItemPolicyChooseBinding binding, @Nullable InsureListResDTO.ResultListBean orderModel, int index) {
         if (orderModel == null) {
             return;
         }

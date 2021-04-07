@@ -19,6 +19,8 @@ import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
+import static com.project.common_resource.global.ConstantData.PAGE_COUNT;
+
 
 /**
  * @author youxuan  E-mail:xuanyouwu@163.com
@@ -57,7 +59,7 @@ public class HomeRepositoryImpl implements IHomeDataSource {
 
         jsonObject.add("params",params);
         jsonObject.addProperty("pageNo",index);
-        jsonObject.addProperty("pageRows",20);
+        jsonObject.addProperty("pageRows",PAGE_COUNT);
 
         return XXF.getApiService(HomeApiService.class)
                 .getPolicyOrderList(jsonObject)

@@ -13,6 +13,8 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
+import static com.project.common_resource.global.ConstantData.PAGE_COUNT;
+
 
 /**
  * @author youxuan  E-mail:xuanyouwu@163.com
@@ -41,13 +43,20 @@ public class OrderRepositoryImpl implements IOrderDataSource {
     }
 
     @Override
-    public Observable<List<InsureListResDTO>> getInsureList(String search) {
+    public Observable<InsureListResDTO> getInsureList(int index, String search) {
         String token = GlobalDataManager.getInstance().getToken();
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("token", token);
-        jsonObject.addProperty("search", search);
+
+        JsonObject params = new JsonObject();
+        params.addProperty("token", token);
+        params.addProperty("search", search);
+
+        jsonObject.add("params",params);
+        jsonObject.addProperty("pageNo",index);
+        jsonObject.addProperty("pageRows",PAGE_COUNT);
+
         return XXF.getApiService(OrderApiService.class)
                 .getInsureList(jsonObject)
-                .map(new ResponseDTOSimpleFunction<List<InsureListResDTO>>());
+                .map(new ResponseDTOSimpleFunction<InsureListResDTO>());
     }
 }

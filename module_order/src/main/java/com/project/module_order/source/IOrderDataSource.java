@@ -19,8 +19,9 @@ public interface IOrderDataSource {
 
     /**
      * 获取保单列表
+     *
      * @param search
      * @return
      */
-    Observable<List<InsureListResDTO>> getInsureList(String search);
+    Observable<InsureListResDTO> getInsureList(int index, String search);
 }

@@ -6,7 +6,7 @@
 
         <variable
             name="model"
-            type="com.project.common_resource.response.InsureListResDTO" />
+            type="com.project.common_resource.response.InsureListResDTO.ResultListBean" />
     </data>
 
     <LinearLayout

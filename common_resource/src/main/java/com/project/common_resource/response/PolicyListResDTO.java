@@ -27,8 +27,6 @@ public class PolicyListResDTO implements Serializable {
     private int first;
 
     private List<ResultListBean> resultList;
-    private Params params;
-
     public String getPageFlag() {
         return pageFlag;
     }
@@ -205,103 +203,6 @@ public class PolicyListResDTO implements Serializable {
 
         public void setClaimStatus(int claimStatus) {
             this.claimStatus = claimStatus;
-        }
-    }
-
-    public static class Params {
-
-        /**
-         * phone : 13051680882
-         * insureId : as
-         * claimStatus : as
-         * claimType : as
-         * submitStartDate : as
-         * submitEndDate : as
-         * search : 123
-         * claimId : 123
-         * token : 12345
-         */
-
-        private String phone;
-        private String insureId;
-        private String claimStatus;
-        private String claimType;
-        private String submitStartDate;
-        private String submitEndDate;
-        private String search;
-        private String claimId;
-        private String token;
-
-        public String getPhone() {
-            return phone;
-        }
-
-        public void setPhone(String phone) {
-            this.phone = phone;
-        }
-
-        public String getInsureId() {
-            return insureId;
-        }
-
-        public void setInsureId(String insureId) {
-            this.insureId = insureId;
-        }
-
-        public String getClaimStatus() {
-            return claimStatus;
-        }
-
-        public void setClaimStatus(String claimStatus) {
-            this.claimStatus = claimStatus;
-        }
-
-        public String getClaimType() {
-            return claimType;
-        }
-
-        public void setClaimType(String claimType) {
-            this.claimType = claimType;
-        }
-
-        public String getSubmitStartDate() {
-            return submitStartDate;
-        }
-
-        public void setSubmitStartDate(String submitStartDate) {
-            this.submitStartDate = submitStartDate;
-        }
-
-        public String getSubmitEndDate() {
-            return submitEndDate;
-        }
-
-        public void setSubmitEndDate(String submitEndDate) {
-            this.submitEndDate = submitEndDate;
-        }
-
-        public String getSearch() {
-            return search;
-        }
-
-        public void setSearch(String search) {
-            this.search = search;
-        }
-
-        public String getClaimId() {
-            return claimId;
-        }
-
-        public void setClaimId(String claimId) {
-            this.claimId = claimId;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
         }
     }
 }

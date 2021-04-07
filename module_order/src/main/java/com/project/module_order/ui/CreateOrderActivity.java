@@ -267,7 +267,7 @@ public class CreateOrderActivity extends BaseActivity {
         }
         if (resultCode == RESULT_OK) {
             if (requestCode == RESULT_CHOOSE) {
-                InsureListResDTO result = (InsureListResDTO) data.getSerializableExtra("result");
+                InsureListResDTO.ResultListBean result = (InsureListResDTO.ResultListBean) data.getSerializableExtra("result");
                 binding.tvCode.setText(result.getInsureId());
                 binding.tvName.setText(result.getInsureName());
                 binding.tvDateStart.setText(result.getInsureStartTime());
