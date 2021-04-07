@@ -38,7 +38,7 @@ public class GlobalDataManager {
     }
 
     public LoginResDTO.SettingsBean getSettings() {
-        return settings;
+        return settings == null ? new LoginResDTO.SettingsBean() : settings;
     }
 
     public void updateInfo(LoginResDTO resp) {
@@ -54,7 +54,7 @@ public class GlobalDataManager {
     }
 
     public LoginResDTO.UserInfoBean getUserInfo() {
-        return userInfo;
+        return userInfo == null ? new LoginResDTO.UserInfoBean() : userInfo;
     }
 
     public String getToken() {

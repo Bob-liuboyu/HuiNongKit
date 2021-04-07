@@ -6,7 +6,7 @@ import android.view.View;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.utils.GlideUtils;
-import com.project.common_resource.OrderPhotoListModel;
+import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotoListAdapter;
 import com.project.module_order.databinding.OrderActivityPrePhotosBinding;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class PrePhotosActivity extends BaseActivity {
     private OrderActivityPrePhotosBinding mBinding;
-    private List<OrderPhotoListModel> list;
+    private List<PolicyDetailResDTO.ClaimListBean> list;
     private int index;
     private OrderPhotoListAdapter mAdapter;
     private int currentIndex;
@@ -42,7 +42,7 @@ public class PrePhotosActivity extends BaseActivity {
     }
 
     private void initView() {
-        list = (List<OrderPhotoListModel>) getIntent().getSerializableExtra("list");
+        list = (List<PolicyDetailResDTO.ClaimListBean>) getIntent().getSerializableExtra("list");
         index = getIntent().getIntExtra("index", 0);
         if (list == null || list.get(index) == null) {
             return;
@@ -50,11 +50,11 @@ public class PrePhotosActivity extends BaseActivity {
         mBinding.tvTitle.setText("图片详情" + "(" + (index + 1) + "/" + list.size() + ")");
         mAdapter = new OrderPhotoListAdapter();
 
-        updataPage(index);
+        updatePage(index);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
-                GlideUtils.loadImage(mBinding.ivPhoto, mAdapter.getItem(index).getUrl());
+                GlideUtils.loadImage(mBinding.ivPhoto, mAdapter.getItem(index).getImgUrl());
             }
         });
         mBinding.recyclerView.post(new Runnable() {
@@ -65,7 +65,7 @@ public class PrePhotosActivity extends BaseActivity {
                 int rightWidth = mBinding.tvNext.getWidth();
                 int width = (screenWidth - DisplayUtils.dip2px(mBinding.recyclerView.getContext(), 15 * 2) - leftWidth - rightWidth) / 3;
                 mAdapter.setWidth(width);
-                mAdapter.bindData(true, list.get(index).getPhotos());
+                mAdapter.bindData(true, list.get(index).getPigInfo());
                 mBinding.recyclerView.setAdapter(mAdapter);
             }
         });
@@ -83,7 +83,7 @@ public class PrePhotosActivity extends BaseActivity {
                     return;
                 }
                 index--;
-                updataPage(index);
+                updatePage(index);
             }
         });
         mBinding.tvNext.setOnClickListener(new View.OnClickListener() {
@@ -94,16 +94,16 @@ public class PrePhotosActivity extends BaseActivity {
                     return;
                 }
                 index++;
-                updataPage(index);
+                updatePage(index);
             }
         });
     }
 
 
-    private void updataPage(int index) {
+    private void updatePage(int index) {
         mBinding.tvTitle.setText("(" + (index + 1) + "/" + list.size() + ")");
-        mAdapter.bindData(true, list.get(index).getPhotos());
+        mAdapter.bindData(true, list.get(index).getPigInfo());
         mBinding.setModel(mAdapter.getItem(0));
-        GlideUtils.loadImage(mBinding.ivPhoto, mAdapter.getItem(0).getUrl());
+        GlideUtils.loadImage(mBinding.ivPhoto, mAdapter.getItem(0).getImgUrl());
     }
 }

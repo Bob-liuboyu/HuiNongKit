@@ -9,9 +9,8 @@ import android.view.ViewGroup;
 
 import com.project.arch_repo.base.recyclerview.BaseBindableAdapter;
 import com.project.arch_repo.utils.DisplayUtils;
-import com.project.common_resource.OrderPhotoListModel;
+import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.module_order.databinding.OrderItemPolicyListPhotosBinding;
-import com.project.module_order.ui.OrderDetailActivity;
 import com.project.module_order.ui.PrePhotosActivity;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 
@@ -23,7 +22,7 @@ import java.io.Serializable;
  * @date: 2021/3/13 2:34 PM
  * @description: 首页订单列表
  */
-public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyListPhotosBinding, OrderPhotoListModel> {
+public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyListPhotosBinding, PolicyDetailResDTO.ClaimListBean> {
     private int width;
 
     @Override
@@ -32,7 +31,7 @@ public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyL
     }
 
     @Override
-    public void onBindHolder(BaseViewHolder holder, final OrderItemPolicyListPhotosBinding binding, @Nullable final OrderPhotoListModel model, final int index) {
+    public void onBindHolder(BaseViewHolder holder, final OrderItemPolicyListPhotosBinding binding, @Nullable final PolicyDetailResDTO.ClaimListBean model, final int index) {
         if (model == null) {
             return;
         }
@@ -44,9 +43,9 @@ public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyL
                 int leftWidth = binding.llLeft.getWidth();
                 int width = (screenWidth - DisplayUtils.dip2px(binding.recyclerView.getContext(), 15 * 6) - leftWidth) / 3;
                 adapter.setWidth(width);
-                adapter.bindData(true, model.getPhotos());
+                adapter.bindData(true, model.getPigInfo());
                 binding.recyclerView.setAdapter(adapter);
-                binding.tvResult.setText(model.getResult());
+                binding.tvResult.setText(model.getWeight());
                 binding.tvIndex.setText((index + 1) + "");
             }
         });

@@ -2,6 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="model"
+            type="com.project.common_resource.response.PolicyDetailResDTO" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -105,6 +111,7 @@
                                 android:layout_height="wrap_content"
                                 android:background="@color/arch_color_translate"
                                 android:hint="请输入保险人姓名"
+                                android:text="@{model.name}"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/arch_dp_14" />
                         </LinearLayout>
@@ -134,12 +141,13 @@
                                 android:ellipsize="end"
                                 android:gravity="center|left"
                                 android:singleLine="true"
-                                android:text="能繁母猪"
+                                android:text="@{model.claimTypeName}"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/arch_dp_14"
                                 android:visibility="gone" />
 
                             <LinearLayout
+                                android:visibility="gone"
                                 android:id="@+id/ll_policy_category"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -173,6 +181,7 @@
                                 android:ellipsize="end"
                                 android:gravity="center|left"
                                 android:hint="请选择保险单号"
+                                android:text="@{model.claimId}"
                                 android:singleLine="true"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/arch_dp_14" />
@@ -211,6 +220,7 @@
                                 android:ellipsize="end"
                                 android:gravity="center|left"
                                 android:hint="开始日期"
+                                android:text="@{model.insureStartTime}"
                                 android:singleLine="true"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/arch_dp_14" />
@@ -234,6 +244,7 @@
                                 android:ellipsize="end"
                                 android:gravity="center|left"
                                 android:hint="截止日期"
+                                android:text="@{model.insureEndTime}"
                                 android:singleLine="true"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/arch_dp_14" />
@@ -264,7 +275,6 @@
                                 android:ellipsize="end"
                                 android:gravity="center|left"
                                 android:singleLine="true"
-                                android:text="刘伯羽"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/arch_dp_14" />
                         </LinearLayout>
@@ -298,7 +308,7 @@
                                 android:ellipsize="end"
                                 android:gravity="center|left"
                                 android:singleLine="true"
-                                android:text="2021-03-13 18:00:30"
+                                android:text="@{model.submitDate}"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/arch_dp_14" />
                         </LinearLayout>
@@ -351,7 +361,7 @@
                                 android:id="@+id/tv_measure_way"
                                 android:layout_width="@dimen/arch_dp_100"
                                 android:layout_height="wrap_content"
-                                android:text="测重"
+                                android:text="@{model.measureTypeName}"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/arch_dp_14"
                                 android:visibility="gone" />

@@ -1,8 +1,16 @@
 package com.project.module_order.ui;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.opengl.GLSurfaceView;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -11,7 +19,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.huawei.hiar.ARBodyTrackingConfig;
 import com.huawei.hiar.ARConfigBase;
@@ -26,10 +33,9 @@ import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.utils.SharedPreferencesUtils;
 import com.project.arch_repo.widget.ImagePopupWindow;
-import com.project.common_resource.OrderPhotoListModel;
-import com.project.common_resource.PhotoModel;
-import com.project.common_resource.TakePhotoButtonItem;
 import com.project.common_resource.TakePhotoModel;
+import com.project.common_resource.response.LoginResDTO;
+import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
 import com.project.module_order.adapter.TakePhotoBtnAdapter;
@@ -47,14 +53,13 @@ import com.xxf.view.utils.StatusBarUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Locale;
 
 /**
  * @author liuboyu  E-mail:545777678@qq.com
  * @Date 2021-03-25
  * @Description
  */
-@Route(path = ArouterConfig.Order.ORDER_TAKE_PHOTO)
 public class TakePhotoActivity extends BaseActivity {
     private OrderActivityTakePhotoBinding mBinding;
 
@@ -65,19 +70,22 @@ public class TakePhotoActivity extends BaseActivity {
     private BodyRenderManager mBodyRenderManager;
 
     private DisplayRotationManager mDisplayRotationManager;
-
+    private LocationManager locationManager;
+    private String locationProvider = null;
     private String message = null;
 
     private boolean isRemindInstall = false;
     private TakePhotoBtnAdapter mBtnAdapter;
     private int currentBtnIndex = 0;
     private Bitmap maskBitmap;
-    private List<TakePhotoButtonItem> list;
+    private List<Address> mAddresses;
+    private Location mLocation;
+    private List<LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean> mButtonItems;
     /**
      * 每只猪的照片
      */
-    private List<PhotoModel> photos = new ArrayList<>();
-    private List<OrderPhotoListModel> result = new ArrayList<>();
+    private List<PolicyDetailResDTO.ClaimListBean.PigInfoBean> photos = new ArrayList<>();
+    private List<PolicyDetailResDTO.ClaimListBean> result = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,25 +103,23 @@ public class TakePhotoActivity extends BaseActivity {
                 showPigTips();
             }
         }, 200);
+        getLocation();
     }
 
     private void initView() {
-        list = new ArrayList();
-        list.add(new TakePhotoButtonItem("测重识别", true));
-        list.add(new TakePhotoButtonItem("猪脸识别", false));
-        list.add(new TakePhotoButtonItem("耳标识别", false));
+        mButtonItems = (List<LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean>) getIntent().getSerializableExtra("mButtonItems");
         mBinding.rvPhotos.setAdapter(mBtnAdapter = new TakePhotoBtnAdapter());
-        mBtnAdapter.bindData(true, list);
+        mBtnAdapter.bindData(true, mButtonItems);
         mBtnAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
-                for (TakePhotoButtonItem item : list) {
+                for (LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean item : mButtonItems) {
                     item.setSelect(false);
                 }
-                list.get(index).setSelect(true);
+                mButtonItems.get(index).setSelect(true);
                 mBtnAdapter.notifyDataSetChanged();
                 currentBtnIndex = index;
-                if (list.get(currentBtnIndex).getName().contains("脸")) {
+                if (mButtonItems.get(currentBtnIndex).getName().contains("脸")) {
                     showPigFaceTips();
                 }
             }
@@ -121,7 +127,7 @@ public class TakePhotoActivity extends BaseActivity {
         mBinding.ivTake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PhotoModel photoModel = new PhotoModel();
+                PolicyDetailResDTO.ClaimListBean.PigInfoBean photoModel = new PolicyDetailResDTO.ClaimListBean.PigInfoBean();
 
                 TakePhotoModel model = SurfaceCameraUtils.takePhoto(TakePhotoActivity.this, mBinding.surfaceview, maskBitmap);
                 // 先显示，后保存
@@ -133,18 +139,13 @@ public class TakePhotoActivity extends BaseActivity {
                 btnLayout.setVisibility(View.GONE);
                 img.setVisibility(View.VISIBLE);
                 img.setImageBitmap(model.getBitmap());
-                list.get(currentBtnIndex).setUrl(model.getPath());
+                mButtonItems.get(currentBtnIndex).setUrl(model.getPath());
                 checkNextButton();
                 canNext();
 
-                photoModel.setUrl(model.getPath());
-                photoModel.setAddr("物资学院路3");
-                photoModel.setCompany("百度3");
-                photoModel.setDate("2021-02-33");
-                photoModel.setName("刘伯羽3");
-                photoModel.setNum("15011447166");
-                photoModel.setPos("12312312312,q2312313");
-                photoModel.setResult(new Random().nextInt(100) + "kg");
+                photoModel.setImgUrl(model.getPath());
+                photoModel.setColumn(mButtonItems.get(currentBtnIndex).getName());
+                photoModel.setResults("result");
                 photos.add(photoModel);
 
             }
@@ -171,7 +172,7 @@ public class TakePhotoActivity extends BaseActivity {
             public void onClickPhoto(int pos) {
                 ARouter.getInstance()
                         .build(ArouterConfig.Order.ORDER_PHOTO_PRE)
-                        .withString("url", list.get(pos).getUrl())
+                        .withString("url", mButtonItems.get(pos).getUrl())
                         .navigation();
             }
         });
@@ -185,7 +186,16 @@ public class TakePhotoActivity extends BaseActivity {
         mBinding.tvNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                result.add(new OrderPhotoListModel(new Random().nextInt(100) + "kg", photos));
+                PolicyDetailResDTO.ClaimListBean pig = new PolicyDetailResDTO.ClaimListBean();
+                pig.setPigInfo(photos);
+                if (mAddresses != null) {
+                    pig.setAddress(mAddresses.toString());
+                }
+                if (mLocation != null) {
+                    pig.setLatitude(mLocation.getLatitude() + "");
+                    pig.setLongitude(mLocation.getLongitude() + "");
+                }
+                result.add(pig);
                 photos.clear();
                 reset();
             }
@@ -199,7 +209,7 @@ public class TakePhotoActivity extends BaseActivity {
         mBinding.ivQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (list.get(currentBtnIndex).getName().contains("脸")) {
+                if (mButtonItems.get(currentBtnIndex).getName().contains("脸")) {
                     showPopupWindow(R.mipmap.sample_pig_face);
                 } else {
                     showPopupWindow(R.mipmap.sample_pig);
@@ -209,8 +219,17 @@ public class TakePhotoActivity extends BaseActivity {
     }
 
     private void commitPhotos() {
-        result.add(new OrderPhotoListModel(new Random().nextInt(100) + "kg", photos));
-        Intent intent = new Intent(TakePhotoActivity.this, CreateOrderActivity.class);
+        PolicyDetailResDTO.ClaimListBean pig = new PolicyDetailResDTO.ClaimListBean();
+        pig.setPigInfo(photos);
+        if (mAddresses != null) {
+            pig.setAddress(mAddresses.toString());
+        }
+        if (mLocation != null) {
+            pig.setLatitude(mLocation.getLatitude() + "");
+            pig.setLongitude(mLocation.getLongitude() + "");
+        }
+        result.add(pig);
+        Intent intent = getIntent();
         intent.putExtra("result", (Serializable) result);
         setResult(RESULT_OK, intent);
         finish();
@@ -233,11 +252,11 @@ public class TakePhotoActivity extends BaseActivity {
     }
 
     private void reset() {
-        for (TakePhotoButtonItem takePhotoButtonItem : list) {
+        for (LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean takePhotoButtonItem : mButtonItems) {
             takePhotoButtonItem.setSelect(false);
             takePhotoButtonItem.setUrl("");
         }
-        list.get(0).setSelect(true);
+        mButtonItems.get(0).setSelect(true);
         currentBtnIndex = 0;
         mBtnAdapter.notifyDataSetChanged();
     }
@@ -246,23 +265,23 @@ public class TakePhotoActivity extends BaseActivity {
      * 切换到下一个部位
      */
     private void checkNextButton() {
-        for (TakePhotoButtonItem item : list) {
+        for (LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean item : mButtonItems) {
             item.setSelect(false);
         }
-        if (currentBtnIndex < list.size() - 1) {
+        if (currentBtnIndex < mButtonItems.size() - 1) {
             currentBtnIndex = currentBtnIndex + 1;
-            list.get(currentBtnIndex).setSelect(true);
+            mButtonItems.get(currentBtnIndex).setSelect(true);
             mBtnAdapter.notifyDataSetChanged();
         }
     }
 
     private void canNext() {
-        if (list == null) {
+        if (mButtonItems == null) {
             return;
         }
 
         boolean canNext = true;
-        for (TakePhotoButtonItem item : list) {
+        for (LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean item : mButtonItems) {
             if (item != null && TextUtils.isEmpty(item.getUrl())) {
                 canNext = false;
             }
@@ -379,6 +398,7 @@ public class TakePhotoActivity extends BaseActivity {
         Log.i(TAG, "onPause end.");
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onDestroy() {
         Log.i(TAG, "onDestroy start.");
@@ -386,6 +406,9 @@ public class TakePhotoActivity extends BaseActivity {
         if (mArSession != null) {
             mArSession.stop();
             mArSession = null;
+        }
+        if (locationManager != null) {
+            locationManager.removeUpdates(locationListener);
         }
         Log.i(TAG, "onDestroy end.");
     }
@@ -407,4 +430,102 @@ public class TakePhotoActivity extends BaseActivity {
         popupWindow.setSrc(source);
         popupWindow.showAsDropDown(mBinding.ivQuestion, 100, 0);
     }
+
+
+    @SuppressLint("MissingPermission")
+    private void getLocation() {
+        //1.获取位置管理器
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        //2.获取位置提供器，GPS或是NetWork
+        List<String> providers = locationManager.getProviders(true);
+
+        if (providers.contains(LocationManager.GPS_PROVIDER)) {
+            //如果是GPS
+            locationProvider = LocationManager.GPS_PROVIDER;
+            Log.v("TAG", "定位方式GPS");
+        } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+            //如果是Network
+            locationProvider = LocationManager.NETWORK_PROVIDER;
+            Log.v("TAG", "定位方式Network");
+        } else {
+            Toast.makeText(this, "没有可用的位置提供器", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mLocation = locationManager.getLastKnownLocation(locationProvider);
+            if (mLocation != null) {
+                Toast.makeText(this, mLocation.getLongitude() + " " +
+                        mLocation.getLatitude() + "", Toast.LENGTH_SHORT).show();
+                Log.v("TAG", "获取上次的位置-经纬度：" + mLocation.getLongitude() + "   " + mLocation.getLatitude());
+                getAddress(mLocation);
+
+            } else {
+                //监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
+                locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
+            }
+        } else {
+            mLocation = locationManager.getLastKnownLocation(locationProvider);
+            if (mLocation != null) {
+                Toast.makeText(this, mLocation.getLongitude() + " " +
+                        mLocation.getLatitude() + "", Toast.LENGTH_SHORT).show();
+                Log.v("TAG", "获取上次的位置-经纬度：" + mLocation.getLongitude() + "   " + mLocation.getLatitude());
+                getAddress(mLocation);
+            } else {
+                //监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
+                locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
+            }
+        }
+    }
+
+    public LocationListener locationListener = new LocationListener() {
+        // Provider的状态在可用、暂时不可用和无服务三个状态直接切换时触发此函数
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        // Provider被enable时触发此函数，比如GPS被打开
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        // Provider被disable时触发此函数，比如GPS被关闭
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+
+        //当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
+        @Override
+        public void onLocationChanged(Location location) {
+            if (location != null) {
+                //如果位置发生变化，重新显示地理位置经纬度
+                Toast.makeText(TakePhotoActivity.this, location.getLongitude() + " " +
+                        location.getLatitude() + "", Toast.LENGTH_SHORT).show();
+                Log.v("TAG", "监视地理位置变化-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
+            }
+        }
+    };
+
+    /**
+     * 获取地址信息:城市、街道等信息
+     *
+     * @param location
+     * @return
+     */
+    private void getAddress(Location location) {
+        try {
+            if (location != null) {
+                Geocoder gc = new Geocoder(this, Locale.getDefault());
+                mAddresses = gc.getFromLocation(location.getLatitude(),
+                        location.getLongitude(), 1);
+                Toast.makeText(this, "获取地址信息：" + result.toString(), Toast.LENGTH_LONG).show();
+                Log.v("TAG", "获取地址信息：" + result.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

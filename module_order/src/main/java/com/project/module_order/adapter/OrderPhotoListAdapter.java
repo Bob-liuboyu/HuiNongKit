@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 
 import com.project.arch_repo.base.recyclerview.BaseBindableAdapter;
 import com.project.arch_repo.utils.GlideUtils;
-import com.project.common_resource.PhotoModel;
+import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.module_order.databinding.OrderItemPolicyListPhotoBinding;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 
@@ -15,7 +15,7 @@ import com.xxf.view.recyclerview.adapter.BaseViewHolder;
  * @Date 2021-03-21
  * @Description
  */
-public class OrderPhotoListAdapter extends BaseBindableAdapter<OrderItemPolicyListPhotoBinding, PhotoModel> {
+public class OrderPhotoListAdapter extends BaseBindableAdapter<OrderItemPolicyListPhotoBinding, PolicyDetailResDTO.ClaimListBean.PigInfoBean> {
     private int width;
 
     @Override
@@ -24,7 +24,7 @@ public class OrderPhotoListAdapter extends BaseBindableAdapter<OrderItemPolicyLi
     }
 
     @Override
-    public void onBindHolder(BaseViewHolder holder, OrderItemPolicyListPhotoBinding binding, @Nullable PhotoModel model, int index) {
+    public void onBindHolder(BaseViewHolder holder, OrderItemPolicyListPhotoBinding binding, @Nullable PolicyDetailResDTO.ClaimListBean.PigInfoBean model, int index) {
         if (model == null) {
             return;
         }
@@ -32,7 +32,7 @@ public class OrderPhotoListAdapter extends BaseBindableAdapter<OrderItemPolicyLi
         params.width = width;
         params.height = width;
         binding.ivPhoto.setLayoutParams(params);
-        GlideUtils.loadImage(binding.ivPhoto, model.getUrl());
+        GlideUtils.loadImage(binding.ivPhoto, model.getImgUrl());
     }
 
     public void setWidth(int width) {

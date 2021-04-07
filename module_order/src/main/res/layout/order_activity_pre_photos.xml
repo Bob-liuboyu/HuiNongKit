@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="com.project.common_resource.PhotoModel" />
+            type="com.project.common_resource.response.PolicyDetailResDTO.ClaimListBean.PigInfoBean" />
     </data>
 
     <FrameLayout

@@ -23,11 +23,11 @@ import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.widget.CommonDialog;
 import com.project.arch_repo.widget.DatePickerDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
-import com.project.common_resource.OrderModel;
-import com.project.common_resource.OrderPhotoListModel;
 import com.project.common_resource.global.GlobalDataManager;
+import com.project.common_resource.requestModel.CreatePolicyRequestModel;
 import com.project.common_resource.response.InsureListResDTO;
 import com.project.common_resource.response.LoginResDTO;
+import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
@@ -36,6 +36,7 @@ import com.xxf.arch.dialog.IResultDialog;
 import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.utils.StatusBarUtils;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class CreateOrderActivity extends BaseActivity {
     protected static final int RESULT_CHOOSE = 100;
     //开始测量
     protected static final int RESULT_MEASURE = 101;
-    protected List<OrderPhotoListModel> result = new ArrayList<>();
+    protected List<PolicyDetailResDTO.ClaimListBean> result = new ArrayList<>();
     private SimpleDateFormat sdf;
     private boolean isFromChoose;
     /**
@@ -77,6 +78,8 @@ public class CreateOrderActivity extends BaseActivity {
 
     private LoginResDTO.SettingsBean.CategoryBean currentCategory;
     private LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean currentMeasureWay;
+
+    private List<PolicyDetailResDTO.ClaimListBean> forResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,7 @@ public class CreateOrderActivity extends BaseActivity {
     }
 
     private void initView() {
+        binding.llPolicyCategory.setVisibility(View.VISIBLE);
         sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         category = GlobalDataManager.getInstance().getSettings().getCategory();
         binding.tvTitle.setText("理赔登记");
@@ -103,6 +107,8 @@ public class CreateOrderActivity extends BaseActivity {
             measureWays = currentCategory.getMeasure_ways();
             currentMeasureWay = measureWays.get(0);
         }
+        LoginResDTO.UserInfoBean info = GlobalDataManager.getInstance().getUserInfo();
+        binding.tvMaster.setText(info != null ? info.getUserName() : "");
     }
 
     private void createMeasureWayItems() {
@@ -150,7 +156,7 @@ public class CreateOrderActivity extends BaseActivity {
         for (final LoginResDTO.SettingsBean.CategoryBean bean : category) {
             final TextView item = new TextView(this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.leftMargin = DisplayUtils.dip2px(this, 15);
+            params.rightMargin = DisplayUtils.dip2px(this, 15);
             item.setPadding(padding15, padding3, padding15, padding3);
             item.setText(bean.getClaimName());
             item.setBackgroundResource(R.drawable.filter_select_status);
@@ -247,8 +253,7 @@ public class CreateOrderActivity extends BaseActivity {
         binding.tvRightText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.showToast("提交理赔成功");
-                finish();
+
             }
         });
         binding.ivBack.setOnClickListener(new View.OnClickListener() {
@@ -273,8 +278,9 @@ public class CreateOrderActivity extends BaseActivity {
                 binding.tvDateStart.setText(result.getInsureStartTime());
                 binding.tvDateEnd.setText(result.getInsureEndTime());
                 isFromChoose = true;
+                binding.tvName.setEnabled(false);
             } else if (requestCode == RESULT_MEASURE) {
-                List<OrderPhotoListModel> forResult = (List<OrderPhotoListModel>) data.getSerializableExtra("result");
+                forResult = (List<PolicyDetailResDTO.ClaimListBean>) data.getSerializableExtra("result");
                 if (forResult != null && forResult.size() > 0) {
                     result.addAll(forResult);
                     mAdapter = new OrderPhotosListAdapter();
@@ -288,7 +294,7 @@ public class CreateOrderActivity extends BaseActivity {
         }
     }
 
-    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
+    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     public void showCamera() {
         if (!isHuawei()) {
             ToastUtils.showToast("当前应用只支持华为设备！");
@@ -303,25 +309,29 @@ public class CreateOrderActivity extends BaseActivity {
             ToastUtils.showToast("请先填写信息后在进行测量！");
             return;
         }
-        ARouter.getInstance().build(ArouterConfig.Order.ORDER_TAKE_PHOTO)
-                .navigation(CreateOrderActivity.this, RESULT_MEASURE);
+
+        Intent intent = new Intent(this, TakePhotoActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("mButtonItems", (Serializable) currentMeasureWay.getDetails());
+        intent.putExtras(bundle);
+        startActivityForResult(intent, RESULT_MEASURE);
     }
 
-    @OnShowRationale({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
+    @OnShowRationale({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void showRationaleForCamera(PermissionRequest request) {
         // NOTE: Show a rationale to explain why the permission is needed, e.g. with a dialog.
         // Call proceed() or cancel() on the provided PermissionRequest to continue or abort
         showRationaleDialog("使用此功能需要您的拍照、储存卡权限", request);
     }
 
-    @OnPermissionDenied({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
+    @OnPermissionDenied({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void onCameraDenied() {
         // NOTE: Deal with a denied permission, e.g. by showing specific UI
         // or disabling certain functionality
         Toast.makeText(this, "权限被拒绝", Toast.LENGTH_SHORT).show();
     }
 
-    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
+    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void onCameraNeverAskAgain() {
         Toast.makeText(this, "请到设置中开启拍照、储存卡权限", Toast.LENGTH_SHORT).show();
     }
@@ -376,6 +386,42 @@ public class CreateOrderActivity extends BaseActivity {
         } else {
             return Build.BRAND.toLowerCase().equals("huawei") || Build.BRAND.toLowerCase().equals("honor");
         }
+    }
+
+
+    private void commitData() {
+        CreatePolicyRequestModel requestModel = new CreatePolicyRequestModel();
+        requestModel.setToken(GlobalDataManager.getInstance().getToken());
+        // FIXME: 2021-04-07 估计没有用
+        requestModel.setClaimId("asdfadfads");
+        String claimName = "";
+        for (int i = 0; i < binding.llPolicyCategory.getChildCount(); i++) {
+            TextView category = (TextView) binding.llPolicyCategory.getChildAt(i);
+            if (category != null && category.isSelected()) {
+                claimName = category.getText().toString();
+                break;
+            }
+        }
+        requestModel.setClaimName(claimName);
+
+        // FIXME: 2021-04-07 估计没有用
+        requestModel.setClaimType("claimType");
+        requestModel.setClaimUserId(GlobalDataManager.getInstance().getUserInfo().getUserId());
+        requestModel.setInsureStartTime(binding.tvDateStart.getText().toString());
+        requestModel.setInsureEndTime(binding.tvDateEnd.getText().toString());
+        requestModel.setInsureId(binding.tvCode.getText().toString());
+        String measureType = "";
+        for (int i = 0; i < binding.llMeasureWay.getChildCount(); i++) {
+            TextView category = (TextView) binding.llMeasureWay.getChildAt(i);
+            if (category != null && category.isSelected()) {
+                measureType = category.getText().toString();
+                break;
+            }
+        }
+        requestModel.setMeasureType(measureType);
+        // FIXME: 2021-04-07 哪里来的phone
+        requestModel.setPhone("15011447166");
+
 
     }
 

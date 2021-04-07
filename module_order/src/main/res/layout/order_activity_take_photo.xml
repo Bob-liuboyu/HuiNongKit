@@ -320,12 +320,11 @@
                         android:layout_height="@dimen/arch_dp_30"
                         android:layout_alignParentBottom="true"
                         android:layout_centerInParent="true"
-                        android:background="@drawable/base_rect_btn_bg_selector"
-                        android:enabled="false"
+                        android:background="@drawable/base_bg_white_round_rect_4"
                         android:gravity="center"
                         android:layout_marginBottom="@dimen/arch_dp_50"
                         android:text="拍完了"
-                        android:textColor="#ffffff"
+                        android:textColor="@color/arch_color_base"
                         android:textSize="@dimen/arch_dp_13" />
 
                     <ImageView

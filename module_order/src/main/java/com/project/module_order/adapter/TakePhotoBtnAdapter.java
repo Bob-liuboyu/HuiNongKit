@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.arch_repo.base.recyclerview.BaseBindableAdapter;
-import com.project.common_resource.TakePhotoButtonItem;
+import com.project.common_resource.response.LoginResDTO;
 import com.project.module_order.R;
 import com.project.module_order.databinding.OrderItemTakePhotoBinding;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
@@ -17,7 +17,7 @@ import com.xxf.view.recyclerview.adapter.BaseViewHolder;
  * @Date 2021-03-26
  * @Description
  */
-public class TakePhotoBtnAdapter extends BaseBindableAdapter<OrderItemTakePhotoBinding, TakePhotoButtonItem> {
+public class TakePhotoBtnAdapter extends BaseBindableAdapter<OrderItemTakePhotoBinding, LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean> {
     private DeletePhotoListener mListener;
 
     @Override
@@ -26,7 +26,7 @@ public class TakePhotoBtnAdapter extends BaseBindableAdapter<OrderItemTakePhotoB
     }
 
     @Override
-    public void onBindHolder(BaseViewHolder holder, final OrderItemTakePhotoBinding binding, @Nullable final TakePhotoButtonItem orderModel, final int index) {
+    public void onBindHolder(BaseViewHolder holder, final OrderItemTakePhotoBinding binding, @Nullable final LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean orderModel, final int index) {
         if (orderModel == null) {
             return;
         }
@@ -50,10 +50,10 @@ public class TakePhotoBtnAdapter extends BaseBindableAdapter<OrderItemTakePhotoB
             }
         });
 
-        if(TextUtils.isEmpty(orderModel.getUrl())){
+        if (TextUtils.isEmpty(orderModel.getUrl())) {
             binding.ivPhoto.setVisibility(View.GONE);
             binding.llButton.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             binding.ivPhoto.setVisibility(View.VISIBLE);
             binding.llButton.setVisibility(View.GONE);
         }
@@ -65,6 +65,7 @@ public class TakePhotoBtnAdapter extends BaseBindableAdapter<OrderItemTakePhotoB
 
     public interface DeletePhotoListener {
         void onDelete(int pos);
+
         void onClickPhoto(int pos);
     }
 }

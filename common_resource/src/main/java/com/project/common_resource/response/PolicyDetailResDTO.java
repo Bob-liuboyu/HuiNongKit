@@ -25,6 +25,8 @@ public class PolicyDetailResDTO implements Serializable {
     private String claimStatusName;
     private int claimStatus;
     private int measureType;
+    private String insureStartTime;
+    private String insureEndTime;
     /**
      * simmilarity : 85%
      * address : 北京市朝阳区
@@ -44,6 +46,22 @@ public class PolicyDetailResDTO implements Serializable {
      */
 
     private List<ClaimListBean> claimList;
+
+    public String getInsureStartTime() {
+        return insureStartTime;
+    }
+
+    public void setInsureStartTime(String insureStartTime) {
+        this.insureStartTime = insureStartTime;
+    }
+
+    public String getInsureEndTime() {
+        return insureEndTime;
+    }
+
+    public void setInsureEndTime(String insureEndTime) {
+        this.insureEndTime = insureEndTime;
+    }
 
     public String getDeptName() {
         return deptName;
@@ -173,7 +191,7 @@ public class PolicyDetailResDTO implements Serializable {
         this.claimList = claimList;
     }
 
-    public static class ClaimListBean {
+    public static class ClaimListBean implements Serializable {
         private String simmilarity;
         private String address;
         private int is_repeat;
@@ -317,11 +335,20 @@ public class PolicyDetailResDTO implements Serializable {
             this.pigInfo = pigInfo;
         }
 
-        public static class PigInfoBean {
+        public static class PigInfoBean implements Serializable {
             private String imgUrl;
             private int no;
             private String name;
             private String results;
+            private String column;
+
+            public String getColumn() {
+                return column;
+            }
+
+            public void setColumn(String column) {
+                this.column = column;
+            }
 
             public String getImgUrl() {
                 return imgUrl;

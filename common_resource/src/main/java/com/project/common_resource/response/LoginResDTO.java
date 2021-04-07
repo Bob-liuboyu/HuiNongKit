@@ -32,7 +32,7 @@ public class LoginResDTO implements Serializable {
         this.token = token;
     }
 
-    public static class SettingsBean {
+    public static class SettingsBean implements Serializable{
         private String phone_support;
         private boolean needResetPwd;
         private String version;
@@ -76,7 +76,7 @@ public class LoginResDTO implements Serializable {
             this.category = category;
         }
 
-        public static class CategoryBean {
+        public static class CategoryBean implements Serializable{
             private String claimName;
             private String claimId;
             /**
@@ -111,7 +111,7 @@ public class LoginResDTO implements Serializable {
                 this.measure_ways = measure_ways;
             }
 
-            public static class MeasureWaysBean {
+            public static class MeasureWaysBean implements Serializable{
                 private String measureName;
                 private String measureType;
                 /**
@@ -147,11 +147,29 @@ public class LoginResDTO implements Serializable {
                     this.details = details;
                 }
 
-                public static class DetailsBean {
+                public static class DetailsBean implements Serializable{
                     private String name;
                     private String column;
                     private String iconUrl;
                     private String isShow;
+                    private boolean select;
+                    private String url;
+
+                    public boolean isSelect() {
+                        return select;
+                    }
+
+                    public void setSelect(boolean select) {
+                        this.select = select;
+                    }
+
+                    public String getUrl() {
+                        return url;
+                    }
+
+                    public void setUrl(String url) {
+                        this.url = url;
+                    }
 
                     public String getName() {
                         return name;
@@ -189,7 +207,7 @@ public class LoginResDTO implements Serializable {
         }
     }
 
-    public static class UserInfoBean {
+    public static class UserInfoBean implements Serializable{
         private String orgName;
         private String companyName;
         private String userName;
