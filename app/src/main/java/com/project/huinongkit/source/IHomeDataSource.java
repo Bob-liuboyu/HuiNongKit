@@ -10,8 +10,9 @@ import io.reactivex.Observable;
 public interface IHomeDataSource {
     /**
      * 首页理赔单列表
+     *
      * @param model
      * @return
      */
-    Observable<List<PolicyListResDTO>> getPolicyOrderList(SelectFilterModel model);
+    Observable<PolicyListResDTO> getPolicyOrderList(int index, SelectFilterModel model);
 }

@@ -41,7 +41,7 @@ public class MineFragment extends BaseFragment {
     }
 
     private void initView() {
-        LoginResDTO.UserinfoBean userInfo = GlobalDataManager.getInstance().getUserInfo();
+        LoginResDTO.UserInfoBean userInfo = GlobalDataManager.getInstance().getUserInfo();
         LoginResDTO.SettingsBean settings = GlobalDataManager.getInstance().getSettings();
         mBinding.setModel(userInfo);
 

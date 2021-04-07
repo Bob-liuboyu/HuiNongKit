@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="com.project.common_resource.response.LoginResDTO.UserinfoBean" />
+            type="com.project.common_resource.response.LoginResDTO.UserInfoBean" />
 
     </data>
 

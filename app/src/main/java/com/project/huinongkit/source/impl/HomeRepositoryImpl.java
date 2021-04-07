@@ -43,17 +43,24 @@ public class HomeRepositoryImpl implements IHomeDataSource {
 
 
     @Override
-    public Observable<List<PolicyListResDTO>> getPolicyOrderList(SelectFilterModel model) {
+    public Observable<PolicyListResDTO> getPolicyOrderList(int index,SelectFilterModel model) {
         String token = GlobalDataManager.getInstance().getToken();
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("search", model.getSearch());
-        jsonObject.addProperty("claimStatus", model.getClaimStatus());
-        jsonObject.addProperty("claimType", model.getClaimType());
-        jsonObject.addProperty("submitEndDate", model.getSubmitEndDate());
-        jsonObject.addProperty("submitStartDate", model.getSubmitStartDate());
-        jsonObject.addProperty("token", token);
+
+        JsonObject params = new JsonObject();
+        params.addProperty("search", model.getSearch());
+        params.addProperty("claimStatus", model.getClaimStatus());
+        params.addProperty("claimType", model.getClaimType());
+        params.addProperty("submitEndDate", model.getSubmitEndDate());
+        params.addProperty("submitStartDate", model.getSubmitStartDate());
+        params.addProperty("token", token);
+
+        jsonObject.add("params",params);
+        jsonObject.addProperty("pageNo",index);
+        jsonObject.addProperty("pageRows",20);
+
         return XXF.getApiService(HomeApiService.class)
                 .getPolicyOrderList(jsonObject)
-                .map(new ResponseDTOSimpleFunction<List<PolicyListResDTO>>());
+                .map(new ResponseDTOSimpleFunction<PolicyListResDTO>());
     }
 }

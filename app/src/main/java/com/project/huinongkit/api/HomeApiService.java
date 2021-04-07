@@ -32,5 +32,5 @@ public interface HomeApiService {
      * @return
      */
     @POST("claim/list")
-    Observable<ResponseDTO<List<PolicyListResDTO>>> getPolicyOrderList(@Body JsonObject body);
+    Observable<ResponseDTO<PolicyListResDTO>> getPolicyOrderList(@Body JsonObject body);
 }

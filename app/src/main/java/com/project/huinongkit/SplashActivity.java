@@ -76,7 +76,7 @@ public class SplashActivity extends BaseActivity {
         String settings = SharedPreferencesUtils.getStringValue(getApplicationContext(), "settings", "");
         String token = SharedPreferencesUtils.getStringValue(getApplicationContext(), "token", "");
 
-        LoginResDTO.UserinfoBean userinfoBean = gson.fromJson(user_info, LoginResDTO.UserinfoBean.class);
+        LoginResDTO.UserInfoBean userinfoBean = gson.fromJson(user_info, LoginResDTO.UserInfoBean.class);
         LoginResDTO.SettingsBean settingsBean = gson.fromJson(settings, LoginResDTO.SettingsBean.class);
         if (login && userinfoBean != null && settingsBean != null && !TextUtils.isEmpty(token)) {
             ARouter.getInstance().build(ArouterConfig.Main.MAIN)

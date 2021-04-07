@@ -5,7 +5,7 @@ import java.util.List;
 
 public class LoginResDTO implements Serializable {
     private SettingsBean settings;
-    private UserinfoBean userInfo;
+    private UserInfoBean userInfo;
     private String token;
 
     public SettingsBean getSettings() {
@@ -16,11 +16,11 @@ public class LoginResDTO implements Serializable {
         this.settings = settings;
     }
 
-    public UserinfoBean getUserInfo() {
+    public UserInfoBean getUserInfo() {
         return userInfo;
     }
 
-    public void setUserInfo(UserinfoBean userInfo) {
+    public void setUserInfo(UserInfoBean userInfo) {
         this.userInfo = userInfo;
     }
 
@@ -39,7 +39,7 @@ public class LoginResDTO implements Serializable {
         /**
          * claimName : 肥母猪
          * claimId : 123
-         * measure_ways : [{"details":[{"name":"猪身","column":"siteType","iconUrl":"icon图片url"},{"name":"正脸","column":"siteType","iconUrl":"icon图片url"},{"name":"耳朵","column":"siteType","iconUrl":"icon图片url"},{"name":"环境","column":"siteType","iconUrl":"icon图片url"}],"measureName":"测长","measureType":"0"}]
+         * measure_ways : [{"details":[{"name":"猪身","column":"pigBody","iconUrl":"icon图片url","isShow":"true"},{"name":"正脸","column":"pigFace","iconUrl":"icon图片url","isShow":"true"},{"name":"耳朵","column":"pigEar","iconUrl":"icon图片url","isShow":"true"},{"name":"环境","column":"pigEnvironmentOne","iconUrl":"icon图片1url","isShow":"true"},{"name":"环境","column":"pigEnvironmentTwo","iconUrl":"icon图片2url","isShow":"true"}],"measureName":"测长","measureType":"0"}]
          */
 
         private List<CategoryBean> category;
@@ -80,7 +80,7 @@ public class LoginResDTO implements Serializable {
             private String claimName;
             private String claimId;
             /**
-             * details : [{"name":"猪身","column":"siteType","iconUrl":"icon图片url"},{"name":"正脸","column":"siteType","iconUrl":"icon图片url"},{"name":"耳朵","column":"siteType","iconUrl":"icon图片url"},{"name":"环境","column":"siteType","iconUrl":"icon图片url"}]
+             * details : [{"name":"猪身","column":"pigBody","iconUrl":"icon图片url","isShow":"true"},{"name":"正脸","column":"pigFace","iconUrl":"icon图片url","isShow":"true"},{"name":"耳朵","column":"pigEar","iconUrl":"icon图片url","isShow":"true"},{"name":"环境","column":"pigEnvironmentOne","iconUrl":"icon图片1url","isShow":"true"},{"name":"环境","column":"pigEnvironmentTwo","iconUrl":"icon图片2url","isShow":"true"}]
              * measureName : 测长
              * measureType : 0
              */
@@ -116,8 +116,9 @@ public class LoginResDTO implements Serializable {
                 private String measureType;
                 /**
                  * name : 猪身
-                 * column : siteType
+                 * column : pigBody
                  * iconUrl : icon图片url
+                 * isShow : true
                  */
 
                 private List<DetailsBean> details;
@@ -150,6 +151,7 @@ public class LoginResDTO implements Serializable {
                     private String name;
                     private String column;
                     private String iconUrl;
+                    private String isShow;
 
                     public String getName() {
                         return name;
@@ -174,12 +176,20 @@ public class LoginResDTO implements Serializable {
                     public void setIconUrl(String iconUrl) {
                         this.iconUrl = iconUrl;
                     }
+
+                    public String getIsShow() {
+                        return isShow;
+                    }
+
+                    public void setIsShow(String isShow) {
+                        this.isShow = isShow;
+                    }
                 }
             }
         }
     }
 
-    public static class UserinfoBean {
+    public static class UserInfoBean {
         private String orgName;
         private String companyName;
         private String userName;

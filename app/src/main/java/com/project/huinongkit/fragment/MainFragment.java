@@ -76,16 +76,20 @@ public class MainFragment extends BaseFragment {
             return;
         }
         HomeRepositoryImpl.getInstance()
-                .getPolicyOrderList(model)
+                .getPolicyOrderList(currentPageIndex, model)
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(XXF.<List<PolicyListResDTO>>bindToLifecycle(this))
-                .compose(XXF.<List<PolicyListResDTO>>bindToErrorNotice())
-                .compose(XXF.<List<PolicyListResDTO>>bindToProgressHud(
+                .compose(XXF.<PolicyListResDTO>bindToLifecycle(this))
+                .compose(XXF.<PolicyListResDTO>bindToErrorNotice())
+                .compose(XXF.<PolicyListResDTO>bindToProgressHud(
                         new ProgressHUDTransformerImpl.Builder(this)
                                 .setLoadingNotice("努力加载中...")))
-                .subscribe(new Consumer<List<PolicyListResDTO>>() {
+                .subscribe(new Consumer<PolicyListResDTO>() {
                     @Override
-                    public void accept(List<PolicyListResDTO> data) throws Exception {
+                    public void accept(PolicyListResDTO result) throws Exception {
+                        if (result == null || result.getResultList() == null || result.getResultList().size() == 0) {
+                            return;
+                        }
+                        List<PolicyListResDTO.ResultListBean> data = result.getResultList();
                         if (currentPageIndex == 0) {
                             mAdapter.bindData(true, data);
                         } else {
