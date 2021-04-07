@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.project.arch_repo.function.ResponseDTOSimpleFunction;
 import com.project.common_resource.global.GlobalDataManager;
 import com.project.common_resource.response.InsureListResDTO;
+import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.common_resource.response.PolicyListResDTO;
 import com.project.module_order.api.OrderApiService;
 import com.project.module_order.source.IOrderDataSource;
@@ -58,5 +59,18 @@ public class OrderRepositoryImpl implements IOrderDataSource {
         return XXF.getApiService(OrderApiService.class)
                 .getInsureList(jsonObject)
                 .map(new ResponseDTOSimpleFunction<InsureListResDTO>());
+    }
+
+    @Override
+    public Observable<PolicyDetailResDTO> getClaimDetail(String claimId) {
+        String token = GlobalDataManager.getInstance().getToken();
+
+        JsonObject params = new JsonObject();
+        params.addProperty("token", token);
+        params.addProperty("claimId", claimId);
+
+        return XXF.getApiService(OrderApiService.class)
+                .getClaimDetail(params)
+                .map(new ResponseDTOSimpleFunction<PolicyDetailResDTO>());
     }
 }

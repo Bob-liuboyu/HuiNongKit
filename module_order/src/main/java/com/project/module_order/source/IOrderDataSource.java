@@ -1,6 +1,7 @@
 package com.project.module_order.source;
 
 import com.project.common_resource.response.InsureListResDTO;
+import com.project.common_resource.response.PolicyDetailResDTO;
 
 import java.util.List;
 
@@ -24,4 +25,12 @@ public interface IOrderDataSource {
      * @return
      */
     Observable<InsureListResDTO> getInsureList(int index, String search);
+
+    /**
+     * 获取理赔单详情
+     *
+     * @param claimId
+     * @return
+     */
+    Observable<PolicyDetailResDTO> getClaimDetail(String claimId);
 }

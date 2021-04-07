@@ -114,6 +114,7 @@ public class MainFragment extends BaseFragment {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
                 ARouter.getInstance().build(ArouterConfig.Order.ORDER_DETAIL)
+                        .withString("claimId", mAdapter.getItem(index).getClaimId())
                         .navigation();
             }
         });

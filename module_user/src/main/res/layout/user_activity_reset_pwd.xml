@@ -70,7 +70,7 @@
             android:layout_marginTop="128dp"
             android:layout_marginRight="32dp"
             android:background="@drawable/base_btn_bg_selector"
-            android:text="登录"
+            android:text="确定"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
     </LinearLayout>

@@ -1,17 +1,28 @@
 package com.project.module_order.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.project.common_resource.OrderPhotoListModel;
 import com.project.common_resource.PhotoModel;
+import com.project.common_resource.response.PolicyDetailResDTO;
+import com.project.common_resource.response.PolicyListResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
+import com.project.module_order.source.impl.OrderRepositoryImpl;
+import com.xxf.arch.XXF;
+import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
+import com.xxf.arch.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * @fileName: OrderDetailActivity
@@ -21,11 +32,36 @@ import java.util.Random;
  */
 @Route(path = ArouterConfig.Order.ORDER_DETAIL)
 public class OrderDetailActivity extends CreateOrderActivity {
+    @Autowired
+    String claimId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setData();
         initPhotoList();
+        initData(claimId);
+    }
+
+    private void initData(String claimId) {
+        if (TextUtils.isEmpty(claimId)) {
+            ToastUtils.showToast("claimId 异常，请稍后再试～");
+            return;
+        }
+        OrderRepositoryImpl.getInstance()
+                .getClaimDetail(claimId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(XXF.<PolicyDetailResDTO>bindToLifecycle(this))
+                .compose(XXF.<PolicyDetailResDTO>bindToErrorNotice())
+                .compose(XXF.<PolicyDetailResDTO>bindToProgressHud(
+                        new ProgressHUDTransformerImpl.Builder(this)
+                                .setLoadingNotice("努力加载中...")))
+                .subscribe(new Consumer<PolicyDetailResDTO>() {
+                    @Override
+                    public void accept(PolicyDetailResDTO result) throws Exception {
+
+                    }
+                });
     }
 
     public void setData() {

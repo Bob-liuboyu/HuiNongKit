@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.project.arch_repo.http.GlobalGsonConvertInterceptor;
 import com.project.arch_repo.http.httpmodel.ResponseDTO;
 import com.project.common_resource.response.InsureListResDTO;
+import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.common_resource.response.PolicyListResDTO;
 import com.project.config_repo.ApiConfig;
 import com.xxf.arch.annotation.BaseUrl;
@@ -42,4 +43,13 @@ public interface OrderApiService {
      */
     @POST("claim/getInsureList")
     Observable<ResponseDTO<InsureListResDTO>> getInsureList(@Body JsonObject body);
+
+    /**
+     * 获取理赔单详情
+     *
+     * @param body
+     * @return
+     */
+    @POST("claim/claimDetail")
+    Observable<ResponseDTO<PolicyDetailResDTO>> getClaimDetail(@Body JsonObject body);
 }
