@@ -19,7 +19,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -35,14 +34,20 @@ import com.project.common_resource.requestModel.CreatePolicyRequestModel;
 import com.project.common_resource.response.InsureListResDTO;
 import com.project.common_resource.response.LoginResDTO;
 import com.project.common_resource.response.PolicyDetailResDTO;
+import com.project.common_resource.response.PolicyListResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
 import com.project.module_order.databinding.OrderActivityCreateBinding;
+import com.project.module_order.source.impl.OrderRepositoryImpl;
+import com.project.module_order.utils.ImageUtils;
+import com.xxf.arch.XXF;
 import com.xxf.arch.dialog.IResultDialog;
+import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
 import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.utils.StatusBarUtils;
 
+import java.io.File;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,6 +55,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 import static com.project.common_resource.global.ConstantData.FILE_PATH;
 
@@ -96,6 +104,7 @@ public class CreateOrderActivity extends BaseActivity {
         createPolicyCategoryItems();
         setListener();
         getLocation();
+        clearLocalPhotos();
     }
 
     private void initView() {
@@ -394,7 +403,7 @@ public class CreateOrderActivity extends BaseActivity {
                 }
                 CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity photo = new CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity();
                 photo.setColumn(pigInfoBean.getColumn());
-                photo.setImgBase64("ImgBase64");
+                photo.setImgBase64(com.project.module_order.utils.ImageUtils.imageToBase64(pigInfoBean.getImgUrl()));
                 photo.setResults("result");
                 photos.add(photo);
             }
@@ -403,7 +412,7 @@ public class CreateOrderActivity extends BaseActivity {
             requestModel.setPhotoInfo(pigs);
         }
 
-        Log.e("xxxxxxxx", requestModel.toString());
+        commitPolicy(requestModel);
     }
 
     @SuppressLint("MissingPermission")
@@ -423,15 +432,12 @@ public class CreateOrderActivity extends BaseActivity {
             locationProvider = LocationManager.NETWORK_PROVIDER;
             Log.v("TAG", "定位方式Network");
         } else {
-            Toast.makeText(this, "没有可用的位置提供器", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mLocation = locationManager.getLastKnownLocation(locationProvider);
             if (mLocation != null) {
-                Toast.makeText(this, mLocation.getLongitude() + " " +
-                        mLocation.getLatitude() + "", Toast.LENGTH_SHORT).show();
                 Log.v("TAG", "获取上次的位置-经纬度：" + mLocation.getLongitude() + "   " + mLocation.getLatitude());
                 getAddress(mLocation);
 
@@ -442,8 +448,6 @@ public class CreateOrderActivity extends BaseActivity {
         } else {
             mLocation = locationManager.getLastKnownLocation(locationProvider);
             if (mLocation != null) {
-                Toast.makeText(this, mLocation.getLongitude() + " " +
-                        mLocation.getLatitude() + "", Toast.LENGTH_SHORT).show();
                 Log.v("TAG", "获取上次的位置-经纬度：" + mLocation.getLongitude() + "   " + mLocation.getLatitude());
                 getAddress(mLocation);
             } else {
@@ -453,7 +457,7 @@ public class CreateOrderActivity extends BaseActivity {
         }
     }
 
-    public LocationListener locationListener = new LocationListener() {
+    private LocationListener locationListener = new LocationListener() {
         // Provider的状态在可用、暂时不可用和无服务三个状态直接切换时触发此函数
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -474,8 +478,6 @@ public class CreateOrderActivity extends BaseActivity {
         public void onLocationChanged(Location location) {
             if (location != null) {
                 //如果位置发生变化，重新显示地理位置经纬度
-                Toast.makeText(CreateOrderActivity.this, location.getLongitude() + " " +
-                        location.getLatitude() + "", Toast.LENGTH_SHORT).show();
                 Log.v("TAG", "监视地理位置变化-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
             }
         }
@@ -493,7 +495,6 @@ public class CreateOrderActivity extends BaseActivity {
                 Geocoder gc = new Geocoder(this, Locale.getDefault());
                 mAddresses = gc.getFromLocation(location.getLatitude(),
                         location.getLongitude(), 1);
-                Toast.makeText(this, "获取地址信息：" + result.toString(), Toast.LENGTH_LONG).show();
                 Log.v("TAG", "获取地址信息：" + result.toString());
             }
         } catch (Exception e) {
@@ -508,14 +509,31 @@ public class CreateOrderActivity extends BaseActivity {
         if (locationManager != null) {
             locationManager.removeUpdates(locationListener);
         }
-
-        clearLocalPhotos();
     }
 
     /**
      * 清空本地图片
      */
     private void clearLocalPhotos() {
-        FileUtils.clearFile(FILE_PATH);
+        FileUtils.deleteFiles(FILE_PATH);
+    }
+
+    private void commitPolicy(CreatePolicyRequestModel requestModel) {
+        if (requestModel == null) {
+            return;
+        }
+        OrderRepositoryImpl.getInstance()
+                .submit(requestModel)
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(XXF.<Boolean>bindToLifecycle(this))
+                .compose(XXF.<Boolean>bindToErrorNotice())
+                .compose(XXF.<Boolean>bindToProgressHud(
+                        new ProgressHUDTransformerImpl.Builder(this)
+                                .setLoadingNotice("内容较多，请稍后～")))
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean result) throws Exception {
+                    }
+                });
     }
 }

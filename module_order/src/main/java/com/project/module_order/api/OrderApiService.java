@@ -10,6 +10,8 @@ import com.project.config_repo.ApiConfig;
 import com.xxf.arch.annotation.BaseUrl;
 import com.xxf.arch.annotation.GsonInterceptor;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -33,7 +35,7 @@ public interface OrderApiService {
      * @return
      */
     @POST("claim/submit")
-    Observable<ResponseDTO> submit(@Body JsonObject body);
+    Observable<ResponseDTO<Boolean>> submit(@Body JsonObject body);
 
     /**
      * 获取保单列表

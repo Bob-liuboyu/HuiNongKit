@@ -1,8 +1,12 @@
 package com.project.module_order.source.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.project.arch_repo.function.ResponseDTOSimpleFunction;
+import com.project.arch_repo.http.httpmodel.ResponseDTO;
 import com.project.common_resource.global.GlobalDataManager;
+import com.project.common_resource.requestModel.CreatePolicyRequestModel;
 import com.project.common_resource.response.InsureListResDTO;
 import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.common_resource.response.PolicyListResDTO;
@@ -10,9 +14,14 @@ import com.project.module_order.api.OrderApiService;
 import com.project.module_order.source.IOrderDataSource;
 import com.xxf.arch.XXF;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 
 import static com.project.common_resource.global.ConstantData.PAGE_COUNT;
 
@@ -39,8 +48,16 @@ public class OrderRepositoryImpl implements IOrderDataSource {
     }
 
     @Override
-    public Observable<String> submit(String phone, String password, String token) {
-        return null;
+    public Observable<Boolean> submit(CreatePolicyRequestModel model) {
+        JsonObject jsonObject = new Gson().toJsonTree(model).getAsJsonObject();
+        return XXF.getApiService(OrderApiService.class)
+                .submit(jsonObject)
+                .map(new Function<ResponseDTO, Boolean>() {
+                    @Override
+                    public Boolean apply(@NonNull ResponseDTO responseDTO) throws Exception {
+                        return responseDTO.success;
+                    }
+                });
     }
 
     @Override
@@ -52,9 +69,9 @@ public class OrderRepositoryImpl implements IOrderDataSource {
         params.addProperty("token", token);
         params.addProperty("search", search);
 
-        jsonObject.add("params",params);
-        jsonObject.addProperty("pageNo",index);
-        jsonObject.addProperty("pageRows",PAGE_COUNT);
+        jsonObject.add("params", params);
+        jsonObject.addProperty("pageNo", index);
+        jsonObject.addProperty("pageRows", PAGE_COUNT);
 
         return XXF.getApiService(OrderApiService.class)
                 .getInsureList(jsonObject)

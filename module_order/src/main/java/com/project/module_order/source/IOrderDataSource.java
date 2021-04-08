@@ -1,5 +1,7 @@
 package com.project.module_order.source;
 
+import com.project.arch_repo.http.httpmodel.ResponseDTO;
+import com.project.common_resource.requestModel.CreatePolicyRequestModel;
 import com.project.common_resource.response.InsureListResDTO;
 import com.project.common_resource.response.PolicyDetailResDTO;
 
@@ -12,11 +14,10 @@ public interface IOrderDataSource {
     /**
      * 创建订单
      *
-     * @param phone
-     * @param password
+     * @param model
      * @return
      */
-    Observable<String> submit(String phone, String password, String token);
+    Observable<Boolean> submit(CreatePolicyRequestModel model);
 
     /**
      * 获取保单列表

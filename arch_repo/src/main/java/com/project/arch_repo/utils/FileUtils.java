@@ -96,7 +96,7 @@ public class FileUtils {
             long folderSize = 0L;
             String[] list = folder.list();
             if (list != null && list.length > 0) {
-                for(int i = 0; i < list.length; ++i) {
+                for (int i = 0; i < list.length; ++i) {
                     File object = new File(folder, list[i]);
                     if (object.isDirectory()) {
                         folderSize += getFolderSize(object);
@@ -131,13 +131,13 @@ public class FileUtils {
         String displaySize;
         float d;
         if (size / 1073741824L > 0L) {
-            d = (float)size / 1.07374182E9F;
+            d = (float) size / 1.07374182E9F;
             displaySize = getOffsetDecimal(d, scale) + " GB";
         } else if (size / 1048576L > 0L) {
-            d = (float)size / 1048576.0F;
+            d = (float) size / 1048576.0F;
             displaySize = getOffsetDecimal(d, scale) + " MB";
         } else if (size / 1024L > 0L) {
-            d = (float)size / 1024.0F;
+            d = (float) size / 1024.0F;
             displaySize = getOffsetDecimal(d, scale) + " KB";
         } else {
             displaySize = size + " bytes";
@@ -148,7 +148,7 @@ public class FileUtils {
 
     private static String getOffsetDecimal(float ft, int scale) {
         int roundingMode = 4;
-        BigDecimal bd = new BigDecimal((double)ft);
+        BigDecimal bd = new BigDecimal((double) ft);
         bd = bd.setScale(scale, roundingMode);
         ft = bd.floatValue();
         return "" + ft;
@@ -245,7 +245,7 @@ public class FileUtils {
             String[] tempList = file.list();
             File temp = null;
 
-            for(int i = 0; i < tempList.length; ++i) {
+            for (int i = 0; i < tempList.length; ++i) {
                 if (path.endsWith(File.separator)) {
                     temp = new File(path + tempList[i]);
                 } else {
@@ -277,7 +277,7 @@ public class FileUtils {
             String[] tempList = file.list();
             File temp = null;
 
-            for(int i = 0; i < tempList.length; ++i) {
+            for (int i = 0; i < tempList.length; ++i) {
                 if (path.endsWith(File.separator)) {
                     temp = new File(path + tempList[i]);
                 } else {
@@ -371,7 +371,7 @@ public class FileUtils {
                 byte[] buffer = new byte[1024];
 
                 int len;
-                while((len = in.read(buffer)) != -1) {
+                while ((len = in.read(buffer)) != -1) {
                     out.write(buffer, 0, len);
                 }
             } catch (IOException var14) {
@@ -414,7 +414,7 @@ public class FileUtils {
                     boolean var6 = true;
 
                     int len;
-                    while((len = fis.read(buffer, 0, buffer.length)) != -1) {
+                    while ((len = fis.read(buffer, 0, buffer.length)) != -1) {
                         baos.write(buffer, 0, len);
                     }
 
@@ -497,7 +497,7 @@ public class FileUtils {
             boolean var5 = true;
 
             int len;
-            while((len = in.read(buffer, 0, bufferSize)) != -1) {
+            while ((len = in.read(buffer, 0, bufferSize)) != -1) {
                 out.write(buffer, 0, len);
             }
 
@@ -522,6 +522,33 @@ public class FileUtils {
                 var4.printStackTrace();
             }
 
+        }
+    }
+
+    // 创建目录（文件夹）删除的方法
+    public static void deleteFiles(String path) {
+        // 为传进来的路径参数创建一个文件对象
+        File file = new File(path);
+        // 如果目标路径是一个文件，那么直接调用delete方法删除即可
+        // file.delete();
+        // 如果是一个目录，那么必须把该目录下的所有文件和子目录全部删除，才能删除该目标目录，这里要用到递归函数
+        // 创建一个files数组，用来存放目标目录下所有的文件和目录的file对象
+        File[] files = new File[50];
+        // 将目标目录下所有的file对象存入files数组中
+        files = file.listFiles();
+        // 循环遍历files数组
+        for (File temp : files) {
+            // 判断该temp对象是否为文件对象
+            if (temp.isFile()) {
+                temp.delete();
+            }
+            // 判断该temp对象是否为目录对象
+            if (temp.isDirectory()) {
+                // 将该temp目录的路径给delete方法（自己），达到递归的目的
+                deleteFiles(temp.getAbsolutePath());
+                // 确保该temp目录下已被清空后，删除该temp目录
+                temp.delete();
+            }
         }
     }
 
@@ -596,7 +623,7 @@ public class FileUtils {
                             read = bis.read();
                             continue label72;
                         }
-                    } while(224 > read || read > 239);
+                    } while (224 > read || read > 239);
 
                     read = bis.read();
                     if (128 <= read && read <= 191) {
@@ -606,7 +633,7 @@ public class FileUtils {
                         }
                     }
                     break;
-                } while(128 <= read && read <= 191);
+                } while (128 <= read && read <= 191);
             }
 
             bis.close();
@@ -639,7 +666,7 @@ public class FileUtils {
                     out.setComment("Zip File");
 
                     int len;
-                    while((len = inputStream.read()) != -1) {
+                    while ((len = inputStream.read()) != -1) {
                         out.write(len);
                     }
 
@@ -664,12 +691,12 @@ public class FileUtils {
             try {
                 ZipOutputStream out = new ZipOutputStream(new FileOutputStream(new File(zipFile)));
 
-                for(int i = 0; i < srcFiles.length; ++i) {
+                for (int i = 0; i < srcFiles.length; ++i) {
                     FileInputStream in = new FileInputStream(srcFiles[i]);
                     out.putNextEntry(new ZipEntry(srcFiles[i].getName()));
 
                     int len;
-                    while((len = in.read(buf)) > 0) {
+                    while ((len = in.read(buf)) > 0) {
                         out.write(buf, 0, len);
                     }
 
@@ -701,7 +728,7 @@ public class FileUtils {
                 FileOutputStream output = new FileOutputStream(outFile);
 
                 int len;
-                while((len = input.read()) != -1) {
+                while ((len = input.read()) != -1) {
                     output.write(len);
                 }
 
