@@ -403,7 +403,7 @@ public class CreateOrderActivity extends BaseActivity {
                 }
                 CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity photo = new CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity();
                 photo.setColumn(pigInfoBean.getColumn());
-                photo.setImgBase64(com.project.module_order.utils.ImageUtils.imageToBase64(pigInfoBean.getImgUrl()));
+                photo.setImgBase64(com.project.module_order.utils.ImageUtils.bitmapToString(pigInfoBean.getImgUrl()));
                 photo.setResults("result");
                 photos.add(photo);
             }
