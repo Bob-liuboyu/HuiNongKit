@@ -4,6 +4,7 @@ package com.project.huinongkit;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import com.project.config_repo.ArouterConfig;
 import com.project.huinongkit.databinding.MainActivityMainBinding;
 import com.project.huinongkit.fragment.MainFragment;
 import com.project.huinongkit.fragment.MineFragment;
+import com.xxf.arch.utils.ToastUtils;
 import com.xxf.arch.widget.BaseFragmentAdapter;
 import com.xxf.view.utils.StatusBarUtils;
 
@@ -79,43 +81,39 @@ public class MainActivity extends BaseTitleBarActivity {
         mBinding.btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                MainActivityPermissionsDispatcher.gotoCameraWithCheck(MainActivity.this);
-                ARouter.getInstance().build(ArouterConfig.Order.ORDER_CREATE)
-                        .navigation();
+                MainActivityPermissionsDispatcher.showCameraWithCheck(MainActivity.this);
             }
         });
     }
 
-    @NeedsPermission(Manifest.permission.CAMERA)
-    public void gotoCamera() {
-        ARouter.getInstance().build(ArouterConfig.Order.ORDER_BODY_3D)
+
+    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    public void showCamera() {
+        if (!isHuawei()) {
+            ToastUtils.showToast("当前应用只支持华为设备！");
+            return;
+        }
+        ARouter.getInstance().build(ArouterConfig.Order.ORDER_CREATE)
                 .navigation();
     }
 
-    @OnShowRationale(Manifest.permission.CAMERA)
+    @OnShowRationale({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void showRationaleForCamera(PermissionRequest request) {
         // NOTE: Show a rationale to explain why the permission is needed, e.g. with a dialog.
         // Call proceed() or cancel() on the provided PermissionRequest to continue or abort
-        showRationaleDialog("permission_camera_rationale", request);
+        showRationaleDialog("使用此功能需要您的拍照、储存卡权限", request);
     }
 
-    @OnShowRationale({Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS})
-    void showRationaleForContact(PermissionRequest request) {
-        // NOTE: Show a rationale to explain why the permission is needed, e.g. with a dialog.
-        // Call proceed() or cancel() on the provided PermissionRequest to continue or abort
-        showRationaleDialog("permission_contacts_rationale", request);
-    }
-
-    @OnPermissionDenied(Manifest.permission.CAMERA)
+    @OnPermissionDenied({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void onCameraDenied() {
         // NOTE: Deal with a denied permission, e.g. by showing specific UI
         // or disabling certain functionality
-        Toast.makeText(this, "permission_camera_denied", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "权限被拒绝", Toast.LENGTH_SHORT).show();
     }
 
-    @OnNeverAskAgain(Manifest.permission.CAMERA)
+    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void onCameraNeverAskAgain() {
-        Toast.makeText(this, "permission_camera_never_askagain", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "请到设置中开启拍照、储存卡权限", Toast.LENGTH_SHORT).show();
     }
 
     private void showRationaleDialog(String message, final PermissionRequest request) {
@@ -142,5 +140,13 @@ public class MainActivity extends BaseTitleBarActivity {
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    public boolean isHuawei() {
+        if (Build.BRAND == null) {
+            return false;
+        } else {
+            return Build.BRAND.toLowerCase().equals("huawei") || Build.BRAND.toLowerCase().equals("honor");
+        }
     }
 }

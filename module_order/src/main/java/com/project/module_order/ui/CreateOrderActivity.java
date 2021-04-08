@@ -1,14 +1,20 @@
 package com.project.module_order.ui;
 
-import android.Manifest;
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -20,6 +26,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DateTimeUtils;
 import com.project.arch_repo.utils.DisplayUtils;
+import com.project.arch_repo.utils.FileUtils;
 import com.project.arch_repo.widget.CommonDialog;
 import com.project.arch_repo.widget.DatePickerDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
@@ -44,12 +51,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnNeverAskAgain;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.OnShowRationale;
-import permissions.dispatcher.PermissionRequest;
-import permissions.dispatcher.RuntimePermissions;
+import static com.project.common_resource.global.ConstantData.FILE_PATH;
 
 /**
  * @fileName: CreateOrderActivity
@@ -57,7 +59,6 @@ import permissions.dispatcher.RuntimePermissions;
  * @date: 2021/3/15 11:32 AM
  * @description: 创建订单
  */
-@RuntimePermissions
 @Route(path = ArouterConfig.Order.ORDER_CREATE)
 public class CreateOrderActivity extends BaseActivity {
 
@@ -70,6 +71,10 @@ public class CreateOrderActivity extends BaseActivity {
     protected List<PolicyDetailResDTO.ClaimListBean> result = new ArrayList<>();
     private SimpleDateFormat sdf;
     private boolean isFromChoose;
+    private List<Address> mAddresses;
+    private Location mLocation;
+    private LocationManager locationManager;
+    private String locationProvider = null;
     /**
      * 测量方式
      */
@@ -78,8 +83,6 @@ public class CreateOrderActivity extends BaseActivity {
 
     private LoginResDTO.SettingsBean.CategoryBean currentCategory;
     private LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean currentMeasureWay;
-
-    private List<PolicyDetailResDTO.ClaimListBean> forResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,7 @@ public class CreateOrderActivity extends BaseActivity {
         createMeasureWayItems();
         createPolicyCategoryItems();
         setListener();
+        getLocation();
     }
 
     private void initView() {
@@ -191,7 +195,7 @@ public class CreateOrderActivity extends BaseActivity {
         binding.btnMeasure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CreateOrderActivityPermissionsDispatcher.showCameraWithCheck(CreateOrderActivity.this);
+                showCamera();
             }
         });
         binding.btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -253,7 +257,7 @@ public class CreateOrderActivity extends BaseActivity {
         binding.tvRightText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                commitData();
             }
         });
         binding.ivBack.setOnClickListener(new View.OnClickListener() {
@@ -280,7 +284,7 @@ public class CreateOrderActivity extends BaseActivity {
                 isFromChoose = true;
                 binding.tvName.setEnabled(false);
             } else if (requestCode == RESULT_MEASURE) {
-                forResult = (List<PolicyDetailResDTO.ClaimListBean>) data.getSerializableExtra("result");
+                List<PolicyDetailResDTO.ClaimListBean> forResult = (List<PolicyDetailResDTO.ClaimListBean>) data.getSerializableExtra("result");
                 if (forResult != null && forResult.size() > 0) {
                     result.addAll(forResult);
                     mAdapter = new OrderPhotosListAdapter();
@@ -294,12 +298,7 @@ public class CreateOrderActivity extends BaseActivity {
         }
     }
 
-    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     public void showCamera() {
-        if (!isHuawei()) {
-            ToastUtils.showToast("当前应用只支持华为设备！");
-            return;
-        }
         String name = binding.tvName.getText().toString();
         String code = binding.tvCode.getText().toString();
         String startTime = binding.tvDateStart.getText().toString();
@@ -317,51 +316,6 @@ public class CreateOrderActivity extends BaseActivity {
         startActivityForResult(intent, RESULT_MEASURE);
     }
 
-    @OnShowRationale({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
-    void showRationaleForCamera(PermissionRequest request) {
-        // NOTE: Show a rationale to explain why the permission is needed, e.g. with a dialog.
-        // Call proceed() or cancel() on the provided PermissionRequest to continue or abort
-        showRationaleDialog("使用此功能需要您的拍照、储存卡权限", request);
-    }
-
-    @OnPermissionDenied({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
-    void onCameraDenied() {
-        // NOTE: Deal with a denied permission, e.g. by showing specific UI
-        // or disabling certain functionality
-        Toast.makeText(this, "权限被拒绝", Toast.LENGTH_SHORT).show();
-    }
-
-    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
-    void onCameraNeverAskAgain() {
-        Toast.makeText(this, "请到设置中开启拍照、储存卡权限", Toast.LENGTH_SHORT).show();
-    }
-
-    private void showRationaleDialog(String message, final PermissionRequest request) {
-        new AlertDialog.Builder(this)
-                .setPositiveButton("允许", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        request.proceed();
-                    }
-                })
-                .setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        request.cancel();
-                    }
-                })
-                .setCancelable(false)
-                .setMessage(message)
-                .show();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        CreateOrderActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-    }
-
     private void showDataPicker(String title, final TextView textView, final Date date) {
         new DatePickerDialog(this, title, date, new IResultDialog.OnDialogClickListener<Date>() {
             @Override
@@ -377,15 +331,6 @@ public class CreateOrderActivity extends BaseActivity {
                 return false;
             }
         }).show();
-    }
-
-    public boolean isHuawei() {
-
-        if (Build.BRAND == null) {
-            return false;
-        } else {
-            return Build.BRAND.toLowerCase().equals("huawei") || Build.BRAND.toLowerCase().equals("honor");
-        }
     }
 
 
@@ -422,7 +367,155 @@ public class CreateOrderActivity extends BaseActivity {
         // FIXME: 2021-04-07 哪里来的phone
         requestModel.setPhone("15011447166");
 
+        List<CreatePolicyRequestModel.PhotoInfoEntity> pigs = new ArrayList<>();
+        for (PolicyDetailResDTO.ClaimListBean claimListBean : mAdapter.getData()) {
+            if (claimListBean == null) {
+                continue;
+            }
 
+            CreatePolicyRequestModel.PhotoInfoEntity pig = new CreatePolicyRequestModel.PhotoInfoEntity();
+            pig.setPigId("pigId");
+            if (mAddresses != null && mAddresses.get(0) != null && mAddresses.get(0).getAddressLine(0) != null) {
+                pig.setAddress(mAddresses.get(0).getAddressLine(0).toString());
+            }
+            if (mLocation != null) {
+                pig.setLatitude(mLocation.getLatitude() + "");
+                pig.setLongitude(mLocation.getLongitude() + "");
+            }
+            List<PolicyDetailResDTO.ClaimListBean.PigInfoBean> pigInfo = claimListBean.getPigInfo();
+            if (pigInfo == null || pigInfo.size() == 0) {
+                continue;
+            }
+
+            List<CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity> photos = new ArrayList<>();
+            for (PolicyDetailResDTO.ClaimListBean.PigInfoBean pigInfoBean : pigInfo) {
+                if (pigInfoBean == null) {
+                    continue;
+                }
+                CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity photo = new CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity();
+                photo.setColumn(pigInfoBean.getColumn());
+                photo.setImgBase64("ImgBase64");
+                photo.setResults("result");
+                photos.add(photo);
+            }
+            pig.setBody_info(photos);
+            pigs.add(pig);
+            requestModel.setPhotoInfo(pigs);
+        }
+
+        Log.e("xxxxxxxx", requestModel.toString());
     }
 
+    @SuppressLint("MissingPermission")
+    private void getLocation() {
+        //1.获取位置管理器
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        //2.获取位置提供器，GPS或是NetWork
+        List<String> providers = locationManager.getProviders(true);
+
+        if (providers.contains(LocationManager.GPS_PROVIDER)) {
+            //如果是GPS
+            locationProvider = LocationManager.GPS_PROVIDER;
+            Log.v("TAG", "定位方式GPS");
+        } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+            //如果是Network
+            locationProvider = LocationManager.NETWORK_PROVIDER;
+            Log.v("TAG", "定位方式Network");
+        } else {
+            Toast.makeText(this, "没有可用的位置提供器", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mLocation = locationManager.getLastKnownLocation(locationProvider);
+            if (mLocation != null) {
+                Toast.makeText(this, mLocation.getLongitude() + " " +
+                        mLocation.getLatitude() + "", Toast.LENGTH_SHORT).show();
+                Log.v("TAG", "获取上次的位置-经纬度：" + mLocation.getLongitude() + "   " + mLocation.getLatitude());
+                getAddress(mLocation);
+
+            } else {
+                //监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
+                locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
+            }
+        } else {
+            mLocation = locationManager.getLastKnownLocation(locationProvider);
+            if (mLocation != null) {
+                Toast.makeText(this, mLocation.getLongitude() + " " +
+                        mLocation.getLatitude() + "", Toast.LENGTH_SHORT).show();
+                Log.v("TAG", "获取上次的位置-经纬度：" + mLocation.getLongitude() + "   " + mLocation.getLatitude());
+                getAddress(mLocation);
+            } else {
+                //监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
+                locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
+            }
+        }
+    }
+
+    public LocationListener locationListener = new LocationListener() {
+        // Provider的状态在可用、暂时不可用和无服务三个状态直接切换时触发此函数
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        // Provider被enable时触发此函数，比如GPS被打开
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        // Provider被disable时触发此函数，比如GPS被关闭
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+
+        //当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
+        @Override
+        public void onLocationChanged(Location location) {
+            if (location != null) {
+                //如果位置发生变化，重新显示地理位置经纬度
+                Toast.makeText(CreateOrderActivity.this, location.getLongitude() + " " +
+                        location.getLatitude() + "", Toast.LENGTH_SHORT).show();
+                Log.v("TAG", "监视地理位置变化-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
+            }
+        }
+    };
+
+    /**
+     * 获取地址信息:城市、街道等信息
+     *
+     * @param location
+     * @return
+     */
+    private void getAddress(Location location) {
+        try {
+            if (location != null) {
+                Geocoder gc = new Geocoder(this, Locale.getDefault());
+                mAddresses = gc.getFromLocation(location.getLatitude(),
+                        location.getLongitude(), 1);
+                Toast.makeText(this, "获取地址信息：" + result.toString(), Toast.LENGTH_LONG).show();
+                Log.v("TAG", "获取地址信息：" + result.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (locationManager != null) {
+            locationManager.removeUpdates(locationListener);
+        }
+
+        clearLocalPhotos();
+    }
+
+    /**
+     * 清空本地图片
+     */
+    private void clearLocalPhotos() {
+        FileUtils.clearFile(FILE_PATH);
+    }
 }

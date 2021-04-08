@@ -120,7 +120,6 @@ public class CreatePolicyRequestModel implements Serializable {
          */
 
         private String pigId;
-        private String siteType;
         private String longitude;
         private String latitude;
         private String address;
@@ -132,14 +131,6 @@ public class CreatePolicyRequestModel implements Serializable {
 
         public void setPigId(String pigId) {
             this.pigId = pigId;
-        }
-
-        public String getSiteType() {
-            return siteType;
-        }
-
-        public void setSiteType(String siteType) {
-            this.siteType = siteType;
         }
 
         public String getLongitude() {
@@ -208,6 +199,43 @@ public class CreatePolicyRequestModel implements Serializable {
             public void setResults(String results) {
                 this.results = results;
             }
+
+            @Override
+            public String toString() {
+                return "BodyInfoEntity{" +
+                        "column='" + column + '\'' +
+                        ", imgBase64='" + imgBase64 + '\'' +
+                        ", results='" + results + '\'' +
+                        '}';
+            }
         }
+
+        @Override
+        public String toString() {
+            return "PhotoInfoEntity{" +
+                    "pigId='" + pigId + '\'' +
+                    ", longitude='" + longitude + '\'' +
+                    ", latitude='" + latitude + '\'' +
+                    ", address='" + address + '\'' +
+                    ", body_info=" + body_info +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "CreatePolicyRequestModel{" +
+                "claimId='" + claimId + '\'' +
+                ", claimType='" + claimType + '\'' +
+                ", insureId='" + insureId + '\'' +
+                ", phone='" + phone + '\'' +
+                ", claimUserId='" + claimUserId + '\'' +
+                ", measureType='" + measureType + '\'' +
+                ", claimName='" + claimName + '\'' +
+                ", insureStartTime='" + insureStartTime + '\'' +
+                ", insureEndTime='" + insureEndTime + '\'' +
+                ", token='" + token + '\'' +
+                ", photoInfo=" + photoInfo +
+                '}';
     }
 }

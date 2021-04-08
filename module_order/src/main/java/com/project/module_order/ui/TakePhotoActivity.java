@@ -64,22 +64,15 @@ public class TakePhotoActivity extends BaseActivity {
     private OrderActivityTakePhotoBinding mBinding;
 
     private static final String TAG = TakePhotoActivity.class.getSimpleName();
-
     private ARSession mArSession;
-
     private BodyRenderManager mBodyRenderManager;
-
     private DisplayRotationManager mDisplayRotationManager;
-    private LocationManager locationManager;
-    private String locationProvider = null;
     private String message = null;
 
     private boolean isRemindInstall = false;
     private TakePhotoBtnAdapter mBtnAdapter;
     private int currentBtnIndex = 0;
     private Bitmap maskBitmap;
-    private List<Address> mAddresses;
-    private Location mLocation;
     private List<LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean> mButtonItems;
     /**
      * 每只猪的照片
@@ -103,7 +96,7 @@ public class TakePhotoActivity extends BaseActivity {
                 showPigTips();
             }
         }, 200);
-        getLocation();
+
     }
 
     private void initView() {
@@ -188,13 +181,6 @@ public class TakePhotoActivity extends BaseActivity {
             public void onClick(View v) {
                 PolicyDetailResDTO.ClaimListBean pig = new PolicyDetailResDTO.ClaimListBean();
                 pig.setPigInfo(photos);
-                if (mAddresses != null) {
-                    pig.setAddress(mAddresses.toString());
-                }
-                if (mLocation != null) {
-                    pig.setLatitude(mLocation.getLatitude() + "");
-                    pig.setLongitude(mLocation.getLongitude() + "");
-                }
                 result.add(pig);
                 photos.clear();
                 reset();
@@ -219,15 +205,12 @@ public class TakePhotoActivity extends BaseActivity {
     }
 
     private void commitPhotos() {
+        if (photos == null || photos.size() <= 0) {
+            finish();
+            return;
+        }
         PolicyDetailResDTO.ClaimListBean pig = new PolicyDetailResDTO.ClaimListBean();
         pig.setPigInfo(photos);
-        if (mAddresses != null) {
-            pig.setAddress(mAddresses.toString());
-        }
-        if (mLocation != null) {
-            pig.setLatitude(mLocation.getLatitude() + "");
-            pig.setLongitude(mLocation.getLongitude() + "");
-        }
         result.add(pig);
         Intent intent = getIntent();
         intent.putExtra("result", (Serializable) result);
@@ -407,9 +390,6 @@ public class TakePhotoActivity extends BaseActivity {
             mArSession.stop();
             mArSession = null;
         }
-        if (locationManager != null) {
-            locationManager.removeUpdates(locationListener);
-        }
         Log.i(TAG, "onDestroy end.");
     }
 
@@ -430,102 +410,4 @@ public class TakePhotoActivity extends BaseActivity {
         popupWindow.setSrc(source);
         popupWindow.showAsDropDown(mBinding.ivQuestion, 100, 0);
     }
-
-
-    @SuppressLint("MissingPermission")
-    private void getLocation() {
-        //1.获取位置管理器
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        //2.获取位置提供器，GPS或是NetWork
-        List<String> providers = locationManager.getProviders(true);
-
-        if (providers.contains(LocationManager.GPS_PROVIDER)) {
-            //如果是GPS
-            locationProvider = LocationManager.GPS_PROVIDER;
-            Log.v("TAG", "定位方式GPS");
-        } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
-            //如果是Network
-            locationProvider = LocationManager.NETWORK_PROVIDER;
-            Log.v("TAG", "定位方式Network");
-        } else {
-            Toast.makeText(this, "没有可用的位置提供器", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mLocation = locationManager.getLastKnownLocation(locationProvider);
-            if (mLocation != null) {
-                Toast.makeText(this, mLocation.getLongitude() + " " +
-                        mLocation.getLatitude() + "", Toast.LENGTH_SHORT).show();
-                Log.v("TAG", "获取上次的位置-经纬度：" + mLocation.getLongitude() + "   " + mLocation.getLatitude());
-                getAddress(mLocation);
-
-            } else {
-                //监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
-                locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
-            }
-        } else {
-            mLocation = locationManager.getLastKnownLocation(locationProvider);
-            if (mLocation != null) {
-                Toast.makeText(this, mLocation.getLongitude() + " " +
-                        mLocation.getLatitude() + "", Toast.LENGTH_SHORT).show();
-                Log.v("TAG", "获取上次的位置-经纬度：" + mLocation.getLongitude() + "   " + mLocation.getLatitude());
-                getAddress(mLocation);
-            } else {
-                //监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
-                locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
-            }
-        }
-    }
-
-    public LocationListener locationListener = new LocationListener() {
-        // Provider的状态在可用、暂时不可用和无服务三个状态直接切换时触发此函数
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-
-        // Provider被enable时触发此函数，比如GPS被打开
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        // Provider被disable时触发此函数，比如GPS被关闭
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
-        //当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
-        @Override
-        public void onLocationChanged(Location location) {
-            if (location != null) {
-                //如果位置发生变化，重新显示地理位置经纬度
-                Toast.makeText(TakePhotoActivity.this, location.getLongitude() + " " +
-                        location.getLatitude() + "", Toast.LENGTH_SHORT).show();
-                Log.v("TAG", "监视地理位置变化-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
-            }
-        }
-    };
-
-    /**
-     * 获取地址信息:城市、街道等信息
-     *
-     * @param location
-     * @return
-     */
-    private void getAddress(Location location) {
-        try {
-            if (location != null) {
-                Geocoder gc = new Geocoder(this, Locale.getDefault());
-                mAddresses = gc.getFromLocation(location.getLatitude(),
-                        location.getLongitude(), 1);
-                Toast.makeText(this, "获取地址信息：" + result.toString(), Toast.LENGTH_LONG).show();
-                Log.v("TAG", "获取地址信息：" + result.toString());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }

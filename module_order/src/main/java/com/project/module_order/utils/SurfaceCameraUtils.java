@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static com.project.common_resource.global.ConstantData.FILE_PATH;
+
 /**
  * @author liuboyu  E-mail:545777678@qq.com
  * @Date 2021-03-27
@@ -106,8 +108,7 @@ public class SurfaceCameraUtils {
      * @return
      */
     private static String generateFilename() {
-        return Environment.getExternalStorageDirectory() + "/DCIM/HuiNongKit/"
-                + System.currentTimeMillis() + ".jpg";
+        return FILE_PATH + System.currentTimeMillis() + ".jpg";
     }
 
     private static String saveBitmapToDisk(Bitmap bitmap, String filename) throws IOException {
