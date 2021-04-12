@@ -1,13 +1,7 @@
 package com.project.module_order.ui;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -15,10 +9,7 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.project.arch_repo.base.activity.BaseTitleBarActivity;
-import com.project.common_resource.OrderModel;
-import com.project.common_resource.global.GlobalDataManager;
 import com.project.common_resource.response.InsureListResDTO;
-import com.project.common_resource.response.PolicyListResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
 import com.project.module_order.adapter.ChoosePolicyListAdapter;
@@ -32,7 +23,6 @@ import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 import com.xxf.view.recyclerview.adapter.OnItemClickListener;
 import com.xxf.view.utils.StatusBarUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
@@ -115,7 +105,12 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
                 .subscribe(new Consumer<InsureListResDTO>() {
                     @Override
                     public void accept(InsureListResDTO result) throws Exception {
-                        if(result == null || result.getResultList() == null || result.getResultList().size() == 0){
+                        if (result == null || result.getResultList() == null || result.getResultList().size() == 0) {
+                            mBinding.recyclerView.setPullLoadMoreCompleted();
+                            if (currentPageIndex == 1) {
+                                mBinding.layoutEmpty.setVisibility(View.VISIBLE);
+                                mBinding.recyclerView.setVisibility(View.GONE);
+                            }
                             return;
                         }
                         List<InsureListResDTO.ResultListBean> data = result.getResultList();

@@ -1,5 +1,7 @@
 package com.project.common_resource.requestModel;
 
+import com.google.gson.JsonObject;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -174,7 +176,7 @@ public class CreatePolicyRequestModel implements Serializable {
 
             private String column;
             private String imgBase64;
-            private String results;
+            private JsonObject results;
 
             public String getColumn() {
                 return column;
@@ -192,11 +194,12 @@ public class CreatePolicyRequestModel implements Serializable {
                 this.imgBase64 = imgBase64;
             }
 
-            public String getResults() {
+
+            public JsonObject getResults() {
                 return results;
             }
 
-            public void setResults(String results) {
+            public void setResults(JsonObject results) {
                 this.results = results;
             }
 

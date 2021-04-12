@@ -10,6 +10,9 @@ import java.io.Serializable;
  */
 public class SelectFilterModel implements Serializable {
 
+    // 0:待处理 1：已理赔
+    public static final String STATUS_DONE = "1";
+    public static final String STATUS_NO = "0";
 
     /**
      * search : DH123131

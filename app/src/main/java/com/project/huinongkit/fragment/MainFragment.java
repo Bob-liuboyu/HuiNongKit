@@ -10,7 +10,6 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.text.style.URLSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.project.arch_repo.base.fragment.BaseFragment;
-import com.project.common_resource.OrderModel;
 import com.project.common_resource.SelectFilterModel;
 import com.project.common_resource.response.PolicyListResDTO;
 import com.project.config_repo.ArouterConfig;
@@ -31,14 +29,11 @@ import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 import com.xxf.arch.XXF;
 import com.xxf.arch.dialog.IResultDialog;
 import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
-import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 import com.xxf.view.recyclerview.adapter.OnItemClickListener;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -87,6 +82,11 @@ public class MainFragment extends BaseFragment {
                     @Override
                     public void accept(PolicyListResDTO result) throws Exception {
                         if (result == null || result.getResultList() == null || result.getResultList().size() == 0) {
+                            mBinding.recyclerView.setPullLoadMoreCompleted();
+                            if(currentPageIndex == 1){
+                                mBinding.layoutEmpty.setVisibility(View.VISIBLE);
+                                mBinding.recyclerView.setVisibility(View.GONE);
+                            }
                             return;
                         }
                         List<PolicyListResDTO.ResultListBean> data = result.getResultList();

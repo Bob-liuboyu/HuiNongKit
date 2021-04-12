@@ -73,13 +73,13 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
                 cancel(mFilterModel);
             }
         });
-
+        // 0:待处理 1：已理赔
         binding.tvStatusDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 binding.tvStatusDone.setSelected(true);
                 binding.tvStatusTodo.setSelected(false);
-                mFilterModel.setClaimStatus("tvStatusDone");
+                mFilterModel.setClaimStatus(SelectFilterModel.STATUS_DONE);
             }
         });
 
@@ -88,7 +88,7 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
             public void onClick(View v) {
                 binding.tvStatusDone.setSelected(false);
                 binding.tvStatusTodo.setSelected(true);
-                mFilterModel.setClaimStatus("tvStatusTodo");
+                mFilterModel.setClaimStatus(SelectFilterModel.STATUS_NO);
             }
         });
 
@@ -181,12 +181,19 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
     }
 
     private void initData() {
-        binding.tvDateStart.setText(mFilterModel.getSubmitStartDate());
-        binding.tvDateEnd.setText(mFilterModel.getSubmitEndDate());
-        if (mFilterModel.getClaimStatus().equals("tvStatusDone")) {
+        if (mFilterModel == null) {
+            return;
+        }
+        if (!TextUtils.isEmpty(mFilterModel.getSubmitStartDate())) {
+            binding.tvDateStart.setText(mFilterModel.getSubmitStartDate());
+        }
+        if (!TextUtils.isEmpty(mFilterModel.getSubmitEndDate())) {
+            binding.tvDateEnd.setText(mFilterModel.getSubmitEndDate());
+        }
+        if (SelectFilterModel.STATUS_DONE.equals(mFilterModel.getClaimStatus())) {
             binding.tvStatusTodo.setSelected(false);
             binding.tvStatusDone.setSelected(true);
-        } else if (mFilterModel.getClaimStatus().equals("tvStatusTodo")) {
+        } else if (SelectFilterModel.STATUS_NO.equals(mFilterModel.getClaimStatus())) {
             binding.tvStatusTodo.setSelected(true);
             binding.tvStatusDone.setSelected(false);
         } else {
@@ -196,27 +203,41 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
     }
 
     private void commit() {
-        if ((!binding.tvStatusTodo.isSelected() && !binding.tvStatusDone.isSelected())
-                || TextUtils.isEmpty(mFilterModel.getSubmitStartDate())
-                || TextUtils.isEmpty(mFilterModel.getSubmitEndDate())) {
+        if (!binding.tvStatusTodo.isSelected() && !binding.tvStatusDone.isSelected()
+                && TextUtils.isEmpty(mFilterModel.getSubmitStartDate())
+                && TextUtils.isEmpty(mFilterModel.getSubmitEndDate())) {
             ToastUtils.showToast("搜索条件有误，请重新填写");
+            return;
+        }
+
+        if ((TextUtils.isEmpty(mFilterModel.getSubmitStartDate()) && !TextUtils.isEmpty(mFilterModel.getSubmitEndDate()))
+                || (!TextUtils.isEmpty(mFilterModel.getSubmitStartDate()) && TextUtils.isEmpty(mFilterModel.getSubmitEndDate()))) {
+            ToastUtils.showToast("起始／结束时间必须同事输入");
             return;
         }
 
         Date start = null;
         Date end = null;
-        try {
-            start = sdf.parse(mFilterModel.getSubmitStartDate());
-            end = sdf.parse(mFilterModel.getSubmitEndDate());
-            if (end.compareTo(start) <= 0) {
-                ToastUtils.showToast("结束时间必须大于开始时间");
-                return;
+        if (!TextUtils.isEmpty(mFilterModel.getSubmitStartDate()) && !TextUtils.isEmpty(mFilterModel.getSubmitEndDate())) {
+            try {
+                start = sdf.parse(mFilterModel.getSubmitStartDate());
+                end = sdf.parse(mFilterModel.getSubmitEndDate());
+                if (end.compareTo(start) <= 0) {
+                    ToastUtils.showToast("结束时间必须大于开始时间");
+                    return;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
 
         confirm(mFilterModel);
 
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        initData();
     }
 }

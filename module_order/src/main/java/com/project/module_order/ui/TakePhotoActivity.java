@@ -130,7 +130,7 @@ public class TakePhotoActivity extends BaseActivity {
                 canNext();
 
                 photoModel.setImgUrl(model.getPath());
-                photoModel.setColumn(mButtonItems.get(currentBtnIndex).getName());
+                photoModel.setColumn(mButtonItems.get(currentBtnIndex).getColumn());
                 photoModel.setResults("result");
                 photos.add(photoModel);
 

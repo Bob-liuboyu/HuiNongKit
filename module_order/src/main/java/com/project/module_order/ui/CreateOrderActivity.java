@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DateTimeUtils;
 import com.project.arch_repo.utils.DisplayUtils;
@@ -39,9 +41,11 @@ import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
 import com.project.module_order.databinding.OrderActivityCreateBinding;
 import com.project.module_order.source.impl.OrderRepositoryImpl;
+import com.project.module_order.utils.LogToFile;
 import com.xxf.arch.XXF;
 import com.xxf.arch.dialog.IResultDialog;
 import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
+import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.utils.StatusBarUtils;
 
 import java.io.Serializable;
@@ -352,35 +356,25 @@ public class CreateOrderActivity extends BaseActivity {
     private void commitData() {
         CreatePolicyRequestModel requestModel = new CreatePolicyRequestModel();
         requestModel.setToken(GlobalDataManager.getInstance().getToken());
-        // FIXME: 2021-04-07 估计没有用
-        requestModel.setClaimId("asdfadfads");
         String claimName = "";
-        for (int i = 0; i < binding.llPolicyCategory.getChildCount(); i++) {
-            TextView category = (TextView) binding.llPolicyCategory.getChildAt(i);
-            if (category != null && category.isSelected()) {
-                claimName = category.getText().toString();
-                break;
-            }
+        String claimType = "";
+        if (currentCategory != null) {
+            claimName = currentCategory.getClaimName();
+            claimType = currentCategory.getClaimId();
         }
         requestModel.setClaimName(claimName);
-
-        // FIXME: 2021-04-07 估计没有用
-        requestModel.setClaimType("claimType");
+        requestModel.setClaimType(claimType);
         requestModel.setClaimUserId(GlobalDataManager.getInstance().getUserInfo().getUserId());
         requestModel.setInsureStartTime(binding.tvDateStart.getText().toString());
         requestModel.setInsureEndTime(binding.tvDateEnd.getText().toString());
         requestModel.setInsureId(binding.tvCode.getText().toString());
         String measureType = "";
-        for (int i = 0; i < binding.llMeasureWay.getChildCount(); i++) {
-            TextView category = (TextView) binding.llMeasureWay.getChildAt(i);
-            if (category != null && category.isSelected()) {
-                measureType = category.getText().toString();
-                break;
-            }
+        if (currentMeasureWay != null) {
+            measureType = currentMeasureWay.getMeasureType();
         }
         requestModel.setMeasureType(measureType);
-        // FIXME: 2021-04-07 哪里来的phone
-        requestModel.setPhone("15011447166");
+        LoginResDTO.UserInfoBean info = GlobalDataManager.getInstance().getUserInfo();
+        requestModel.setPhone(info.getUserName());
 
         List<CreatePolicyRequestModel.PhotoInfoEntity> pigs = new ArrayList<>();
         for (PolicyDetailResDTO.ClaimListBean claimListBean : mAdapter.getData()) {
@@ -389,6 +383,7 @@ public class CreateOrderActivity extends BaseActivity {
             }
 
             CreatePolicyRequestModel.PhotoInfoEntity pig = new CreatePolicyRequestModel.PhotoInfoEntity();
+            // FIXME: 2021-04-07 pigId
             pig.setPigId("pigId");
             if (mAddresses != null && mAddresses.get(0) != null && mAddresses.get(0).getAddressLine(0) != null) {
                 pig.setAddress(mAddresses.get(0).getAddressLine(0).toString());
@@ -410,14 +405,15 @@ public class CreateOrderActivity extends BaseActivity {
                 CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity photo = new CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity();
                 photo.setColumn(pigInfoBean.getColumn());
                 photo.setImgBase64(com.project.module_order.utils.ImageUtils.bitmapToString(pigInfoBean.getImgUrl()));
-                photo.setResults("result");
+                photo.setResults(new JsonObject());
                 photos.add(photo);
             }
             pig.setBody_info(photos);
             pigs.add(pig);
             requestModel.setPhotoInfo(pigs);
         }
-
+        LogToFile.init(this);
+        LogToFile.d("xxxx", new Gson().toJsonTree(requestModel).getAsJsonObject().toString());
         commitPolicy(requestModel);
     }
 
@@ -539,6 +535,10 @@ public class CreateOrderActivity extends BaseActivity {
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean result) throws Exception {
+                        if (result) {
+                            ToastUtils.showToast("创建成功");
+                            finish();
+                        }
                     }
                 });
     }
