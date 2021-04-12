@@ -38,14 +38,36 @@
                 android:layout_height="@dimen/arch_dp_22"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
-                android:src="@mipmap/icon_more"
                 android:layout_marginRight="@dimen/arch_dp_15"
                 android:gravity="center"
+                android:src="@mipmap/icon_more"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/arch_dp_13" />
 
 
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/lineLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="@dimen/arch_dp_50"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="300dp"
+                android:layout_height="@dimen/arch_dp_3"
+                android:background="@drawable/base_dot_line_white" />
+
+            <View
+                android:layout_width="300dp"
+                android:layout_height="@dimen/arch_dp_3"
+                android:layout_marginTop="@dimen/arch_dp_50"
+                android:background="@drawable/base_dot_line_white" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,10 +93,10 @@
                         android:id="@+id/mScrollView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:visibility="invisible"
                         android:layout_marginLeft="@dimen/arch_dp_15"
                         android:layout_marginTop="@dimen/arch_dp_50"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:visibility="invisible">
 
                         <LinearLayout
                             android:id="@+id/ll_data"
@@ -269,7 +291,6 @@
                 <LinearLayout
                     android:id="@+id/ll_warning"
                     android:layout_width="@dimen/arch_dp_66"
-                    android:visibility="gone"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="@dimen/arch_dp_50"
@@ -277,7 +298,8 @@
                     android:layout_marginBottom="@dimen/arch_dp_15"
                     android:background="#40d1031c"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="@dimen/arch_dp_15"
@@ -320,9 +342,9 @@
                         android:layout_height="@dimen/arch_dp_30"
                         android:layout_alignParentBottom="true"
                         android:layout_centerInParent="true"
+                        android:layout_marginBottom="@dimen/arch_dp_50"
                         android:background="@drawable/base_bg_white_round_rect_4"
                         android:gravity="center"
-                        android:layout_marginBottom="@dimen/arch_dp_50"
                         android:text="拍完了"
                         android:textColor="@color/arch_color_base"
                         android:textSize="@dimen/arch_dp_13" />
@@ -341,10 +363,10 @@
                         android:layout_height="@dimen/arch_dp_30"
                         android:layout_alignParentBottom="true"
                         android:layout_centerInParent="true"
+                        android:layout_marginTop="@dimen/arch_dp_50"
                         android:background="@drawable/base_rect_btn_bg_selector"
                         android:enabled="false"
                         android:gravity="center"
-                        android:layout_marginTop="@dimen/arch_dp_50"
                         android:text="下一只"
                         android:textColor="#ffffff"
                         android:textSize="@dimen/arch_dp_13" />

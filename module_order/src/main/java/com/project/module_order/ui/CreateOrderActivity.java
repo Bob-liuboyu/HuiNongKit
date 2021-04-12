@@ -34,20 +34,16 @@ import com.project.common_resource.requestModel.CreatePolicyRequestModel;
 import com.project.common_resource.response.InsureListResDTO;
 import com.project.common_resource.response.LoginResDTO;
 import com.project.common_resource.response.PolicyDetailResDTO;
-import com.project.common_resource.response.PolicyListResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
 import com.project.module_order.databinding.OrderActivityCreateBinding;
 import com.project.module_order.source.impl.OrderRepositoryImpl;
-import com.project.module_order.utils.ImageUtils;
 import com.xxf.arch.XXF;
 import com.xxf.arch.dialog.IResultDialog;
 import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
-import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.utils.StatusBarUtils;
 
-import java.io.File;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -314,7 +310,17 @@ public class CreateOrderActivity extends BaseActivity {
         String endTime = binding.tvDateEnd.getText().toString();
         if (TextUtils.isEmpty(name) | TextUtils.isEmpty(code) |
                 TextUtils.isEmpty(startTime) | TextUtils.isEmpty(endTime)) {
-            ToastUtils.showToast("请先填写信息后在进行测量！");
+            GrDialogUtils.createCommonDialog(CreateOrderActivity.this, "提示", "请先填写信息后在进行测量！", new CommonDialog.OnDialogClickListener() {
+                @Override
+                public void onClickConfirm(View view) {
+
+                }
+
+                @Override
+                public void onClickCancel(View view) {
+
+                }
+            }).show();
             return;
         }
 

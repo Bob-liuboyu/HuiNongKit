@@ -26,7 +26,7 @@ public class TakePhotoBtnAdapter extends BaseBindableAdapter<OrderItemTakePhotoB
     }
 
     @Override
-    public void onBindHolder(BaseViewHolder holder, final OrderItemTakePhotoBinding binding, @Nullable final LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean orderModel, final int index) {
+    public void onBindHolder(final BaseViewHolder holder, final OrderItemTakePhotoBinding binding, @Nullable final LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean orderModel, final int index) {
         if (orderModel == null) {
             return;
         }
@@ -37,7 +37,7 @@ public class TakePhotoBtnAdapter extends BaseBindableAdapter<OrderItemTakePhotoB
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onDelete(index);
+                    mListener.onDelete(holder.getIndex());
                 }
             }
         });
@@ -45,7 +45,7 @@ public class TakePhotoBtnAdapter extends BaseBindableAdapter<OrderItemTakePhotoB
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onClickPhoto(index);
+                    mListener.onClickPhoto(holder.getIndex());
                 }
             }
         });
@@ -53,9 +53,11 @@ public class TakePhotoBtnAdapter extends BaseBindableAdapter<OrderItemTakePhotoB
         if (TextUtils.isEmpty(orderModel.getUrl())) {
             binding.ivPhoto.setVisibility(View.GONE);
             binding.llButton.setVisibility(View.VISIBLE);
+            binding.ivDelete.setVisibility(View.GONE);
         } else {
             binding.ivPhoto.setVisibility(View.VISIBLE);
             binding.llButton.setVisibility(View.GONE);
+            binding.ivDelete.setVisibility(View.VISIBLE);
         }
     }
 

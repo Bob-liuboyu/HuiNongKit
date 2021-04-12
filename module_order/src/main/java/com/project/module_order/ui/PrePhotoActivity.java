@@ -3,6 +3,8 @@ package com.project.module_order.ui;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -28,6 +30,9 @@ public class PrePhotoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         int color = getResources().getColor(R.color.arch_black);
         StatusBarUtils.compatStatusBarForM(this, false, color);
         mBinding = OrderActivityPrePhotoBinding.inflate(getLayoutInflater());

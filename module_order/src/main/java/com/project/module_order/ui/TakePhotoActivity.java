@@ -1,16 +1,9 @@
 package com.project.module_order.ui;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.opengl.GLSurfaceView;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -43,7 +36,6 @@ import com.project.module_order.body3d.rendering.BodyRenderManager;
 import com.project.module_order.common.ConnectAppMarketActivity;
 import com.project.module_order.common.DisplayRotationManager;
 import com.project.module_order.databinding.OrderActivityTakePhotoBinding;
-import com.project.module_order.utils.ImageUtils;
 import com.project.module_order.utils.SurfaceCameraUtils;
 import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
@@ -53,7 +45,8 @@ import com.xxf.view.utils.StatusBarUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
+import static com.project.module_order.utils.ImageUtils.getBitmap;
 
 /**
  * @author liuboyu  E-mail:545777678@qq.com
@@ -86,7 +79,7 @@ public class TakePhotoActivity extends BaseActivity {
         int color = getResources().getColor(R.color.arch_black);
         StatusBarUtils.compatStatusBarForM(this, false, color);
         mBinding = OrderActivityTakePhotoBinding.inflate(getLayoutInflater());
-        maskBitmap = ImageUtils.getBitmap(this, R.drawable.ic_camera, DisplayUtils.dip2px(this, 200), DisplayUtils.dip2px(this, 200));
+        maskBitmap = getBitmap(this, R.mipmap.logo_mask_full, DisplayUtils.getRealScreenSize(this).x, DisplayUtils.getRealScreenSize(this).y);
         setContentView(mBinding.getRoot());
         initView();
         initCamera();
@@ -147,18 +140,21 @@ public class TakePhotoActivity extends BaseActivity {
         mBtnAdapter.setDeletePhotoListener(new TakePhotoBtnAdapter.DeletePhotoListener() {
             @Override
             public void onDelete(int pos) {
-                View view = mBinding.rvPhotos.getLayoutManager().findViewByPosition(currentBtnIndex);
-                View btnLayout = view.findViewById(R.id.ll_button);
-                ImageView img = view.findViewById(R.id.iv_photo);
-                ImageView delete = view.findViewById(R.id.iv_delete);
-                View llRootView = view.findViewById(R.id.ll_rootView);
-
-                img.setImageBitmap(null);
-                img.setVisibility(View.GONE);
-                btnLayout.setVisibility(View.VISIBLE);
-                delete.setVisibility(View.INVISIBLE);
-                llRootView.setSelected(true);
+                mBtnAdapter.getData().get(pos).setUrl("");
+                mBtnAdapter.getData().get(pos).setSelect(true);
                 canNext();
+                for (int i = 0; i < mBtnAdapter.getData().size(); i++) {
+                    if (mBtnAdapter.getData().get(i).getUrl().isEmpty()) {
+                        currentBtnIndex = i;
+                        break;
+                    }
+                }
+                for (LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean datum : mBtnAdapter.getData()) {
+                    datum.setSelect(false);
+                }
+
+                mBtnAdapter.getData().get(currentBtnIndex).setSelect(true);
+                mBtnAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -255,6 +251,12 @@ public class TakePhotoActivity extends BaseActivity {
             currentBtnIndex = currentBtnIndex + 1;
             mButtonItems.get(currentBtnIndex).setSelect(true);
             mBtnAdapter.notifyDataSetChanged();
+        }
+
+        if (mButtonItems.get(currentBtnIndex).getName().contains("身")) {
+            mBinding.lineLayout.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.lineLayout.setVisibility(View.GONE);
         }
     }
 

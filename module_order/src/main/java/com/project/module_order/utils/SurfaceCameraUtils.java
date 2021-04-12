@@ -85,7 +85,7 @@ public class SurfaceCameraUtils {
                     if (copyResult == PixelCopy.SUCCESS) {
                         try {
 //                            result[0] = ImageMaskUtil.createWaterMaskLeftTop(context, bitmap, maskBitmap, 100, 100);
-                            saveBitmapToDisk(ImageMaskUtil.createWaterMaskLeftTop(context, bitmap, maskBitmap, 100, 100), filename);
+                            saveBitmapToDisk(ImageMaskUtil.createWaterMaskLeftTop(context, bitmap, maskBitmap, 0, 0), filename);
                             return;
                         } catch (Exception e) {
                             Log.e(TAG, e.getMessage());

@@ -94,7 +94,7 @@ public class BodyActivity extends Activity {
         mTextView = findViewById(R.id.bodyTextView);
         mSurfaceView = findViewById(R.id.bodySurfaceview);
         mDisplayRotationManager = new DisplayRotationManager(this);
-        maskBitmap = getBitmap(this, R.drawable.ic_camera, DisplayUtils.dip2px(this, 200), DisplayUtils.dip2px(this, 200));
+        maskBitmap = getBitmap(this, R.mipmap.logo_mask_full, DisplayUtils.getRealScreenSize(this).x, DisplayUtils.getRealScreenSize(this).y);
 //        maskBitmap = BitmapFactory.decodeStream(getClass().getResourceAsStream("/res/drawable/ic_camera.png"));;
         // Keep the OpenGL ES running context.
         mSurfaceView.setPreserveEGLContextOnPause(true);

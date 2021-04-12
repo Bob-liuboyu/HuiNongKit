@@ -2,14 +2,14 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <FrameLayout
-        android:layout_width="@dimen/arch_dp_80"
-        android:layout_marginRight="@dimen/arch_dp_14"
-        android:layout_height="@dimen/arch_dp_80">
+        android:layout_width="@dimen/arch_dp_55"
+        android:layout_marginRight="@dimen/arch_dp_10"
+        android:layout_height="@dimen/arch_dp_55">
 
         <FrameLayout
             android:id="@+id/ll_rootView"
-            android:layout_width="@dimen/arch_dp_75"
-            android:layout_height="@dimen/arch_dp_75"
+            android:layout_width="@dimen/arch_dp_50"
+            android:layout_height="@dimen/arch_dp_50"
             android:layout_gravity="bottom"
             android:background="@drawable/base_bg_item_photo_line_selector">
 
@@ -22,8 +22,8 @@
 
                 <ImageView
                     android:id="@+id/iv_icon"
-                    android:layout_width="@dimen/arch_dp_22"
-                    android:layout_height="@dimen/arch_dp_22"
+                    android:layout_width="@dimen/arch_dp_12"
+                    android:layout_height="@dimen/arch_dp_12"
                     android:layout_gravity="center_horizontal"
                     android:src="@mipmap/icon_add_white" />
 
@@ -35,7 +35,7 @@
                     android:gravity="center"
                     android:text="猪耳标签"
                     android:textColor="@color/arch_white"
-                    android:textSize="@dimen/arch_dp_13" />
+                    android:textSize="@dimen/arch_dp_10" />
             </LinearLayout>
 
             <ImageView
@@ -49,8 +49,8 @@
 
         <ImageView
             android:id="@+id/iv_delete"
-            android:layout_width="@dimen/arch_dp_18"
-            android:layout_height="@dimen/arch_dp_18"
+            android:layout_width="@dimen/arch_dp_15"
+            android:layout_height="@dimen/arch_dp_15"
             android:layout_gravity="right"
             android:elevation="1dp"
             android:visibility="gone"
