@@ -67,4 +67,15 @@ public class SelectFilterModel implements Serializable {
     public void setSubmitEndDate(String submitEndDate) {
         this.submitEndDate = submitEndDate;
     }
+
+    @Override
+    public String toString() {
+        return "SelectFilterModel{" +
+                "search='" + search + '\'' +
+                ", claimStatus='" + claimStatus + '\'' +
+                ", claimType='" + claimType + '\'' +
+                ", submitEndDate='" + submitEndDate + '\'' +
+                ", submitStartDate='" + submitStartDate + '\'' +
+                '}';
+    }
 }

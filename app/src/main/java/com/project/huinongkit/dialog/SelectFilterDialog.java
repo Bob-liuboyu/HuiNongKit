@@ -13,19 +13,25 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.project.arch_repo.base.dialog.BaseDialog;
 import com.project.arch_repo.utils.DateTimeUtils;
+import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.widget.DatePickerDialog;
+import com.project.common_resource.SelectFilterModel;
+import com.project.common_resource.global.GlobalDataManager;
+import com.project.common_resource.response.LoginResDTO;
 import com.project.huinongkit.R;
 import com.project.huinongkit.databinding.MainDialogSelectFilterBinding;
-import com.project.common_resource.SelectFilterModel;
 import com.xxf.arch.dialog.IResultDialog;
 import com.xxf.arch.utils.ToastUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -91,7 +97,7 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
             @Override
             public void onClick(View v) {
                 binding.tvStatusDone.setSelected(false);
-                binding.tvStatusTodo.setSelected(!binding.tvStatusDone.isSelected());
+                binding.tvStatusTodo.setSelected(!binding.tvStatusTodo.isSelected());
                 if (binding.tvStatusTodo.isSelected()) {
                     mFilterModel.setClaimStatus(SelectFilterModel.STATUS_NO);
                 } else {
@@ -152,6 +158,45 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         }).show();
     }
 
+    private void createMeasureWayItems() {
+        List<LoginResDTO.SettingsBean.CategoryBean> category = GlobalDataManager.getInstance().getSettings().getCategory();
+        if (category == null) {
+            return;
+        }
+        for (final LoginResDTO.SettingsBean.CategoryBean way : category) {
+            if (way == null) {
+                continue;
+            }
+            final TextView item = new TextView(getContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DisplayUtils.dip2px(getContext(), 70), DisplayUtils.dip2px(getContext(), 28));
+            params.rightMargin = DisplayUtils.dip2px(getContext(), 21);
+            item.setBackgroundResource(com.project.module_order.R.drawable.filter_select_status);
+            item.setTextColor(getContext().getResources().getColorStateList(com.project.module_order.R.color.filter_select_text));
+            item.setText(way.getClaimName());
+            item.setGravity(Gravity.CENTER);
+            item.setLayoutParams(params);
+            item.setTextSize(14);
+            binding.llCategory.addView(item);
+            item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!item.isSelected()) {
+                        for (int i = 0; i < binding.llCategory.getChildCount(); i++) {
+                            binding.llCategory.getChildAt(i).setSelected(false);
+                        }
+                        item.setSelected(true);
+                        mFilterModel.setClaimType(way.getClaimId());
+                    } else {
+                        for (int i = 0; i < binding.llCategory.getChildCount(); i++) {
+                            binding.llCategory.getChildAt(i).setSelected(false);
+                        }
+                        mFilterModel.setClaimType("");
+                    }
+                }
+            });
+        }
+    }
+
     private void showEndDataPicker(Date date) {
         new DatePickerDialog(activity, "结束日期", date, new IResultDialog.OnDialogClickListener<Date>() {
             @Override
@@ -208,6 +253,8 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
             binding.tvStatusTodo.setSelected(false);
             binding.tvStatusDone.setSelected(false);
         }
+
+        createMeasureWayItems();
     }
 
     private void commit() {
@@ -238,7 +285,6 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
                 e.printStackTrace();
             }
         }
-
         confirm(mFilterModel);
 
     }
