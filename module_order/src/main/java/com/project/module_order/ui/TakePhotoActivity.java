@@ -86,7 +86,7 @@ public class TakePhotoActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                showPigTips();
+                showPopupWindow(R.mipmap.sample_pig);
             }
         }, 200);
 
@@ -106,7 +106,7 @@ public class TakePhotoActivity extends BaseActivity {
                 mBtnAdapter.notifyDataSetChanged();
                 currentBtnIndex = index;
                 if (mButtonItems.get(currentBtnIndex).getName().contains("脸")) {
-                    showPigFaceTips();
+                    showPopupWindow(R.mipmap.sample_pig_face);
                 }
             }
         });
@@ -214,21 +214,21 @@ public class TakePhotoActivity extends BaseActivity {
         finish();
     }
 
-    private void showPigTips() {
-        boolean tips = SharedPreferencesUtils.getBooleanValue(this, "showTipsBody", false);
-        if (!tips) {
-            SharedPreferencesUtils.setBooleanValue(this, "showTipsBody", true);
-            showPopupWindow(R.mipmap.sample_pig);
-        }
-    }
-
-    private void showPigFaceTips() {
-        boolean tips = SharedPreferencesUtils.getBooleanValue(this, "showPigFace", false);
-        if (!tips) {
-            SharedPreferencesUtils.setBooleanValue(this, "showPigFace", true);
-            showPopupWindow(R.mipmap.sample_pig_face);
-        }
-    }
+//    private void showPigTips() {
+//        boolean tips = SharedPreferencesUtils.getBooleanValue(this, "showTipsBody", false);
+//        if (!tips) {
+//            SharedPreferencesUtils.setBooleanValue(this, "showTipsBody", true);
+//            showPopupWindow(R.mipmap.sample_pig);
+//        }
+//    }
+//
+//    private void showPigFaceTips() {
+//        boolean tips = SharedPreferencesUtils.getBooleanValue(this, "showPigFace", false);
+//        if (!tips) {
+//            SharedPreferencesUtils.setBooleanValue(this, "showPigFace", true);
+//            showPopupWindow(R.mipmap.sample_pig_face);
+//        }
+//    }
 
     private void reset() {
         for (LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean takePhotoButtonItem : mButtonItems) {

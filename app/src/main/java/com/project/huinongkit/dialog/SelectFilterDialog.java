@@ -77,9 +77,13 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         binding.tvStatusDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.tvStatusDone.setSelected(true);
+                binding.tvStatusDone.setSelected(!binding.tvStatusDone.isSelected());
                 binding.tvStatusTodo.setSelected(false);
-                mFilterModel.setClaimStatus(SelectFilterModel.STATUS_DONE);
+                if (binding.tvStatusDone.isSelected()) {
+                    mFilterModel.setClaimStatus(SelectFilterModel.STATUS_DONE);
+                } else {
+                    mFilterModel.setClaimStatus("");
+                }
             }
         });
 
@@ -87,8 +91,12 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
             @Override
             public void onClick(View v) {
                 binding.tvStatusDone.setSelected(false);
-                binding.tvStatusTodo.setSelected(true);
-                mFilterModel.setClaimStatus(SelectFilterModel.STATUS_NO);
+                binding.tvStatusTodo.setSelected(!binding.tvStatusDone.isSelected());
+                if (binding.tvStatusTodo.isSelected()) {
+                    mFilterModel.setClaimStatus(SelectFilterModel.STATUS_NO);
+                } else {
+                    mFilterModel.setClaimStatus("");
+                }
             }
         });
 
