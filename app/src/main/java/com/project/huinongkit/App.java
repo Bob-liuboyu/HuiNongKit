@@ -4,6 +4,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.project.arch_repo.utils.ProjectInit;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -24,6 +25,8 @@ public class App extends MultiDexApplication {
         closeAndroidPDialog();
         //组件化初始化
         ProjectInit.getInstance().init(this);
+        // bugly 初始化配置
+        CrashReport.initCrashReport(getApplicationContext(), "66be8446b7", false);
     }
 
     /**

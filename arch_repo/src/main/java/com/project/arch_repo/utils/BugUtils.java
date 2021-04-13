@@ -43,8 +43,6 @@ public class BugUtils {
                                             }
                                         }
         );
-        // bugly 初始化配置
-        CrashReport.initCrashReport(context.getApplicationContext(), "d0d05e18ea", false, strategy);
     }
 
     private BugUtils() {
