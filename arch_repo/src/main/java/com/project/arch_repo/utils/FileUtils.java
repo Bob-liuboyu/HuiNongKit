@@ -538,6 +538,9 @@ public class FileUtils {
         files = file.listFiles();
         // 循环遍历files数组
         for (File temp : files) {
+            if (temp == null) {
+                continue;
+            }
             // 判断该temp对象是否为文件对象
             if (temp.isFile()) {
                 temp.delete();

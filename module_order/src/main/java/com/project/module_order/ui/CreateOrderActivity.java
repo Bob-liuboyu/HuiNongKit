@@ -141,6 +141,7 @@ public class CreateOrderActivity extends BaseActivity {
             item.setText(way.getMeasureName());
             item.setGravity(Gravity.CENTER);
             item.setLayoutParams(params);
+            item.setTextSize(13);
             binding.llMeasureWay.addView(item);
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -176,6 +177,7 @@ public class CreateOrderActivity extends BaseActivity {
             item.setTextColor(getResources().getColorStateList(R.color.filter_select_text));
             item.setGravity(Gravity.CENTER);
             item.setLayoutParams(params);
+            item.setTextSize(13);
             binding.llPolicyCategory.addView(item);
             item.setOnClickListener(new View.OnClickListener() {
                 @Override

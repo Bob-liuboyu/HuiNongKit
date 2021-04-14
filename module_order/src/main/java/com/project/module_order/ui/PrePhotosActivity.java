@@ -2,6 +2,9 @@ package com.project.module_order.ui;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DisplayUtils;
@@ -50,7 +53,6 @@ public class PrePhotosActivity extends BaseActivity {
         mBinding.tvTitle.setText("图片详情" + "(" + (index + 1) + "/" + list.size() + ")");
         mAdapter = new OrderPhotoListAdapter();
 
-        updatePage(index);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
@@ -97,6 +99,7 @@ public class PrePhotosActivity extends BaseActivity {
                 updatePage(index);
             }
         });
+        updatePage(index);
     }
 
 
