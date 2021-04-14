@@ -428,8 +428,7 @@ public class CreateOrderActivity extends BaseActivity {
                 requestModel.setPhotoInfo(pigs);
             }
         }
-        Log.e("xxxxxxxxx", "" + requestModel.toString());
-//        commitPolicy(requestModel);
+        commitPolicy(requestModel);
     }
 
     @SuppressLint("MissingPermission")
@@ -546,7 +545,7 @@ public class CreateOrderActivity extends BaseActivity {
                 .compose(XXF.<Boolean>bindToErrorNotice())
                 .compose(XXF.<Boolean>bindToProgressHud(
                         new ProgressHUDTransformerImpl.Builder(this)
-                                .setLoadingNotice("内容较多，请稍后～")))
+                                .setLoadingNotice("正在创建理赔单～")))
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean result) throws Exception {

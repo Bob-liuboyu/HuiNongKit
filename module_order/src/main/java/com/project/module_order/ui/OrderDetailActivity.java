@@ -89,7 +89,10 @@ public class OrderDetailActivity extends CreateOrderActivity {
         binding.tvDateStart.setClickable(false);
         binding.tvDateEnd.setClickable(false);
         binding.tvChoose.setVisibility(View.GONE);
-
+        if(result.getClaimType() == 1){
+            binding.layoutMeasure2.setVisibility(View.GONE);
+            binding.lineCount.setVisibility(View.GONE);
+        }
         updatePhotoList(list);
     }
 

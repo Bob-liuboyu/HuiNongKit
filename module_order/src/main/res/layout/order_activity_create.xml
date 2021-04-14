@@ -352,6 +352,7 @@
                             android:paddingRight="@dimen/arch_dp_12">
 
                             <LinearLayout
+                                android:id="@+id/layout_measure2"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/arch_dp_55"
                                 android:gravity="center_vertical"

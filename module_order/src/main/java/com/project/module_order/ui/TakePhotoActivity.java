@@ -126,14 +126,13 @@ public class TakePhotoActivity extends BaseActivity {
                 img.setVisibility(View.VISIBLE);
                 img.setImageBitmap(model.getBitmap());
                 mButtonItems.get(currentBtnIndex).setUrl(model.getPath());
-                checkNextButton();
-                canNext();
 
                 photoModel.setImgUrl(model.getPath());
                 photoModel.setColumn(mButtonItems.get(currentBtnIndex).getColumn());
                 photoModel.setResults("result");
                 photos.add(photoModel);
-
+                checkNextButton();
+                canNext();
             }
         });
 
