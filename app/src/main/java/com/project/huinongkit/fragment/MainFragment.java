@@ -49,6 +49,7 @@ public class MainFragment extends BaseFragment {
     private OrderListAdapter mAdapter;
     private SelectFilterModel mFilterModel;
     private int currentPageIndex = 1;
+    private boolean hasNext = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,6 +90,7 @@ public class MainFragment extends BaseFragment {
                             }
                             return;
                         }
+                        hasNext = result.isHasNext();
                         List<PolicyListResDTO.ResultListBean> data = result.getResultList();
                         if (currentPageIndex == 1) {
                             mAdapter.bindData(true, data);
@@ -103,6 +105,7 @@ public class MainFragment extends BaseFragment {
                             mBinding.recyclerView.setVisibility(View.VISIBLE);
                         }
                         mBinding.recyclerView.setPullLoadMoreCompleted();
+                        mBinding.recyclerView.setPushRefreshEnable(hasNext);
                     }
                 });
     }

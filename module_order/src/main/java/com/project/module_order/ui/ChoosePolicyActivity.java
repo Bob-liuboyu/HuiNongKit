@@ -38,6 +38,7 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
     private ChoosePolicyListAdapter mAdapter;
     private int currentPageIndex = 1;
     private String currentWord;
+    private boolean hasNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +114,7 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
                             }
                             return;
                         }
+                        hasNext = result.isHasNext();
                         List<InsureListResDTO.ResultListBean> data = result.getResultList();
                         if (currentPageIndex == 1) {
                             mAdapter.bindData(true, data);
@@ -127,6 +129,7 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
                             mBinding.recyclerView.setVisibility(View.VISIBLE);
                         }
                         mBinding.recyclerView.setPullLoadMoreCompleted();
+                        mBinding.recyclerView.setPushRefreshEnable(hasNext);
                     }
                 });
     }
