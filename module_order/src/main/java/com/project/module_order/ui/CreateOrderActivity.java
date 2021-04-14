@@ -60,6 +60,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
 import static com.project.common_resource.global.ConstantData.FILE_PATH;
+import static com.project.common_resource.global.ConstantData.PAGE_COUNT;
 
 /**
  * @fileName: CreateOrderActivity
@@ -89,8 +90,8 @@ public class CreateOrderActivity extends BaseActivity {
     private List<LoginResDTO.SettingsBean.CategoryBean> category;
     private List<LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean> measureWays;
 
-    private LoginResDTO.SettingsBean.CategoryBean currentCategory;
-    private LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean currentMeasureWay;
+    private LoginResDTO.SettingsBean.CategoryBean currentCategory = null;
+    private LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean currentMeasureWay = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +101,8 @@ public class CreateOrderActivity extends BaseActivity {
         binding = OrderActivityCreateBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initView();
-        createMeasureWayItems();
         createPolicyCategoryItems();
+        createMeasureWayItems();
         setListener();
         getLocation();
         clearLocalPhotos();
@@ -125,13 +126,20 @@ public class CreateOrderActivity extends BaseActivity {
     }
 
     private void createMeasureWayItems() {
-        if (measureWays == null) {
+        if (currentCategory == null || currentCategory.getMeasure_ways() == null) {
             return;
         }
+        binding.llMeasureWay.removeAllViews();
+        if (currentCategory.getMeasure_ways().size() == 1) {
+            binding.layoutMeasure.setVisibility(View.GONE);
+            currentMeasureWay = currentCategory.getMeasure_ways().get(0);
+            return;
+        }
+        binding.layoutMeasure.setVisibility(View.VISIBLE);
         int padding15 = DisplayUtils.dip2px(this, 15);
         int padding3 = DisplayUtils.dip2px(this, 3);
 
-        for (final LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean way : measureWays) {
+        for (final LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean way : currentCategory.getMeasure_ways()) {
             final TextView item = new TextView(this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.rightMargin = DisplayUtils.dip2px(this, 15);
@@ -187,6 +195,10 @@ public class CreateOrderActivity extends BaseActivity {
                     }
                     item.setSelected(true);
                     currentCategory = bean;
+                    createMeasureWayItems();
+                    if(currentCategory != null && currentCategory.getMeasure_ways() != null){
+                        currentMeasureWay = currentCategory.getMeasure_ways().get(0);
+                    }
                 }
             });
         }
@@ -379,44 +391,45 @@ public class CreateOrderActivity extends BaseActivity {
         requestModel.setPhone(info.getUserName());
 
         List<CreatePolicyRequestModel.PhotoInfoEntity> pigs = new ArrayList<>();
-        for (PolicyDetailResDTO.ClaimListBean claimListBean : mAdapter.getData()) {
-            if (claimListBean == null) {
-                continue;
-            }
-
-            CreatePolicyRequestModel.PhotoInfoEntity pig = new CreatePolicyRequestModel.PhotoInfoEntity();
-            // FIXME: 2021-04-07 pigId
-            pig.setPigId("pigId");
-            if (mAddresses != null && mAddresses.get(0) != null && mAddresses.get(0).getAddressLine(0) != null) {
-                pig.setAddress(mAddresses.get(0).getAddressLine(0).toString());
-            }
-            if (mLocation != null) {
-                pig.setLatitude(mLocation.getLatitude() + "");
-                pig.setLongitude(mLocation.getLongitude() + "");
-            }
-            List<PolicyDetailResDTO.ClaimListBean.PigInfoBean> pigInfo = claimListBean.getPigInfo();
-            if (pigInfo == null || pigInfo.size() == 0) {
-                continue;
-            }
-
-            List<CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity> photos = new ArrayList<>();
-            for (PolicyDetailResDTO.ClaimListBean.PigInfoBean pigInfoBean : pigInfo) {
-                if (pigInfoBean == null) {
+        if(mAdapter != null){
+            for (PolicyDetailResDTO.ClaimListBean claimListBean : mAdapter.getData()) {
+                if (claimListBean == null) {
                     continue;
                 }
-                CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity photo = new CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity();
-                photo.setColumn(pigInfoBean.getColumn());
-                photo.setImgBase64(com.project.module_order.utils.ImageUtils.bitmapToString(pigInfoBean.getImgUrl()));
-                photo.setResults(new JsonObject());
-                photos.add(photo);
+
+                CreatePolicyRequestModel.PhotoInfoEntity pig = new CreatePolicyRequestModel.PhotoInfoEntity();
+                // FIXME: 2021-04-07 pigId
+                pig.setPigId("pigId");
+                if (mAddresses != null && mAddresses.get(0) != null && mAddresses.get(0).getAddressLine(0) != null) {
+                    pig.setAddress(mAddresses.get(0).getAddressLine(0).toString());
+                }
+                if (mLocation != null) {
+                    pig.setLatitude(mLocation.getLatitude() + "");
+                    pig.setLongitude(mLocation.getLongitude() + "");
+                }
+                List<PolicyDetailResDTO.ClaimListBean.PigInfoBean> pigInfo = claimListBean.getPigInfo();
+                if (pigInfo == null || pigInfo.size() == 0) {
+                    continue;
+                }
+
+                List<CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity> photos = new ArrayList<>();
+                for (PolicyDetailResDTO.ClaimListBean.PigInfoBean pigInfoBean : pigInfo) {
+                    if (pigInfoBean == null) {
+                        continue;
+                    }
+                    CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity photo = new CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity();
+                    photo.setColumn(pigInfoBean.getColumn());
+                    photo.setImgBase64(com.project.module_order.utils.ImageUtils.bitmapToString(pigInfoBean.getImgUrl()));
+                    photo.setResults(new JsonObject());
+                    photos.add(photo);
+                }
+                pig.setBody_info(photos);
+                pigs.add(pig);
+                requestModel.setPhotoInfo(pigs);
             }
-            pig.setBody_info(photos);
-            pigs.add(pig);
-            requestModel.setPhotoInfo(pigs);
         }
-        LogToFile.init(this);
-        LogToFile.d("xxxx", new Gson().toJsonTree(requestModel).getAsJsonObject().toString());
-        commitPolicy(requestModel);
+        Log.e("xxxxxxxxx", "" + requestModel.toString());
+//        commitPolicy(requestModel);
     }
 
     @SuppressLint("MissingPermission")
