@@ -309,6 +309,7 @@ public class CreateOrderActivity extends BaseActivity {
                 binding.tvDateEnd.setText(result.getInsureEndTime());
                 isFromChoose = true;
                 binding.tvName.setEnabled(false);
+                binding.tvCode.setEnabled(false);
             } else if (requestCode == RESULT_MEASURE) {
                 List<PolicyDetailResDTO.ClaimListBean> forResult = (List<PolicyDetailResDTO.ClaimListBean>) data.getSerializableExtra("result");
                 if (forResult != null && forResult.size() > 0) {
