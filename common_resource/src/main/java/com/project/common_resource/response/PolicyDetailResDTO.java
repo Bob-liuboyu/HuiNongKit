@@ -1,5 +1,7 @@
 package com.project.common_resource.response;
 
+import com.google.gson.JsonObject;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -339,7 +341,7 @@ public class PolicyDetailResDTO implements Serializable {
             private String imgUrl;
             private int no;
             private String name;
-            private String results;
+            private MeasureResponse results;
             private String column;
 
             public String getColumn() {
@@ -374,11 +376,11 @@ public class PolicyDetailResDTO implements Serializable {
                 this.name = name;
             }
 
-            public String getResults() {
+            public MeasureResponse getResults() {
                 return results;
             }
 
-            public void setResults(String results) {
+            public void setResults(MeasureResponse results) {
                 this.results = results;
             }
         }

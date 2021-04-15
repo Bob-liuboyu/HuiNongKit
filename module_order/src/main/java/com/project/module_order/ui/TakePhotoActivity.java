@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.huawei.hiar.ARBodyTrackingConfig;
 import com.huawei.hiar.ARConfigBase;
 import com.huawei.hiar.AREnginesApk;
@@ -27,7 +29,9 @@ import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.utils.SharedPreferencesUtils;
 import com.project.arch_repo.widget.ImagePopupWindow;
 import com.project.common_resource.TakePhotoModel;
+import com.project.common_resource.requestModel.MeasurePicResponse;
 import com.project.common_resource.response.LoginResDTO;
+import com.project.common_resource.response.MeasureResponse;
 import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
@@ -36,7 +40,12 @@ import com.project.module_order.body3d.rendering.BodyRenderManager;
 import com.project.module_order.common.ConnectAppMarketActivity;
 import com.project.module_order.common.DisplayRotationManager;
 import com.project.module_order.databinding.OrderActivityTakePhotoBinding;
+import com.project.module_order.source.impl.PicMeasureRepositoryImpl;
+import com.project.module_order.utils.ImageUtils;
 import com.project.module_order.utils.SurfaceCameraUtils;
+import com.xxf.arch.XXF;
+import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
+import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
 import com.xxf.view.recyclerview.adapter.BaseViewHolder;
 import com.xxf.view.recyclerview.adapter.OnItemClickListener;
@@ -45,6 +54,8 @@ import com.xxf.view.utils.StatusBarUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.functions.Consumer;
 
 import static com.project.module_order.utils.ImageUtils.getBitmap;
 
@@ -67,6 +78,10 @@ public class TakePhotoActivity extends BaseActivity {
     private int currentBtnIndex = 0;
     private Bitmap maskBitmap;
     private List<LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean> mButtonItems;
+    private String orderId;
+    private String latitude;
+    private String longitude;
+    private long pigId;
     /**
      * 每只猪的照片
      */
@@ -94,6 +109,10 @@ public class TakePhotoActivity extends BaseActivity {
 
     private void initView() {
         mButtonItems = (List<LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean>) getIntent().getSerializableExtra("mButtonItems");
+        orderId = getIntent().getStringExtra("orderId");
+        latitude = getIntent().getStringExtra("latitude");
+        longitude = getIntent().getStringExtra("longitude");
+        pigId = getIntent().getLongExtra("pigId", 0);
         mBinding.rvPhotos.setAdapter(mBtnAdapter = new TakePhotoBtnAdapter());
         mBtnAdapter.bindData(true, mButtonItems);
         mBtnAdapter.setOnItemClickListener(new OnItemClickListener() {
@@ -113,9 +132,9 @@ public class TakePhotoActivity extends BaseActivity {
         mBinding.ivTake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PolicyDetailResDTO.ClaimListBean.PigInfoBean photoModel = new PolicyDetailResDTO.ClaimListBean.PigInfoBean();
+                final PolicyDetailResDTO.ClaimListBean.PigInfoBean photoModel = new PolicyDetailResDTO.ClaimListBean.PigInfoBean();
 
-                TakePhotoModel model = SurfaceCameraUtils.takePhoto(TakePhotoActivity.this, mBinding.surfaceview, maskBitmap);
+                final TakePhotoModel model = SurfaceCameraUtils.takePhoto(TakePhotoActivity.this, mBinding.surfaceview, maskBitmap);
                 // 先显示，后保存
                 View view = mBinding.rvPhotos.getLayoutManager().findViewByPosition(currentBtnIndex);
                 View btnLayout = view.findViewById(R.id.ll_button);
@@ -129,10 +148,35 @@ public class TakePhotoActivity extends BaseActivity {
 
                 photoModel.setImgUrl(model.getPath());
                 photoModel.setColumn(mButtonItems.get(currentBtnIndex).getColumn());
-                photoModel.setResults("result");
-                photos.add(photoModel);
-                checkNextButton();
-                canNext();
+
+                if (mButtonItems.get(currentBtnIndex).getColumn().equals("pigBody")) {
+                    final MeasurePicResponse request = new MeasurePicResponse();
+                    request.setBaodan(orderId);
+                    request.setDepthImage("depthImage");
+                    request.setId(pigId);
+                    request.setScope_dir(null);
+                    request.setLatitude(latitude);
+                    request.setLongitude(longitude);
+                    request.setImage(com.project.module_order.utils.ImageUtils.bitmapToString(model.getBitmap()));
+                    if (request == null || photos == null || photoModel == null) {
+                        return;
+                    }
+                    picMeasure(request, new Consumer<MeasureResponse>() {
+                        @Override
+                        public void accept(MeasureResponse measureResponse) throws Exception {
+                            photoModel.setResults(measureResponse);
+                            photos.add(photoModel);
+                            checkNextButton();
+                            canNext();
+                        }
+                    });
+                } else {
+                    photoModel.setResults(new MeasureResponse());
+                    photos.add(photoModel);
+                    checkNextButton();
+                    canNext();
+
+                }
             }
         });
 
@@ -410,5 +454,20 @@ public class TakePhotoActivity extends BaseActivity {
         ImagePopupWindow popupWindow = new ImagePopupWindow(this);
         popupWindow.setSrc(source);
         popupWindow.showAsDropDown(mBinding.ivQuestion, 100, 0);
+    }
+
+    private void picMeasure(MeasurePicResponse model, Consumer<MeasureResponse> consumer) {
+        if (model == null) {
+            return;
+        }
+        Log.e("xxxxxxxxx", "MeasurePicResponse = " + result.toString());
+        PicMeasureRepositoryImpl.getInstance()
+                .measure(model)
+                .compose(XXF.<MeasureResponse>bindToLifecycle(this))
+                .compose(XXF.<MeasureResponse>bindToErrorNotice())
+                .compose(XXF.<MeasureResponse>bindToProgressHud(
+                        new ProgressHUDTransformerImpl.Builder(this)
+                                .setLoadingNotice("测量中～")))
+                .subscribe(consumer);
     }
 }

@@ -1,11 +1,8 @@
 package com.project.module_order.source;
 
-import com.project.arch_repo.http.httpmodel.ResponseDTO;
 import com.project.common_resource.requestModel.CreatePolicyRequestModel;
 import com.project.common_resource.response.InsureListResDTO;
 import com.project.common_resource.response.PolicyDetailResDTO;
-
-import java.util.List;
 
 import io.reactivex.Observable;
 

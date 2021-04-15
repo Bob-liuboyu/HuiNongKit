@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -92,6 +93,7 @@ public class CreateOrderActivity extends BaseActivity {
 
     private LoginResDTO.SettingsBean.CategoryBean currentCategory = null;
     private LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean currentMeasureWay = null;
+    private long pigId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +125,7 @@ public class CreateOrderActivity extends BaseActivity {
         }
         LoginResDTO.UserInfoBean info = GlobalDataManager.getInstance().getUserInfo();
         binding.tvMaster.setText(info != null ? info.getUserName() : "");
+        pigId = generatePigId();
     }
 
     private void createMeasureWayItems() {
@@ -196,7 +199,7 @@ public class CreateOrderActivity extends BaseActivity {
                     item.setSelected(true);
                     currentCategory = bean;
                     createMeasureWayItems();
-                    if(currentCategory != null && currentCategory.getMeasure_ways() != null){
+                    if (currentCategory != null && currentCategory.getMeasure_ways() != null) {
                         currentMeasureWay = currentCategory.getMeasure_ways().get(0);
                     }
                 }
@@ -341,11 +344,18 @@ public class CreateOrderActivity extends BaseActivity {
             }).show();
             return;
         }
+        if (currentMeasureWay == null) {
+            return;
+        }
 
         Intent intent = new Intent(this, TakePhotoActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("mButtonItems", (Serializable) currentMeasureWay.getDetails());
         intent.putExtras(bundle);
+        intent.putExtra("orderId", binding.tvCode.getText().toString());
+        intent.putExtra("latitude", mLocation.getLatitude() + "");
+        intent.putExtra("longitude", mLocation.getLongitude() + "");
+        intent.putExtra("pigId", pigId);
         startActivityForResult(intent, RESULT_MEASURE);
     }
 
@@ -391,15 +401,14 @@ public class CreateOrderActivity extends BaseActivity {
         requestModel.setPhone(info.getUserName());
 
         List<CreatePolicyRequestModel.PhotoInfoEntity> pigs = new ArrayList<>();
-        if(mAdapter != null){
+        if (mAdapter != null) {
             for (PolicyDetailResDTO.ClaimListBean claimListBean : mAdapter.getData()) {
                 if (claimListBean == null) {
                     continue;
                 }
 
                 CreatePolicyRequestModel.PhotoInfoEntity pig = new CreatePolicyRequestModel.PhotoInfoEntity();
-                // FIXME: 2021-04-07 pigId
-                pig.setPigId("pigId");
+                pig.setPigId(pigId + "");
                 if (mAddresses != null && mAddresses.get(0) != null && mAddresses.get(0).getAddressLine(0) != null) {
                     pig.setAddress(mAddresses.get(0).getAddressLine(0).toString());
                 }
@@ -419,8 +428,8 @@ public class CreateOrderActivity extends BaseActivity {
                     }
                     CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity photo = new CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity();
                     photo.setColumn(pigInfoBean.getColumn());
-                    photo.setImgBase64(com.project.module_order.utils.ImageUtils.bitmapToString(pigInfoBean.getImgUrl()));
-                    photo.setResults(new JsonObject());
+                    photo.setImgBase64(com.project.module_order.utils.ImageUtils.bitmapPathToString(pigInfoBean.getImgUrl()));;
+                    photo.setResults(new Gson().toJsonTree(pigInfoBean.getResults()).getAsJsonObject());
                     photos.add(photo);
                 }
                 pig.setBody_info(photos);
@@ -555,5 +564,20 @@ public class CreateOrderActivity extends BaseActivity {
                         }
                     }
                 });
+    }
+
+    /**
+     * 生成唯一猪id
+     *
+     * @return
+     */
+    private long generatePigId() {
+        StringBuilder str = new StringBuilder();//定义变长字符串
+        Random random = new Random();
+        //随机生成数字，并添加到字符串
+        for (int i = 0; i < 8; i++) {
+            str.append(random.nextInt(10));
+        }
+        return Long.valueOf(str.toString());
     }
 }

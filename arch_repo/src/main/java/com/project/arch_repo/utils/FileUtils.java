@@ -536,6 +536,9 @@ public class FileUtils {
         File[] files = new File[50];
         // 将目标目录下所有的file对象存入files数组中
         files = file.listFiles();
+        if (files == null) {
+            return;
+        }
         // 循环遍历files数组
         for (File temp : files) {
             if (temp == null) {
