@@ -2,16 +2,13 @@ package com.project.module_order.ui;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DisplayUtils;
-import com.project.arch_repo.utils.GlideUtils;
 import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotoListAdapter;
+import com.project.module_order.adapter.PicViewPagerAdapter;
 import com.project.module_order.databinding.OrderActivityPrePhotosBinding;
 import com.xxf.arch.utils.ToastUtils;
 import com.xxf.view.recyclerview.adapter.BaseRecyclerAdapter;
@@ -32,7 +29,7 @@ public class PrePhotosActivity extends BaseActivity {
     private List<PolicyDetailResDTO.ClaimListBean> list;
     private int index;
     private OrderPhotoListAdapter mAdapter;
-    private int currentIndex;
+    private PicViewPagerAdapter picViewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +49,11 @@ public class PrePhotosActivity extends BaseActivity {
         }
         mBinding.tvTitle.setText("图片详情" + "(" + (index + 1) + "/" + list.size() + ")");
         mAdapter = new OrderPhotoListAdapter();
-
+        mBinding.ivPhoto.setAdapter(picViewPagerAdapter = new PicViewPagerAdapter(list.get(index).getPigInfo()));
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
-                GlideUtils.loadImage(mBinding.ivPhoto, mAdapter.getItem(index).getImgUrl());
+                mBinding.ivPhoto.setCurrentItem(index);
             }
         });
         mBinding.recyclerView.post(new Runnable() {
@@ -104,9 +101,9 @@ public class PrePhotosActivity extends BaseActivity {
 
 
     private void updatePage(int index) {
-        mBinding.tvTitle.setText("(" + (index + 1) + "/" + list.size() + ")");
+        mBinding.tvTitle.setText("(" + (index + 1) + "/" + list.size() + ")"+"只");
         mAdapter.bindData(true, list.get(index).getPigInfo());
         mBinding.setModel(mAdapter.getItem(0));
-        GlideUtils.loadImage(mBinding.ivPhoto, mAdapter.getItem(0).getImgUrl());
+        mBinding.ivPhoto.setCurrentItem(index);
     }
 }
