@@ -76,7 +76,11 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         binding.okCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancel(mFilterModel);
+                if(isEmpty()){
+                    cancel(mFilterModel);
+                }else{
+                    reset();
+                }
             }
         });
         // 0:待处理 1：已理赔
@@ -239,9 +243,11 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         }
         if (!TextUtils.isEmpty(mFilterModel.getSubmitStartDate())) {
             binding.tvDateStart.setText(mFilterModel.getSubmitStartDate());
+            binding.tvDateStart.setSelected(true);
         }
         if (!TextUtils.isEmpty(mFilterModel.getSubmitEndDate())) {
             binding.tvDateEnd.setText(mFilterModel.getSubmitEndDate());
+            binding.tvDateEnd.setSelected(true);
         }
         if (SelectFilterModel.STATUS_DONE.equals(mFilterModel.getClaimStatus())) {
             binding.tvStatusTodo.setSelected(false);
@@ -255,16 +261,23 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
         }
 
         createMeasureWayItems();
+
+        List<LoginResDTO.SettingsBean.CategoryBean> category = GlobalDataManager.getInstance().getSettings().getCategory();
+        if(category != null){
+            for (int i = 0; i < category.size(); i++) {
+                if (category.get(i).getClaimId().equals(mFilterModel.getClaimType())) {
+                    binding.llCategory.getChildAt(i).setSelected(true);
+                    break;
+                }
+            }
+        }
+
+        if(!isEmpty()){
+            binding.okCancel.setText("重置");
+        }
     }
 
     private void commit() {
-        if (!binding.tvStatusTodo.isSelected() && !binding.tvStatusDone.isSelected()
-                && TextUtils.isEmpty(mFilterModel.getSubmitStartDate())
-                && TextUtils.isEmpty(mFilterModel.getSubmitEndDate())) {
-            ToastUtils.showToast("搜索条件有误，请重新填写");
-            return;
-        }
-
         if ((TextUtils.isEmpty(mFilterModel.getSubmitStartDate()) && !TextUtils.isEmpty(mFilterModel.getSubmitEndDate()))
                 || (!TextUtils.isEmpty(mFilterModel.getSubmitStartDate()) && TextUtils.isEmpty(mFilterModel.getSubmitEndDate()))) {
             ToastUtils.showToast("起始／结束时间必须同事输入");
@@ -293,5 +306,36 @@ public class SelectFilterDialog extends BaseDialog<SelectFilterModel> {
     public void show() {
         super.show();
         initData();
+    }
+
+    /**
+     * 重置
+     */
+    private void reset(){
+        mFilterModel.setSubmitEndDate("");
+        mFilterModel.setSubmitStartDate("");
+        mFilterModel.setClaimStatus("");
+        mFilterModel.setClaimType("");
+        mFilterModel.setSearch("");
+        binding.tvStatusTodo.setSelected(false);
+        binding.tvStatusDone.setSelected(false);
+        for (int i = 0; i < binding.llCategory.getChildCount(); i++) {
+            binding.llCategory.getChildAt(i).setSelected(false);
+        }
+        binding.tvDateStart.setSelected(false);
+        binding.tvDateEnd.setSelected(false);
+
+    }
+
+    private boolean isEmpty(){
+        if(mFilterModel == null){
+            return true;
+        }
+
+        return  "".equals(mFilterModel.getClaimStatus()) &&
+                "".equals(mFilterModel.getClaimType()) &&
+                "".equals(mFilterModel.getSearch()) &&
+                "".equals(mFilterModel.getSubmitStartDate()) &&
+                "".equals(mFilterModel.getSubmitEndDate());
     }
 }

@@ -1,13 +1,8 @@
 package com.project.huinongkit.fragment;
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -15,12 +10,10 @@ import com.project.arch_repo.base.fragment.BaseFragment;
 import com.project.arch_repo.utils.SharedPreferencesUtils;
 import com.project.arch_repo.widget.CommonDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
-import com.project.common_resource.UserInfoModel;
 import com.project.common_resource.global.GlobalDataManager;
 import com.project.common_resource.response.LoginResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.huinongkit.databinding.MainFragmentMineBinding;
-import com.project.user.LoginActivity;
 
 /**
  * @fileName: MainFragment
@@ -44,6 +37,12 @@ public class MineFragment extends BaseFragment {
         LoginResDTO.UserInfoBean userInfo = GlobalDataManager.getInstance().getUserInfo();
         LoginResDTO.SettingsBean settings = GlobalDataManager.getInstance().getSettings();
         mBinding.setModel(userInfo);
+
+        if(userInfo.getCompanyName() == null || "".equals(userInfo.getCompanyName())){
+            mBinding.tvCompany1.setVisibility(View.GONE);
+        }else{
+            mBinding.tvCompany1.setVisibility(View.VISIBLE);
+        }
 
         if (settings != null) {
             mBinding.tvVersion.setText("版本号：" + settings.getVersion());

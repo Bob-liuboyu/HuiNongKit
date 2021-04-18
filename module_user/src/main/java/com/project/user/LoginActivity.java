@@ -10,6 +10,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.gson.Gson;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.SharedPreferencesUtils;
+import com.project.arch_repo.utils.StringUtils;
 import com.project.arch_repo.widget.CommonDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
 import com.project.common_resource.global.GlobalDataManager;
@@ -44,8 +45,8 @@ public class LoginActivity extends BaseActivity {
         binding = UserActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setListener();
-        binding.etPhone.setText("admin");
-        binding.etPwd.setText("admin12345");
+        binding.etPhone.setText("13112341234");
+        binding.etPwd.setText("123456");
     }
 
     public void setListener() {
@@ -79,11 +80,10 @@ public class LoginActivity extends BaseActivity {
     private void login() {
         String phone = binding.etPhone.getText().toString();
         String pwd = binding.etPwd.getText().toString();
-        // FIXME: 2021-03-31 
-//        if (TextUtils.isEmpty(phone) || !StringUtils.isMobilPhoneNumber(phone)) {
-//            ToastUtils.showToast("请输入正确的手机号");
-//            return;
-//        }
+        if (TextUtils.isEmpty(phone) || !StringUtils.isMobilPhoneNumber(phone)) {
+            ToastUtils.showToast("请输入正确的手机号");
+            return;
+        }
         if (TextUtils.isEmpty(pwd)) {
             ToastUtils.showToast("请输入密码");
             return;
@@ -112,6 +112,7 @@ public class LoginActivity extends BaseActivity {
                             ARouter.getInstance().build(ArouterConfig.Main.MAIN)
                                     .navigation();
                         }
+                        SharedPreferencesUtils.setStringValue(getContext(),"phone",binding.etPhone.getText().toString());
                         finish();
                     }
                 });

@@ -27,6 +27,7 @@ import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DateTimeUtils;
 import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.utils.FileUtils;
+import com.project.arch_repo.utils.SharedPreferencesUtils;
 import com.project.arch_repo.widget.CommonDialog;
 import com.project.arch_repo.widget.DatePickerDialog;
 import com.project.arch_repo.widget.GrDialogUtils;
@@ -387,13 +388,12 @@ public class CreateOrderActivity extends BaseActivity {
     private void commitData() {
         CreatePolicyRequestModel requestModel = new CreatePolicyRequestModel();
         requestModel.setToken(GlobalDataManager.getInstance().getToken());
-        String claimName = "";
         String claimType = "";
         if (currentCategory != null) {
-            claimName = currentCategory.getClaimName();
             claimType = currentCategory.getClaimId();
         }
-        requestModel.setClaimName(claimName);
+        LoginResDTO.UserInfoBean info = GlobalDataManager.getInstance().getUserInfo();
+        requestModel.setClaimName(info.getUserName());
         requestModel.setClaimType(claimType);
         requestModel.setClaimUserId(GlobalDataManager.getInstance().getUserInfo().getUserId());
         requestModel.setInsureStartTime(binding.tvDateStart.getText().toString());
@@ -404,8 +404,7 @@ public class CreateOrderActivity extends BaseActivity {
             measureType = currentMeasureWay.getMeasureType();
         }
         requestModel.setMeasureType(measureType);
-        LoginResDTO.UserInfoBean info = GlobalDataManager.getInstance().getUserInfo();
-        requestModel.setPhone(info.getUserName());
+        requestModel.setPhone(SharedPreferencesUtils.getStringValue(getContext(), "phone", ""));
 
         List<CreatePolicyRequestModel.PhotoInfoEntity> pigs = new ArrayList<>();
         if (mAdapter != null) {
