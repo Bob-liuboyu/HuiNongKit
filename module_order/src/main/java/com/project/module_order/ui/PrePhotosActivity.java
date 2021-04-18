@@ -28,7 +28,14 @@ import java.util.List;
 public class PrePhotosActivity extends BaseActivity {
     private OrderActivityPrePhotosBinding mBinding;
     private List<PolicyDetailResDTO.ClaimListBean> list;
+    /**
+     * 第几支猪
+     */
     private int index;
+    /**
+     * 第几张照片
+     */
+    private int currentPhotoIndex;
     private OrderPhotoListAdapter mAdapter;
     private PicViewPagerAdapter picViewPagerAdapter;
 
@@ -48,9 +55,10 @@ public class PrePhotosActivity extends BaseActivity {
         if (list == null || list.get(index) == null) {
             return;
         }
-        mBinding.tvTitle.setText("图片详情" + "(" + (index + 1) + "/" + list.size() + ")");
         mAdapter = new OrderPhotoListAdapter();
         mBinding.ivPhoto.setAdapter(picViewPagerAdapter = new PicViewPagerAdapter(list.get(index).getPigInfo()));
+        mBinding.tvTitle.setText("(" + (currentPhotoIndex + 1) + "/" + list.get(index).getPigInfo().size() + ")张");
+        mBinding.tvCount.setText("(" + (index + 1) + "/" + list.size() + ")只");
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int i) {
@@ -60,6 +68,9 @@ public class PrePhotosActivity extends BaseActivity {
                 }
                 list.get(index).getPigInfo().get(i).setSelect(true);
                 mAdapter.notifyDataSetChanged();
+                currentPhotoIndex = i;
+                mBinding.tvTitle.setText("(" + (currentPhotoIndex + 1) + "/" + list.get(index).getPigInfo().size() + ")张");
+
             }
         });
         mBinding.recyclerView.post(new Runnable() {
@@ -105,7 +116,6 @@ public class PrePhotosActivity extends BaseActivity {
                 updatePage(index);
             }
         });
-        updatePage(index);
         mBinding.ivPhoto.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -117,8 +127,10 @@ public class PrePhotosActivity extends BaseActivity {
                 for (PolicyDetailResDTO.ClaimListBean.PigInfoBean bean : list.get(index).getPigInfo()) {
                     bean.setSelect(false);
                 }
+                currentPhotoIndex = i;
                 list.get(index).getPigInfo().get(i).setSelect(true);
                 mAdapter.notifyDataSetChanged();
+                mBinding.tvTitle.setText("(" + (currentPhotoIndex + 1) + "/" + list.get(index).getPigInfo().size() + ")张");
             }
 
             @Override
@@ -130,7 +142,8 @@ public class PrePhotosActivity extends BaseActivity {
 
 
     private void updatePage(int index) {
-        mBinding.tvTitle.setText("(" + (index + 1) + "/" + list.size() + ")" + "只");
+        currentPhotoIndex = 0;
+        mBinding.tvCount.setText("(" + (index + 1) + "/" + list.size() + ")只");
         mAdapter.bindData(true, list.get(index).getPigInfo());
         mBinding.setModel(mAdapter.getItem(0));
         mBinding.ivPhoto.setCurrentItem(index);
