@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DateTimeUtils;
 import com.project.arch_repo.utils.DisplayUtils;
@@ -41,7 +40,6 @@ import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
 import com.project.module_order.databinding.OrderActivityCreateBinding;
 import com.project.module_order.source.impl.OrderRepositoryImpl;
-import com.project.module_order.utils.LogToFile;
 import com.xxf.arch.XXF;
 import com.xxf.arch.dialog.IResultDialog;
 import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
@@ -61,7 +59,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
 import static com.project.common_resource.global.ConstantData.FILE_PATH;
-import static com.project.common_resource.global.ConstantData.PAGE_COUNT;
 
 /**
  * @fileName: CreateOrderActivity
@@ -81,6 +78,7 @@ public class CreateOrderActivity extends BaseActivity {
     protected List<PolicyDetailResDTO.ClaimListBean> result = new ArrayList<>();
     private SimpleDateFormat sdf;
     private boolean isFromChoose;
+    private boolean isFromPhoto;
     private List<Address> mAddresses;
     private Location mLocation;
     private LocationManager locationManager;
@@ -221,23 +219,31 @@ public class CreateOrderActivity extends BaseActivity {
         binding.btnMeasure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCamera();
+                if (isFromPhoto) {
+                    commitData();
+                } else {
+                    showCamera();
+                }
             }
         });
         binding.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GrDialogUtils.createCommonDialog(CreateOrderActivity.this, "确认返回", "已拍摄的测重/测长照片将不会保存", new CommonDialog.OnDialogClickListener() {
-                    @Override
-                    public void onClickConfirm(View view) {
-                        finish();
-                    }
+                if (isFromPhoto) {
+                    showCamera();
+                } else {
+                    GrDialogUtils.createCommonDialog(CreateOrderActivity.this, "确认返回", "已拍摄的测重/测长照片将不会保存", new CommonDialog.OnDialogClickListener() {
+                        @Override
+                        public void onClickConfirm(View view) {
+                            finish();
+                        }
 
-                    @Override
-                    public void onClickCancel(View view) {
+                        @Override
+                        public void onClickCancel(View view) {
 
-                    }
-                }).show();
+                        }
+                    }).show();
+                }
             }
         });
         binding.tvDateStart.setOnClickListener(new View.OnClickListener() {
@@ -280,12 +286,6 @@ public class CreateOrderActivity extends BaseActivity {
                 }
             }
         });
-        binding.tvRightText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                commitData();
-            }
-        });
         binding.ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -320,6 +320,12 @@ public class CreateOrderActivity extends BaseActivity {
                     binding.tvTitlePhotos.setVisibility(View.VISIBLE);
                     binding.llCount.setVisibility(View.VISIBLE);
                     binding.tvCount.setText(result.size() + "只");
+                    isFromPhoto = true;
+                }
+
+                if (isFromPhoto) {
+                    binding.btnCancel.setText("继续拍摄");
+                    binding.btnMeasure.setText("提交");
                 }
             }
         }
@@ -429,7 +435,8 @@ public class CreateOrderActivity extends BaseActivity {
                     }
                     CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity photo = new CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity();
                     photo.setColumn(pigInfoBean.getColumn());
-                    photo.setImgBase64(com.project.module_order.utils.ImageUtils.bitmapPathToString(pigInfoBean.getImgUrl()));;
+                    photo.setImgBase64(com.project.module_order.utils.ImageUtils.bitmapPathToString(pigInfoBean.getImgUrl()));
+                    ;
                     photo.setResults(new Gson().toJsonTree(pigInfoBean.getResults()).getAsJsonObject());
                     photos.add(photo);
                 }

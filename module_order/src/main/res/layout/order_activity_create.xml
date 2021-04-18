@@ -48,6 +48,7 @@
                 android:layout_alignParentRight="true"
                 android:gravity="center"
                 android:maxLines="1"
+                android:visibility="gone"
                 android:paddingRight="@dimen/arch_dp_15"
                 android:textColor="#333333"
                 android:textSize="13sp" />
