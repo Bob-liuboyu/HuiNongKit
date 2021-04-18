@@ -1,6 +1,7 @@
 package com.project.module_order.ui;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.project.arch_repo.base.activity.BaseActivity;
@@ -52,8 +53,13 @@ public class PrePhotosActivity extends BaseActivity {
         mBinding.ivPhoto.setAdapter(picViewPagerAdapter = new PicViewPagerAdapter(list.get(index).getPigInfo()));
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int index) {
-                mBinding.ivPhoto.setCurrentItem(index);
+            public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int i) {
+                mBinding.ivPhoto.setCurrentItem(i);
+                for (PolicyDetailResDTO.ClaimListBean.PigInfoBean bean : list.get(index).getPigInfo()) {
+                    bean.setSelect(false);
+                }
+                list.get(index).getPigInfo().get(i).setSelect(true);
+                mAdapter.notifyDataSetChanged();
             }
         });
         mBinding.recyclerView.post(new Runnable() {
@@ -64,6 +70,9 @@ public class PrePhotosActivity extends BaseActivity {
                 int rightWidth = mBinding.tvNext.getWidth();
                 int width = (screenWidth - DisplayUtils.dip2px(mBinding.recyclerView.getContext(), 15 * 2) - leftWidth - rightWidth) / 3;
                 mAdapter.setWidth(width);
+                if (list.get(index).getPigInfo() != null) {
+                    list.get(index).getPigInfo().get(0).setSelect(true);
+                }
                 mAdapter.bindData(true, list.get(index).getPigInfo());
                 mBinding.recyclerView.setAdapter(mAdapter);
             }
@@ -97,11 +106,31 @@ public class PrePhotosActivity extends BaseActivity {
             }
         });
         updatePage(index);
+        mBinding.ivPhoto.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                for (PolicyDetailResDTO.ClaimListBean.PigInfoBean bean : list.get(index).getPigInfo()) {
+                    bean.setSelect(false);
+                }
+                list.get(index).getPigInfo().get(i).setSelect(true);
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 
 
     private void updatePage(int index) {
-        mBinding.tvTitle.setText("(" + (index + 1) + "/" + list.size() + ")"+"只");
+        mBinding.tvTitle.setText("(" + (index + 1) + "/" + list.size() + ")" + "只");
         mAdapter.bindData(true, list.get(index).getPigInfo());
         mBinding.setModel(mAdapter.getItem(0));
         mBinding.ivPhoto.setCurrentItem(index);

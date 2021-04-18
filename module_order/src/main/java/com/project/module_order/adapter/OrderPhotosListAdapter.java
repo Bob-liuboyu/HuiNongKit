@@ -52,12 +52,6 @@ public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyL
         binding.shadowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("data", model);
-//                Intent intent = new Intent(getContext(), PrePhotosActivity.class);
-//                intent.putExtras(bundle);
-//                getContext().startActivity(intent);
-
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("list", (Serializable) getData());

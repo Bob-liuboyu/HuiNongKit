@@ -1,7 +1,5 @@
 package com.project.common_resource.response;
 
-import com.google.gson.JsonObject;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -343,6 +341,15 @@ public class PolicyDetailResDTO implements Serializable {
             private String name;
             private MeasureResponse results;
             private String column;
+            private boolean select;
+
+            public boolean isSelect() {
+                return select;
+            }
+
+            public void setSelect(boolean select) {
+                this.select = select;
+            }
 
             public String getColumn() {
                 return column;
