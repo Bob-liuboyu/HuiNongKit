@@ -20,6 +20,7 @@ public class PolicyDetailResDTO implements Serializable {
     private String phone;
     private String claimDate;
     private String name;
+    private String insureName;
     private String insureId;
     private String id;
     private String claimStatusName;
@@ -73,6 +74,14 @@ public class PolicyDetailResDTO implements Serializable {
 
     public String getMeasureTypeName() {
         return measureTypeName;
+    }
+
+    public String getInsureName() {
+        return insureName;
+    }
+
+    public void setInsureName(String insureName) {
+        this.insureName = insureName;
     }
 
     public void setMeasureTypeName(String measureTypeName) {

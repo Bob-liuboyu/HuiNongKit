@@ -113,7 +113,7 @@
                                 android:layout_height="wrap_content"
                                 android:background="@color/arch_color_translate"
                                 android:hint="请输入保险人姓名"
-                                android:text="@{model.name}"
+                                android:text="@{model.insureName}"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/arch_dp_14" />
                         </LinearLayout>
@@ -278,6 +278,7 @@
                                 android:ellipsize="end"
                                 android:gravity="center|left"
                                 android:singleLine="true"
+                                android:text="@{model.name}"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/arch_dp_14" />
                         </LinearLayout>
