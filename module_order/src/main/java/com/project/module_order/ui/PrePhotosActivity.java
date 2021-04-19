@@ -171,10 +171,12 @@ public class PrePhotosActivity extends BaseActivity {
                 return;
             }
             if (measureResponse.getStatus() != MeasureResponse.CODE_SUCCESS) {
-                mBinding.tvWarning.setVisibility(View.VISIBLE);
+                mBinding.llWarning.setVisibility(View.VISIBLE);
+                mBinding.llData.setVisibility(View.INVISIBLE);
                 mBinding.tvWarning.setText(measureResponse.getMsg());
             } else {
-                mBinding.tvWarning.setVisibility(View.INVISIBLE);
+                mBinding.llWarning.setVisibility(View.INVISIBLE);
+                mBinding.llData.setVisibility(View.VISIBLE);
                 if (name.contains("长")||name.contains("猪身")) {
                     mBinding.tvMeasureResult.setVisibility(View.VISIBLE);
                     mBinding.tvMeasureResult.setText("长度：" + measureResponse.getLength());

@@ -152,6 +152,7 @@ public class TakePhotoActivity extends BaseActivity {
 
                 photoModel.setImgUrl(model.getPath());
                 photoModel.setColumn(mButtonItems.get(currentBtnIndex).getColumn());
+                photoModel.setName(mButtonItems.get(currentBtnIndex).getName());
 
                 if (mButtonItems.get(currentBtnIndex).getColumn().equals("pigBody")) {
                     final MeasurePicResponse request = new MeasurePicResponse();

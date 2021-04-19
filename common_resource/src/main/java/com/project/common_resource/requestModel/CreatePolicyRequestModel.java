@@ -176,7 +176,16 @@ public class CreatePolicyRequestModel implements Serializable {
 
             private String column;
             private String imgBase64;
-            private JsonObject results;
+            private String results;
+            private String name;
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
 
             public String getColumn() {
                 return column;
@@ -195,11 +204,11 @@ public class CreatePolicyRequestModel implements Serializable {
             }
 
 
-            public JsonObject getResults() {
+            public String getResults() {
                 return results;
             }
 
-            public void setResults(JsonObject results) {
+            public void setResults(String results) {
                 this.results = results;
             }
 
