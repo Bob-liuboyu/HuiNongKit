@@ -2,8 +2,10 @@ package com.project.huinongkit;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,6 +40,7 @@ public class MainActivity extends BaseTitleBarActivity {
     private BaseFragmentAdapter mBaseFragmentAdapter;
     private MainFragment mainFragment;
     private MineFragment mineFragment;
+    public static final int CODE_REQUEST_CREATE = 100;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,7 +97,19 @@ public class MainActivity extends BaseTitleBarActivity {
             return;
         }
         ARouter.getInstance().build(ArouterConfig.Order.ORDER_CREATE)
-                .navigation();
+                .navigation(this, CODE_REQUEST_CREATE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) {
+            return;
+        }
+
+        if (requestCode == CODE_REQUEST_CREATE && resultCode == Activity.RESULT_OK) {
+            mainFragment.refreshData();
+        }
     }
 
     @OnShowRationale({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})

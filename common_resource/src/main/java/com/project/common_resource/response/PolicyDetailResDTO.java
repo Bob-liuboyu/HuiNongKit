@@ -203,9 +203,12 @@ public class PolicyDetailResDTO implements Serializable {
         private String pigEnvironmentTwoUrl;
         private String pigEnvironmentOneUrl;
         private String id;
+        private String phone;
+        private String deptName;
         private int measureType;
         private String longitude;
         private int status;
+        private String name;
         /**
          * imgUrl : https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.med126.com%2Fshouyi%2Fupload%2F201604%2Fvxlr2t5ivsr%28www.med126.com%29.jpg&refer=http%3A%2F%2Fwww.med126.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1620288022&t=33c68901ae885c5dba12254bd7227b6a
          * no : 1
@@ -225,6 +228,30 @@ public class PolicyDetailResDTO implements Serializable {
 
         public String getAddress() {
             return address;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getDeptName() {
+            return deptName;
+        }
+
+        public void setDeptName(String deptName) {
+            this.deptName = deptName;
         }
 
         public void setAddress(String address) {
@@ -339,7 +366,7 @@ public class PolicyDetailResDTO implements Serializable {
             private String imgUrl;
             private int no;
             private String name;
-            private MeasureResponse results;
+            private String results;
             private String column;
             private boolean select;
 
@@ -383,11 +410,11 @@ public class PolicyDetailResDTO implements Serializable {
                 this.name = name;
             }
 
-            public MeasureResponse getResults() {
+            public String getResults() {
                 return results;
             }
 
-            public void setResults(MeasureResponse results) {
+            public void setResults(String results) {
                 this.results = results;
             }
         }

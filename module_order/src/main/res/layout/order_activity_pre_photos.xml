@@ -73,13 +73,14 @@
                         android:layout_weight="1"
                         android:background="#40000000"
                         android:orientation="vertical"
+                        android:visibility="invisible"
                         android:padding="@dimen/arch_dp_15">
 
                         <TextView
                             android:id="@+id/tv_measure_result"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="猪身重量=114.6kg"
+                            tools:text="猪身重量=114.6kg"
                             android:textColor="@color/arch_white"
                             android:textSize="23dp" />
 
@@ -102,7 +103,7 @@
                                 android:layout_marginLeft="@dimen/arch_dp_10"
                                 android:ellipsize="end"
                                 android:singleLine="true"
-                                android:text="2021-03-13 18:00:30"
+                                tools:text="2021-03-13 18:00:30"
                                 android:textColor="@color/arch_white"
                                 android:textSize="14dp" />
                         </LinearLayout>
@@ -131,7 +132,7 @@
                                 android:layout_marginLeft="@dimen/arch_dp_10"
                                 android:ellipsize="end"
                                 android:singleLine="true"
-                                android:text="北京"
+                                tools:text="北京"
                                 android:textColor="@color/arch_white"
                                 android:textSize="14dp" />
                         </LinearLayout>
@@ -160,7 +161,7 @@
                                 android:layout_marginLeft="@dimen/arch_dp_10"
                                 android:ellipsize="end"
                                 android:singleLine="true"
-                                android:text="经纬度"
+                                tools:text="经纬度"
                                 android:textColor="@color/arch_white"
                                 android:textSize="14dp" />
                         </LinearLayout>
@@ -189,7 +190,7 @@
                                 android:layout_marginLeft="@dimen/arch_dp_10"
                                 android:ellipsize="end"
                                 android:singleLine="true"
-                                android:text="15011447166"
+                                tools:text="15011447166"
                                 android:textColor="@color/arch_white"
                                 android:textSize="14dp" />
                         </LinearLayout>
@@ -218,7 +219,7 @@
                                 android:layout_marginLeft="@dimen/arch_dp_10"
                                 android:ellipsize="end"
                                 android:singleLine="true"
-                                android:text="百度"
+                                tools:text="百度"
                                 android:textColor="@color/arch_white"
                                 android:textSize="14dp" />
 
@@ -229,7 +230,7 @@
                                 android:layout_marginLeft="@dimen/arch_dp_10"
                                 android:ellipsize="end"
                                 android:singleLine="true"
-                                android:text="刘伯羽"
+                                tools:text="刘伯羽"
                                 android:textColor="@color/arch_white"
                                 android:textSize="14dp" />
                         </LinearLayout>
@@ -246,6 +247,7 @@
                         android:layout_marginBottom="@dimen/arch_dp_15"
                         android:background="#40d1031c"
                         android:gravity="center"
+                        android:visibility="invisible"
                         android:orientation="horizontal">
 
                         <ImageView

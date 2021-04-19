@@ -64,9 +64,6 @@ public class ResetPwdActivity extends BaseTitleBarActivity {
                 submit();
             }
         });
-        // FIXME: 2021-03-31
-        binding.etPwd.setText("liuboyu0625");
-        binding.etRePwd.setText("liuboyu0625");
     }
 
     private boolean checkInputLegal() {
@@ -87,17 +84,13 @@ public class ResetPwdActivity extends BaseTitleBarActivity {
 
     @SuppressLint("CheckResult")
     private void submit() {
-//        ARouter.getInstance().build(ArouterConfig.Main.MAIN)
-//                .navigation();
-//        finish();
-
         if (!checkInputLegal()) {
             return;
         }
         String pwd = binding.etRePwd.getText().toString().trim();
         String token = GlobalDataManager.getInstance().getToken();
         LoginRepositoryImpl.getInstance()
-                .updatePwd(phone, pwd, "1")
+                .updatePwd(phone, pwd, token)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(XXF.<Boolean>bindToLifecycle(this))
                 .compose(XXF.<Boolean>bindToErrorNotice())

@@ -37,6 +37,7 @@ import com.project.common_resource.response.InsureListResDTO;
 import com.project.common_resource.response.LoginResDTO;
 import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.config_repo.ArouterConfig;
+import com.project.module_order.AppConstant;
 import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
 import com.project.module_order.databinding.OrderActivityCreateBinding;
@@ -436,7 +437,6 @@ public class CreateOrderActivity extends BaseActivity {
                     CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity photo = new CreatePolicyRequestModel.PhotoInfoEntity.BodyInfoEntity();
                     photo.setColumn(pigInfoBean.getColumn());
                     photo.setImgBase64(com.project.module_order.utils.ImageUtils.bitmapPathToString(pigInfoBean.getImgUrl()));
-                    ;
                     photo.setResults(new Gson().toJsonTree(pigInfoBean.getResults()).getAsJsonObject());
                     photos.add(photo);
                 }
@@ -568,6 +568,7 @@ public class CreateOrderActivity extends BaseActivity {
                     public void accept(Boolean result) throws Exception {
                         if (result) {
                             ToastUtils.showToast("创建成功");
+                            setResult(AppConstant.RESULT_CODE.RESULT_OK, new Intent());
                             finish();
                         }
                     }

@@ -172,4 +172,13 @@ public class MainFragment extends BaseFragment {
             }
         });
     }
+
+    /**
+     * 刷新页面
+     */
+    public void refreshData(){
+        currentPageIndex = 1;
+        mFilterModel = new SelectFilterModel();
+        initData(mFilterModel);
+    }
 }

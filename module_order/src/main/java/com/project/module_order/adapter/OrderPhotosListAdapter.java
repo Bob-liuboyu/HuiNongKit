@@ -55,6 +55,7 @@ public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyL
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("list", (Serializable) getData());
+                bundle.putSerializable("model", (Serializable) model);
                 bundle.putInt("index", index);
 
                 Intent intent = new Intent(getContext(), PrePhotosActivity.class);

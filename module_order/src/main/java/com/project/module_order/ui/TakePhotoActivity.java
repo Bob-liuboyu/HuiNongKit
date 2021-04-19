@@ -168,7 +168,7 @@ public class TakePhotoActivity extends BaseActivity {
                     picMeasure(request, new Consumer<MeasureResponse>() {
                         @Override
                         public void accept(MeasureResponse measureResponse) throws Exception {
-                            photoModel.setResults(measureResponse);
+                            photoModel.setResults(new Gson().toJson(measureResponse));
                             photos.add(photoModel);
                             checkNextButton();
                             canNext();
@@ -176,7 +176,7 @@ public class TakePhotoActivity extends BaseActivity {
                         }
                     });
                 } else {
-                    photoModel.setResults(new MeasureResponse());
+                    photoModel.setResults(new Gson().toJson(new MeasureResponse()));
                     photos.add(photoModel);
                     checkNextButton();
                     canNext();
