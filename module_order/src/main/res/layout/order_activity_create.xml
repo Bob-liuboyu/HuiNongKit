@@ -278,7 +278,6 @@
                                 android:ellipsize="end"
                                 android:gravity="center|left"
                                 android:singleLine="true"
-                                android:text="@{model.name}"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/arch_dp_14" />
                         </LinearLayout>

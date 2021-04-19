@@ -123,6 +123,7 @@ public class CreateOrderActivity extends BaseActivity {
             measureWays = currentCategory.getMeasure_ways();
             currentMeasureWay = measureWays.get(0);
         }
+        binding.tvMaster.setText(GlobalDataManager.getInstance().getUserInfo().getUserName());
         pigId = generatePigId();
     }
 

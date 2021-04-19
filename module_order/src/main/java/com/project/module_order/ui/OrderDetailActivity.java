@@ -93,6 +93,7 @@ public class OrderDetailActivity extends CreateOrderActivity {
             binding.layoutMeasure2.setVisibility(View.GONE);
             binding.lineCount.setVisibility(View.GONE);
         }
+        binding.tvMaster.setText(result.getName());
         updatePhotoList(list);
     }
 
