@@ -140,6 +140,15 @@ public class PolicyListResDTO implements Serializable {
         private String claimStatusName;
         private String claimTypeName;
         private int claimStatus;
+        private String insureId;
+
+        public String getInsureId() {
+            return insureId;
+        }
+
+        public void setInsureId(String insureId) {
+            this.insureId = insureId;
+        }
 
         public int getClaimType() {
             return claimType;

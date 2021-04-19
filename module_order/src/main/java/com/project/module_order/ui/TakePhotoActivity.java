@@ -27,8 +27,10 @@ import com.huawei.hiar.exceptions.ARUnavailableServiceNotInstalledException;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.utils.SharedPreferencesUtils;
+import com.project.arch_repo.utils.TimeUtils;
 import com.project.arch_repo.widget.ImagePopupWindow;
 import com.project.common_resource.TakePhotoModel;
+import com.project.common_resource.global.GlobalDataManager;
 import com.project.common_resource.requestModel.MeasurePicResponse;
 import com.project.common_resource.response.LoginResDTO;
 import com.project.common_resource.response.MeasureResponse;
@@ -82,6 +84,7 @@ public class TakePhotoActivity extends BaseActivity {
     private String latitude;
     private String longitude;
     private long pigId;
+    private String addr;
     /**
      * 每只猪的照片
      */
@@ -112,6 +115,7 @@ public class TakePhotoActivity extends BaseActivity {
         orderId = getIntent().getStringExtra("orderId");
         latitude = getIntent().getStringExtra("latitude");
         longitude = getIntent().getStringExtra("longitude");
+        addr = getIntent().getStringExtra("addr");
         pigId = getIntent().getLongExtra("pigId", 0);
         mBinding.rvPhotos.setAdapter(mBtnAdapter = new TakePhotoBtnAdapter());
         mBtnAdapter.bindData(true, mButtonItems);
@@ -168,6 +172,7 @@ public class TakePhotoActivity extends BaseActivity {
                             photos.add(photoModel);
                             checkNextButton();
                             canNext();
+                            dealMeasureData(measureResponse);
                         }
                     });
                 } else {
@@ -460,7 +465,6 @@ public class TakePhotoActivity extends BaseActivity {
         if (model == null) {
             return;
         }
-        Log.e("xxxxxxxxx", "MeasurePicResponse = " + result.toString());
         PicMeasureRepositoryImpl.getInstance()
                 .measure(model)
                 .compose(XXF.<MeasureResponse>bindToLifecycle(this))
@@ -469,5 +473,28 @@ public class TakePhotoActivity extends BaseActivity {
                         new ProgressHUDTransformerImpl.Builder(this)
                                 .setLoadingNotice("测量中～")))
                 .subscribe(consumer);
+    }
+
+    private void dealMeasureData(MeasureResponse measureResponse) {
+        if (measureResponse == null) {
+            return;
+        }
+
+        if (measureResponse.getStatus() != MeasureResponse.CODE_SUCCESS) {
+            mBinding.llWarning.setVisibility(View.VISIBLE);
+            mBinding.tvWarning.setText(measureResponse.getMsg());
+            mBinding.mScrollView.setVisibility(View.INVISIBLE);
+        } else {
+            mBinding.llWarning.setVisibility(View.GONE);
+            mBinding.mScrollView.setVisibility(View.VISIBLE);
+            mBinding.tvMeasureResult.setText("长度：" + measureResponse.getLength());
+            mBinding.tvData.setText(TimeUtils.formatYMD(System.currentTimeMillis()));
+            mBinding.tvAddr.setText(addr);
+            mBinding.tvCall.setText(SharedPreferencesUtils.getStringValue(getContext(), "phone", ""));
+            mBinding.tvPos.setText(latitude + ", " + longitude);
+            mBinding.tvCompany.setText(GlobalDataManager.getInstance().getUserInfo().getCompanyName());
+            mBinding.tvName.setText(GlobalDataManager.getInstance().getUserInfo().getUserName());
+
+        }
     }
 }

@@ -44,9 +44,11 @@ public class LoginActivity extends BaseActivity {
         StatusBarUtils.compatStatusBarForM(this, false, color);
         binding = UserActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        String phone = SharedPreferencesUtils.getStringValue(getContext(), "phone", "");
+        if (!TextUtils.isEmpty(phone)) {
+            binding.etPhone.setText(phone);
+        }
         setListener();
-        binding.etPhone.setText("13112341234");
-        binding.etPwd.setText("123456");
     }
 
     public void setListener() {
@@ -106,13 +108,13 @@ public class LoginActivity extends BaseActivity {
                         saveData(loginUserInfoDTO);
                         if (loginUserInfoDTO.getSettings().isNeedResetPwd()) {
                             ARouter.getInstance().build(ArouterConfig.User.RESET_PWD)
-                                    .withString("phone",binding.etPhone.getText().toString())
+                                    .withString("phone", binding.etPhone.getText().toString())
                                     .navigation();
                         } else {
                             ARouter.getInstance().build(ArouterConfig.Main.MAIN)
                                     .navigation();
                         }
-                        SharedPreferencesUtils.setStringValue(getContext(),"phone",binding.etPhone.getText().toString());
+                        SharedPreferencesUtils.setStringValue(getContext(), "phone", binding.etPhone.getText().toString());
                         finish();
                     }
                 });

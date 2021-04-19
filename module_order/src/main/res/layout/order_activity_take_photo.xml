@@ -220,7 +220,6 @@
                                     android:layout_marginLeft="@dimen/arch_dp_10"
                                     android:ellipsize="end"
                                     android:singleLine="true"
-                                    android:text="15011447166"
                                     android:textColor="@color/arch_white"
                                     android:textSize="14dp" />
                             </LinearLayout>

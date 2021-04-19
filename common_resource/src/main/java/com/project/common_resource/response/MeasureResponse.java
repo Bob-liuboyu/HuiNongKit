@@ -10,6 +10,9 @@ import java.util.List;
  * @description: 测量返回结果
  */
 public class MeasureResponse implements Serializable {
+    public static final int CODE_SUCCESS = 1;
+    public static final int CODE_WARNING = 2;
+    public static final int CODE_ERROR = 0;
     private String id;            //Y	每头猪一个ID
     private int status;        //int	Y	1：成功；2：警告；0：异常；
     private float weight;        //float	Y

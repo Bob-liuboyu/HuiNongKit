@@ -88,7 +88,7 @@
                     android:gravity="center|left"
                     android:paddingRight="@dimen/arch_dp_15"
                     android:singleLine="true"
-                    android:text="@{model.claimId}"
+                    android:text="@{model.insureId}"
                     android:textColor="#1B1B1B"
                     android:textSize="15sp" />
 

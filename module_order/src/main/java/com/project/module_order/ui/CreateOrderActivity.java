@@ -364,6 +364,7 @@ public class CreateOrderActivity extends BaseActivity {
         intent.putExtra("latitude", mLocation.getLatitude() + "");
         intent.putExtra("longitude", mLocation.getLongitude() + "");
         intent.putExtra("pigId", pigId);
+        intent.putExtra("addr", mAddresses.get(0).getAddressLine(0).toString());
         startActivityForResult(intent, RESULT_MEASURE);
     }
 
