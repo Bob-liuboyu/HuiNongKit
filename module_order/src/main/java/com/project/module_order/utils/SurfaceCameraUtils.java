@@ -9,9 +9,11 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 import android.view.PixelCopy;
+import android.view.SurfaceView;
 
 import com.project.arch_repo.utils.ImageMaskUtil;
 import com.project.common_resource.TakePhotoModel;
+import com.project.module_order.view.CameraSurfaceView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -67,6 +69,42 @@ public class SurfaceCameraUtils {
 
 
     public static TakePhotoModel takePhoto(final Context context, final GLSurfaceView surfaceView, final Bitmap maskBitmap) {
+        final String filename = generateFilename();
+        TakePhotoModel model = new TakePhotoModel();
+        model.setPath(filename);
+        /*ArSceneView view = fragment.getArSceneView();*/
+        // Create a bitmap the size of the scene view.
+        final Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(),
+                Bitmap.Config.ARGB_8888);
+        // Create a handler thread to offload the processing of the image.
+        final HandlerThread handlerThread = new HandlerThread("PixelCopier");
+        handlerThread.start();
+//        final Bitmap[] result = new Bitmap[1];
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            PixelCopy.request(surfaceView, bitmap, new PixelCopy.OnPixelCopyFinishedListener() {
+                @Override
+                public void onPixelCopyFinished(int copyResult) {
+                    if (copyResult == PixelCopy.SUCCESS) {
+                        try {
+//                            result[0] = ImageMaskUtil.createWaterMaskLeftTop(context, bitmap, maskBitmap, 100, 100);
+                            saveBitmapToDisk(ImageMaskUtil.createWaterMaskLeftTop(context, bitmap, maskBitmap, 0, 0), filename);
+                            return;
+                        } catch (Exception e) {
+                            Log.e(TAG, e.getMessage());
+                            return;
+                        }
+                    } else {
+                        Log.e(TAG, "Failed to copyPixels: " + copyResult);
+                    }
+                    handlerThread.quitSafely();
+                }
+            }, new Handler(handlerThread.getLooper()));
+        }
+        model.setBitmap(bitmap);
+        return model;
+    }
+
+    public static TakePhotoModel takePhoto(final Context context, final SurfaceView surfaceView, final Bitmap maskBitmap) {
         final String filename = generateFilename();
         TakePhotoModel model = new TakePhotoModel();
         model.setPath(filename);

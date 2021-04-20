@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.google.gson.Gson;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DateTimeUtils;
 import com.project.arch_repo.utils.DisplayUtils;
@@ -42,6 +41,7 @@ import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
 import com.project.module_order.databinding.OrderActivityCreateBinding;
 import com.project.module_order.source.impl.OrderRepositoryImpl;
+import com.project.module_order.test.CameraActivity2;
 import com.xxf.arch.XXF;
 import com.xxf.arch.dialog.IResultDialog;
 import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
@@ -356,7 +356,7 @@ public class CreateOrderActivity extends BaseActivity {
             return;
         }
 
-        Intent intent = new Intent(this, TakePhotoActivity.class);
+        Intent intent = new Intent(this, TakePhotoNoDepthActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("mButtonItems", (Serializable) currentMeasureWay.getDetails());
         intent.putExtras(bundle);
@@ -395,6 +395,7 @@ public class CreateOrderActivity extends BaseActivity {
         }
         LoginResDTO.UserInfoBean info = GlobalDataManager.getInstance().getUserInfo();
         requestModel.setClaimName(info.getUserName());
+        requestModel.setInsureName(binding.tvName.getText().toString());
         requestModel.setClaimType(claimType);
         requestModel.setClaimUserId(GlobalDataManager.getInstance().getUserInfo().getUserId());
         requestModel.setInsureStartTime(binding.tvDateStart.getText().toString());
@@ -469,14 +470,14 @@ public class CreateOrderActivity extends BaseActivity {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mLocation = locationManager.getLastKnownLocation(locationProvider);
+            mLocation = getLastKnownLocation(locationManager);
             if (mLocation != null) {
                 Log.v("TAG", "获取上次的位置-经纬度：" + mLocation.getLongitude() + "   " + mLocation.getLatitude());
                 getAddress(mLocation);
 
             } else {
                 //监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
-                locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
+                locationManager.requestLocationUpdates(locationProvider, 300, 1, locationListener);
             }
         } else {
             mLocation = locationManager.getLastKnownLocation(locationProvider);
@@ -488,6 +489,22 @@ public class CreateOrderActivity extends BaseActivity {
                 locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
             }
         }
+    }
+
+    private Location getLastKnownLocation(LocationManager locationManager) {
+        List<String> providers = locationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            @SuppressLint("MissingPermission") Location l = locationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+        return bestLocation;
     }
 
     private LocationListener locationListener = new LocationListener() {

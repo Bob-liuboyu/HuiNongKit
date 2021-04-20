@@ -26,7 +26,7 @@ public class CameraUtils {
      * 打开相机，默认打开前置相机
      * @param expectFps
      */
-    public static void openFrontalCamera(int expectFps) {
+    public static void openBackalCamera(int expectFps) {
         if (mCamera != null) {
             throw new RuntimeException("camera already initialized!");
         }
@@ -34,7 +34,7 @@ public class CameraUtils {
         int numCameras = Camera.getNumberOfCameras();
         for (int i = 0; i < numCameras; i++) {
             Camera.getCameraInfo(i, info);
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 mCamera = Camera.open(i);
                 mCameraID = info.facing;
                 break;
@@ -53,6 +53,7 @@ public class CameraUtils {
         Camera.Parameters parameters = mCamera.getParameters();
         mCameraPreviewFps = CameraUtils.chooseFixedPreviewFps(parameters, expectFps * 1000);
         parameters.setRecordingHint(true);
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         mCamera.setParameters(parameters);
         setPreviewSize(mCamera, CameraUtils.DEFAULT_WIDTH, CameraUtils.DEFAULT_HEIGHT);
         setPictureSize(mCamera, CameraUtils.DEFAULT_WIDTH, CameraUtils.DEFAULT_HEIGHT);
@@ -358,5 +359,23 @@ public class CameraUtils {
      */
     public static int getCameraPreviewThousandFps() {
         return mCameraPreviewFps;
+    }
+
+    /**
+     * 实现自动对焦
+     */
+    public static void autoFocus(){
+        if(mCamera == null){
+            return;
+        }
+        mCamera.autoFocus(new Camera.AutoFocusCallback() {
+            @Override
+            public void onAutoFocus(boolean success, Camera camera) {
+                if (success) {
+                    camera.startPreview();
+                    camera.cancelAutoFocus();//只有加上了这一句，才会自动对焦。
+                }
+            }
+        });
     }
 }

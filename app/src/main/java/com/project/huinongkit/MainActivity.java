@@ -68,6 +68,10 @@ public class MainActivity extends BaseTitleBarActivity {
         mBinding.tvHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(mBinding.mViewPager.getCurrentItem() == 0){
+                    mainFragment.refreshData();
+                    return;
+                }
                 mBinding.mViewPager.setCurrentItem(0);
                 mBinding.tvHome.setSelected(true);
                 mBinding.tvMine.setSelected(false);
@@ -92,10 +96,10 @@ public class MainActivity extends BaseTitleBarActivity {
 
     @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     public void showCamera() {
-        if (!isHuawei()) {
-            ToastUtils.showToast("当前应用只支持华为设备！");
-            return;
-        }
+//        if (!isHuawei()) {
+//            ToastUtils.showToast("当前应用只支持华为设备！");
+//            return;
+//        }
         ARouter.getInstance().build(ArouterConfig.Order.ORDER_CREATE)
                 .navigation(this, CODE_REQUEST_CREATE);
     }

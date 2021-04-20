@@ -35,7 +35,7 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        CameraUtils.openFrontalCamera(CameraUtils.DESIRED_PREVIEW_FPS);
+        CameraUtils.openBackalCamera(CameraUtils.DESIRED_PREVIEW_FPS);
     }
 
     @Override

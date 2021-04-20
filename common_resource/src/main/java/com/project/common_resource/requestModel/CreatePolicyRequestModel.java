@@ -21,6 +21,7 @@ public class CreatePolicyRequestModel implements Serializable {
     private String claimName;
     private String insureStartTime;
     private String insureEndTime;
+    private String insureName;
     private String token;
     private List<PhotoInfoEntity> photoInfo;
     public String getInsureEndTime() {
@@ -57,6 +58,14 @@ public class CreatePolicyRequestModel implements Serializable {
 
     public String getPhone() {
         return phone;
+    }
+
+    public String getInsureName() {
+        return insureName;
+    }
+
+    public void setInsureName(String insureName) {
+        this.insureName = insureName;
     }
 
     public void setPhone(String phone) {
