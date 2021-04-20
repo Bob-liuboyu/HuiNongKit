@@ -66,6 +66,7 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
     private String latitude;
     private String longitude;
     private long pigId;
+    private String category;
     private String addr;
     private CameraPreview preview;
     private Camera camera;
@@ -85,12 +86,16 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
         maskBitmap = getBitmap(this, R.mipmap.logo_mask_full, DisplayUtils.getRealScreenSize(this).x, DisplayUtils.getRealScreenSize(this).y);
         setContentView(mBinding.getRoot());
         initView();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showPopupWindow(R.mipmap.sample_pig);
-            }
-        }, 200);
+        //能繁母猪，不需要显示这个
+        if (category.equals("0")) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showPopupWindow(R.mipmap.sample_pig);
+                }
+            }, 200);
+
+        }
 
     }
 
@@ -106,7 +111,9 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
         latitude = getIntent().getStringExtra("latitude");
         longitude = getIntent().getStringExtra("longitude");
         addr = getIntent().getStringExtra("addr");
+        category = getIntent().getStringExtra("category");
         pigId = getIntent().getLongExtra("pigId", 0);
+        mButtonItems.get(0).setSelect(true);
         mBinding.rvPhotos.setAdapter(mBtnAdapter = new TakePhotoBtnAdapter());
         mBtnAdapter.bindData(true, mButtonItems);
         mBtnAdapter.setOnItemClickListener(new OnItemClickListener() {
@@ -120,9 +127,19 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
                 currentBtnIndex = index;
                 if (mButtonItems.get(currentBtnIndex).getName().contains("脸")) {
                     showPopupWindow(R.mipmap.sample_pig_face);
+                } else if (mButtonItems.get(currentBtnIndex).getName().contains("长") || mButtonItems.get(currentBtnIndex).getName().contains("重")) {
+                    //能繁母猪，不需要显示这个
+                    if (category.equals("0")) {
+                        showPopupWindow(R.mipmap.sample_pig);
+                    }
                 }
+
+                updateLine();
             }
         });
+
+        updateLine();
+
         mBinding.ivTake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,7 +250,10 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
                 if (mButtonItems.get(currentBtnIndex).getName().contains("脸")) {
                     showPopupWindow(R.mipmap.sample_pig_face);
                 } else {
-                    showPopupWindow(R.mipmap.sample_pig);
+                    //能繁母猪，不需要显示这个
+                    if (category.equals("0")) {
+                        showPopupWindow(R.mipmap.sample_pig);
+                    }
                 }
             }
         });
@@ -269,6 +289,16 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
 //        }
 //    }
 
+
+    private void updateLine() {
+        // 0:育肥猪 1：能繁母猪
+        if (category.equals("0") && (mButtonItems.get(currentBtnIndex).getName().contains("长") || mButtonItems.get(currentBtnIndex).getName().contains("重"))) {
+            mBinding.lineLayout.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.lineLayout.setVisibility(View.GONE);
+        }
+    }
+
     private void reset() {
         for (LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean takePhotoButtonItem : mButtonItems) {
             takePhotoButtonItem.setSelect(false);
@@ -292,11 +322,7 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
             mBtnAdapter.notifyDataSetChanged();
         }
 
-        if (mButtonItems.get(currentBtnIndex).getName().contains("身")) {
-            mBinding.lineLayout.setVisibility(View.VISIBLE);
-        } else {
-            mBinding.lineLayout.setVisibility(View.GONE);
-        }
+        updateLine();
     }
 
     private void canNext() {
