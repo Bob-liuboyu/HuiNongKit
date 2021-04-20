@@ -367,7 +367,7 @@
                         android:background="@drawable/base_rect_btn_bg_selector"
                         android:enabled="false"
                         android:gravity="center"
-                        android:text="下一只"
+                        android:text="下一头"
                         android:textColor="#ffffff"
                         android:textSize="@dimen/arch_dp_13" />
                 </LinearLayout>

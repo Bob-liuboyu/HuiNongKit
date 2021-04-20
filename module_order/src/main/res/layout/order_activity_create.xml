@@ -48,10 +48,10 @@
                 android:layout_alignParentRight="true"
                 android:gravity="center"
                 android:maxLines="1"
-                android:visibility="gone"
                 android:paddingRight="@dimen/arch_dp_15"
                 android:textColor="#333333"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <android.support.v4.widget.NestedScrollView
@@ -107,15 +107,32 @@
                                 android:textColor="#999999"
                                 android:textSize="@dimen/arch_dp_14" />
 
-                            <EditText
-                                android:id="@+id/tv_name"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@color/arch_color_translate"
-                                android:hint="请输入保险人姓名"
-                                android:text="@{model.insureName}"
-                                android:textColor="#333333"
-                                android:textSize="@dimen/arch_dp_14" />
+                                android:orientation="horizontal">
+
+                                <EditText
+                                    android:id="@+id/tv_name"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@color/arch_color_translate"
+                                    android:hint="请输入保险人姓名"
+                                    android:text="@{model.insureName}"
+                                    android:textColor="#333333"
+                                    android:textSize="@dimen/arch_dp_14" />
+
+                                <TextView
+                                    android:id="@+id/tv_choose"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="点击选择"
+                                    android:textColor="#0073BC"
+                                    android:textSize="@dimen/arch_dp_13" />
+                            </LinearLayout>
+
+
                         </LinearLayout>
 
                         <View
@@ -180,22 +197,15 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:ellipsize="end"
                                 android:background="@color/arch_color_translate"
+                                android:ellipsize="end"
                                 android:gravity="center|left"
-                                android:hint="请输入/选择保险单号"
+                                android:hint="请输入保险单号"
                                 android:singleLine="true"
                                 android:text="@{model.insureId}"
                                 android:textColor="#333333"
                                 android:textSize="@dimen/arch_dp_14" />
 
-                            <TextView
-                                android:id="@+id/tv_choose"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="点击选择"
-                                android:textColor="#0073BC"
-                                android:textSize="@dimen/arch_dp_13" />
                         </LinearLayout>
 
                         <View
@@ -413,7 +423,6 @@
                                     android:ellipsize="end"
                                     android:gravity="center|left"
                                     android:singleLine="true"
-                                    android:text="10只"
                                     android:textColor="#333333"
                                     android:textSize="@dimen/arch_dp_14" />
                             </LinearLayout>

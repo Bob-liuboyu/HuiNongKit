@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.project.arch_repo.base.activity.BaseTitleBarActivity;
 import com.project.common_resource.response.InsureListResDTO;
@@ -37,8 +38,9 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
     private OrderActivityChoosePolicyBinding mBinding;
     private ChoosePolicyListAdapter mAdapter;
     private int currentPageIndex = 1;
-    private String currentWord;
     private boolean hasNext;
+    @Autowired
+    String words;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +51,11 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
         mBinding = OrderActivityChoosePolicyBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         initView();
-        initData(currentWord);
+        initData(words);
     }
 
     private void initView() {
+        mBinding.mEditText.setText(words);
         TextView emptyTextView = mBinding.layoutEmpty.findViewById(R.id.tv_empty_text);
         emptyTextView.setText("没有可用的理赔登记信息");
         mBinding.recyclerView.setLinearLayout();
@@ -72,8 +75,8 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    currentWord = mBinding.mEditText.getText().toString();
-                    initData(currentWord);
+                    words = mBinding.mEditText.getText().toString();
+                    initData(words);
                     return true;
                 }
                 return false;
@@ -84,13 +87,13 @@ public class ChoosePolicyActivity extends BaseTitleBarActivity {
             @Override
             public void onRefresh() {
                 currentPageIndex = 1;
-                initData(currentWord);
+                initData(words);
             }
 
             @Override
             public void onLoadMore() {
                 currentPageIndex = currentPageIndex + 1;
-                initData(currentWord);
+                initData(words);
             }
         });
     }

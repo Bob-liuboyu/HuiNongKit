@@ -214,6 +214,7 @@ public class CreateOrderActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 ARouter.getInstance().build(ArouterConfig.Order.ORDER_CHOOSE)
+                        .withString("words",binding.tvName.getText().toString())
                         .navigation(CreateOrderActivity.this, RESULT_CHOOSE);
             }
         });
@@ -320,7 +321,7 @@ public class CreateOrderActivity extends BaseActivity {
                     mAdapter.bindData(true, result);
                     binding.tvTitlePhotos.setVisibility(View.VISIBLE);
                     binding.llCount.setVisibility(View.VISIBLE);
-                    binding.tvCount.setText(result.size() + "只");
+                    binding.tvCount.setText(result.size() + "头");
                     isFromPhoto = true;
                 }
 

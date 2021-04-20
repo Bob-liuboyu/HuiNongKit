@@ -286,7 +286,7 @@
                         android:drawableTop="@mipmap/icon_left"
                         android:gravity="center"
                         android:paddingLeft="@dimen/arch_dp_15"
-                        android:text="上一只"
+                        android:text="上一头"
                         android:textColor="@color/arch_white" />
 
                     <android.support.v7.widget.RecyclerView
@@ -304,7 +304,7 @@
                         android:drawableTop="@mipmap/icon_right"
                         android:gravity="center"
                         android:paddingRight="@dimen/arch_dp_15"
-                        android:text="下一只"
+                        android:text="下一头"
                         android:textColor="@color/arch_white" />
                 </LinearLayout>
                 <TextView

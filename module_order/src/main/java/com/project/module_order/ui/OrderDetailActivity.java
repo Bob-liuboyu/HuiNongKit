@@ -77,7 +77,7 @@ public class OrderDetailActivity extends CreateOrderActivity {
         } else {
             binding.lineCount.setVisibility(View.VISIBLE);
             binding.llCount.setVisibility(View.VISIBLE);
-            binding.tvCount.setText(list.size() + "只");
+            binding.tvCount.setText(list.size() + "头");
         }
         binding.llMeasureWay.setVisibility(View.GONE);
         binding.tvMeasureWay.setVisibility(View.VISIBLE);

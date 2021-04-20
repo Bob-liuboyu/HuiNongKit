@@ -67,7 +67,7 @@ public class PrePhotosActivity extends BaseActivity {
         mAdapter = new OrderPhotoListAdapter();
         mBinding.ivPhoto.setAdapter(picViewPagerAdapter = new PicViewPagerAdapter(list.get(index).getPigInfo()));
         mBinding.tvTitle.setText("(" + (currentPhotoIndex + 1) + "/" + list.get(index).getPigInfo().size() + ")张");
-        mBinding.tvCount.setText("(" + (index + 1) + "/" + list.size() + ")只");
+        mBinding.tvCount.setText("(" + (index + 1) + "/" + list.size() + ")头");
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, BaseViewHolder holder, View itemView, int i) {
@@ -100,7 +100,7 @@ public class PrePhotosActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (index - 1 < 0) {
-                    ToastUtils.showToast("已经是第一只了");
+                    ToastUtils.showToast("已经是第一头了");
                     return;
                 }
                 index--;
@@ -111,7 +111,7 @@ public class PrePhotosActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (index + 1 >= list.size()) {
-                    ToastUtils.showToast("已经是最后一只了");
+                    ToastUtils.showToast("已经是最后一头了");
                     return;
                 }
                 index++;
@@ -202,7 +202,7 @@ public class PrePhotosActivity extends BaseActivity {
 
     private void updatePage(int index) {
         currentPhotoIndex = 0;
-        mBinding.tvCount.setText("(" + (index + 1) + "/" + list.size() + ")只");
+        mBinding.tvCount.setText("(" + (index + 1) + "/" + list.size() + ")头");
         mAdapter.bindData(true, list.get(index).getPigInfo());
         mBinding.setModel(mAdapter.getItem(0));
         mBinding.ivPhoto.setCurrentItem(index);
