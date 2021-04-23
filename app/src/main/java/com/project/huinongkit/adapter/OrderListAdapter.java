@@ -46,8 +46,10 @@ public class OrderListAdapter extends BaseBindableAdapter<MainItemOrderBinding, 
         // 0:待处理 1：已理赔
         if (orderModel.getClaimStatus() == PolicyListResDTO.STATUS_0) {
             binding.tvStatus.setSelected(true);
+            binding.tvStatus.setText("待处理");
         } else {
             binding.tvStatus.setSelected(false);
+            binding.tvStatus.setText("已理赔");
         }
     }
 }
