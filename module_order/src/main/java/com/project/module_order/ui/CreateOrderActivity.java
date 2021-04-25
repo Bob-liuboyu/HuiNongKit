@@ -124,7 +124,6 @@ public class CreateOrderActivity extends BaseActivity {
             currentMeasureWay = measureWays.get(0);
         }
         binding.tvMaster.setText(GlobalDataManager.getInstance().getUserInfo().getUserName());
-        pigId = generatePigId();
     }
 
     private void createMeasureWayItems() {
@@ -214,7 +213,7 @@ public class CreateOrderActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 ARouter.getInstance().build(ArouterConfig.Order.ORDER_CHOOSE)
-                        .withString("words",binding.tvName.getText().toString())
+                        .withString("words", binding.tvName.getText().toString())
                         .navigation(CreateOrderActivity.this, RESULT_CHOOSE);
             }
         });
@@ -313,6 +312,7 @@ public class CreateOrderActivity extends BaseActivity {
                 binding.tvName.setEnabled(false);
                 binding.tvCode.setEnabled(false);
             } else if (requestCode == RESULT_MEASURE) {
+                pigId = data.getLongExtra("pigId", 0);
                 List<PolicyDetailResDTO.ClaimListBean> forResult = (List<PolicyDetailResDTO.ClaimListBean>) data.getSerializableExtra("result");
                 if (forResult != null && forResult.size() > 0) {
                     result.addAll(forResult);
@@ -364,8 +364,9 @@ public class CreateOrderActivity extends BaseActivity {
         intent.putExtra("orderId", binding.tvCode.getText().toString());
         intent.putExtra("latitude", mLocation.getLatitude() + "");
         intent.putExtra("longitude", mLocation.getLongitude() + "");
-        intent.putExtra("pigId", pigId);
-        intent.putExtra("addr", mAddresses.get(0).getAddressLine(0).toString());
+        if (mAddresses != null && mAddresses.get(0) != null && mAddresses.get(0).getAddressLine(0) != null) {
+            intent.putExtra("addr", mAddresses.get(0).getAddressLine(0).toString());
+        }
         intent.putExtra("category", currentCategory.getClaimId());
         startActivityForResult(intent, RESULT_MEASURE);
     }

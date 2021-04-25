@@ -5,6 +5,7 @@ import com.project.arch_repo.http.GlobalGsonConvertInterceptor;
 import com.project.arch_repo.http.httpmodel.ResponseDTO;
 import com.project.common_resource.response.InsureListResDTO;
 import com.project.common_resource.response.MeasureResponse;
+import com.project.common_resource.response.MeasureResponse2;
 import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.config_repo.ApiConfig;
 import com.xxf.arch.annotation.BaseUrl;
@@ -24,7 +25,7 @@ import retrofit2.http.POST;
  * @date: 2021/3/9 5:05 PM
  * @description:
  */
-@BaseUrl(ApiConfig.PicBaseUrl)
+@BaseUrl(ApiConfig.BaseUrl)
 @GsonInterceptor(GlobalGsonConvertInterceptor.class)
 public interface PicMeasureApiService {
     /**
@@ -48,4 +49,7 @@ public interface PicMeasureApiService {
                                         @Field("id") long id,
                                         @Field("longitude") String longitude,
                                         @Field("latitude") String latitude);
+
+    @POST("claim/getModelResult")
+    Observable<MeasureResponse2> measure2(@Body JsonObject body);
 }

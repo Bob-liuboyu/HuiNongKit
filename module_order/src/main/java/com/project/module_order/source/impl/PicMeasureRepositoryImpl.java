@@ -9,6 +9,7 @@ import com.project.common_resource.requestModel.CreatePolicyRequestModel;
 import com.project.common_resource.requestModel.MeasurePicResponse;
 import com.project.common_resource.response.InsureListResDTO;
 import com.project.common_resource.response.MeasureResponse;
+import com.project.common_resource.response.MeasureResponse2;
 import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.module_order.api.OrderApiService;
 import com.project.module_order.api.PicMeasureApiService;
@@ -51,5 +52,28 @@ public class PicMeasureRepositoryImpl implements IPicMeasureDataSource {
         }
         return XXF.getApiService(PicMeasureApiService.class)
                 .measure(model.getDepthImage(), model.getImage(), model.getScope_dir(), model.getBaodan(), model.getId(), model.getLongitude(), model.getLatitude());
+    }
+
+    @Override
+    public Observable<MeasureResponse2> measure2(String claimType,
+                                                 String measureType,
+                                                 String token,
+                                                 String depthImage,
+                                                 String longitude,
+                                                 String latitude,
+                                                 String insureId,
+                                                 String imgBase64) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("claimType",claimType);
+        jsonObject.addProperty("measureType",measureType);
+        jsonObject.addProperty("token",token);
+        jsonObject.addProperty("depthImage",depthImage);
+        jsonObject.addProperty("longitude",longitude);
+        jsonObject.addProperty("latitude",latitude);
+        jsonObject.addProperty("insureId",insureId);
+        jsonObject.addProperty("imgBase64",imgBase64);
+
+        return XXF.getApiService(PicMeasureApiService.class)
+                .measure2(jsonObject);
     }
 }

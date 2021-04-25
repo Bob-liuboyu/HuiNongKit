@@ -25,6 +25,7 @@ import com.project.common_resource.global.GlobalDataManager;
 import com.project.common_resource.requestModel.MeasurePicResponse;
 import com.project.common_resource.response.LoginResDTO;
 import com.project.common_resource.response.MeasureResponse;
+import com.project.common_resource.response.MeasureResponse2;
 import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.config_repo.ArouterConfig;
 import com.project.module_order.R;
@@ -112,7 +113,6 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
         longitude = getIntent().getStringExtra("longitude");
         addr = getIntent().getStringExtra("addr");
         category = getIntent().getStringExtra("category");
-        pigId = getIntent().getLongExtra("pigId", 0);
         mButtonItems.get(0).setSelect(true);
         mBinding.rvPhotos.setAdapter(mBtnAdapter = new TakePhotoBtnAdapter());
         mBtnAdapter.bindData(true, mButtonItems);
@@ -162,20 +162,17 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
                 photoModel.setName(mButtonItems.get(currentBtnIndex).getName());
 
                 if (mButtonItems.get(currentBtnIndex).getColumn().equals("pigBody")) {
-                    final MeasurePicResponse request = new MeasurePicResponse();
-                    request.setBaodan(orderId);
-                    request.setDepthImage("depthImage");
-                    request.setId(pigId);
-                    request.setScope_dir(null);
-                    request.setLatitude(latitude);
-                    request.setLongitude(longitude);
-                    request.setImage(ImageUtils.bitmapToString(model.getBitmap()));
-                    if (request == null || photos == null || photoModel == null) {
-                        return;
-                    }
-                    picMeasure(request, new Consumer<MeasureResponse>() {
+                    picMeasure2(mButtonItems.get(currentBtnIndex).getColumn(),
+                            category,
+                            GlobalDataManager.getInstance().getToken(),
+                            "depthImage",
+                            longitude,
+                            latitude,
+                            orderId,
+                            ImageUtils.bitmapToString(model.getBitmap()),
+                            new Consumer<MeasureResponse2>() {
                         @Override
-                        public void accept(MeasureResponse measureResponse) throws Exception {
+                        public void accept(MeasureResponse2 measureResponse) throws Exception {
                             photoModel.setResults(new Gson().toJson(measureResponse));
                             photos.add(photoModel);
                             checkNextButton();
@@ -269,6 +266,7 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
         result.add(pig);
         Intent intent = getIntent();
         intent.putExtra("result", (Serializable) result);
+        intent.putExtra("pigId", pigId);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -376,19 +374,49 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
                 .subscribe(consumer);
     }
 
-    private void dealMeasureData(MeasureResponse measureResponse) {
-        if (measureResponse == null) {
+    private void picMeasure2(String claimType,
+                             String measureType,
+                             String token,
+                             String depthImage,
+                             String longitude,
+                             String latitude,
+                             String insureId,
+                             String imgBase64, Consumer<MeasureResponse2> consumer) {
+        PicMeasureRepositoryImpl.getInstance()
+                .measure2(claimType,
+                        measureType,
+                        token,
+                        depthImage,
+                        longitude,
+                        latitude,
+                        insureId,
+                        imgBase64)
+                .compose(XXF.<MeasureResponse2>bindToLifecycle(this))
+                .compose(XXF.<MeasureResponse2>bindToErrorNotice())
+                .compose(XXF.<MeasureResponse2>bindToProgressHud(
+                        new ProgressHUDTransformerImpl.Builder(this)
+                                .setLoadingNotice("测量中～")))
+                .subscribe(consumer);
+    }
+
+    private void dealMeasureData(MeasureResponse2 measureResponse) {
+        if (measureResponse == null || measureResponse.getData() == null) {
             return;
         }
-
-        if (measureResponse.getStatus() != MeasureResponse.CODE_SUCCESS) {
+        pigId = measureResponse.getData().getPigId();
+        if (!measureResponse.isSuccess()) {
             mBinding.llWarning.setVisibility(View.VISIBLE);
-            mBinding.tvWarning.setText(measureResponse.getMsg());
+            mBinding.tvWarning.setText(measureResponse.getMessage());
             mBinding.mScrollView.setVisibility(View.INVISIBLE);
         } else {
+            String results = measureResponse.getData().getResults();
+            MeasureResponse response = new Gson().fromJson(results, MeasureResponse.class);
+            if(response == null){
+                return;
+            }
             mBinding.llWarning.setVisibility(View.GONE);
             mBinding.mScrollView.setVisibility(View.VISIBLE);
-            mBinding.tvMeasureResult.setText("长度：" + measureResponse.getLength());
+            mBinding.tvMeasureResult.setText("长度：" + response.getWeight());
             mBinding.tvData.setText(TimeUtils.formatYMD(System.currentTimeMillis()));
             mBinding.tvAddr.setText(addr);
             mBinding.tvCall.setText(SharedPreferencesUtils.getStringValue(getContext(), "phone", ""));

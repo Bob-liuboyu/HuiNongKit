@@ -49,7 +49,7 @@ public class OrderListAdapter extends BaseBindableAdapter<MainItemOrderBinding, 
             binding.tvStatus.setText("待处理");
         } else {
             binding.tvStatus.setSelected(false);
-            binding.tvStatus.setText("已理赔");
+            binding.tvStatus.setText("已处理");
         }
     }
 }
