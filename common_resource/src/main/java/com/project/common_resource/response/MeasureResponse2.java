@@ -1,7 +1,6 @@
 package com.project.common_resource.response;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @fileName: MeasureResponse
@@ -49,7 +48,7 @@ public class MeasureResponse2 implements Serializable {
 
     public static class ResultEntry{
         private int pigId;
-        private String results;
+        private MeasureResponse results;
 
         public int getPigId() {
             return pigId;
@@ -59,11 +58,11 @@ public class MeasureResponse2 implements Serializable {
             this.pigId = pigId;
         }
 
-        public String getResults() {
+        public MeasureResponse getResults() {
             return results;
         }
 
-        public void setResults(String results) {
+        public void setResults(MeasureResponse results) {
             this.results = results;
         }
     }

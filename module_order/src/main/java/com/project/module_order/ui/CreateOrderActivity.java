@@ -362,8 +362,10 @@ public class CreateOrderActivity extends BaseActivity {
         bundle.putSerializable("mButtonItems", (Serializable) currentMeasureWay.getDetails());
         intent.putExtras(bundle);
         intent.putExtra("orderId", binding.tvCode.getText().toString());
-        intent.putExtra("latitude", mLocation.getLatitude() + "");
-        intent.putExtra("longitude", mLocation.getLongitude() + "");
+        if(mLocation != null){
+            intent.putExtra("latitude", mLocation.getLatitude() + "");
+            intent.putExtra("longitude", mLocation.getLongitude() + "");
+        }
         if (mAddresses != null && mAddresses.get(0) != null && mAddresses.get(0).getAddressLine(0) != null) {
             intent.putExtra("addr", mAddresses.get(0).getAddressLine(0).toString());
         }

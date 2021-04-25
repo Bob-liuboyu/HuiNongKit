@@ -171,15 +171,15 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
                             orderId,
                             ImageUtils.bitmapToString(model.getBitmap()),
                             new Consumer<MeasureResponse2>() {
-                        @Override
-                        public void accept(MeasureResponse2 measureResponse) throws Exception {
-                            photoModel.setResults(new Gson().toJson(measureResponse));
-                            photos.add(photoModel);
-                            checkNextButton();
-                            canNext();
-                            dealMeasureData(measureResponse);
-                        }
-                    });
+                                @Override
+                                public void accept(MeasureResponse2 measureResponse) throws Exception {
+                                    photoModel.setResults(new Gson().toJson(measureResponse));
+                                    photos.add(photoModel);
+                                    checkNextButton();
+                                    canNext();
+                                    dealMeasureData(measureResponse);
+                                }
+                            });
                 } else {
                     photoModel.setResults(new Gson().toJson(new MeasureResponse()));
                     photos.add(photoModel);
@@ -409,9 +409,8 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
             mBinding.tvWarning.setText(measureResponse.getMessage());
             mBinding.mScrollView.setVisibility(View.INVISIBLE);
         } else {
-            String results = measureResponse.getData().getResults();
-            MeasureResponse response = new Gson().fromJson(results, MeasureResponse.class);
-            if(response == null){
+            MeasureResponse response = measureResponse.getData().getResults();
+            if (response == null) {
                 return;
             }
             mBinding.llWarning.setVisibility(View.GONE);
