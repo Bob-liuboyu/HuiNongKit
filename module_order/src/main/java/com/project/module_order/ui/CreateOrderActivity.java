@@ -41,7 +41,6 @@ import com.project.module_order.R;
 import com.project.module_order.adapter.OrderPhotosListAdapter;
 import com.project.module_order.databinding.OrderActivityCreateBinding;
 import com.project.module_order.source.impl.OrderRepositoryImpl;
-import com.project.module_order.test.CameraActivity2;
 import com.xxf.arch.XXF;
 import com.xxf.arch.dialog.IResultDialog;
 import com.xxf.arch.rxjava.transformer.ProgressHUDTransformerImpl;
@@ -93,7 +92,6 @@ public class CreateOrderActivity extends BaseActivity {
 
     private LoginResDTO.SettingsBean.CategoryBean currentCategory = null;
     private LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean currentMeasureWay = null;
-    private long pigId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +153,10 @@ public class CreateOrderActivity extends BaseActivity {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (isFromPhoto) {
+                        ToastUtils.showToast("当前状态不允许修改");
+                        return;
+                    }
                     for (int j = 0; j < binding.llMeasureWay.getChildCount(); j++) {
                         binding.llMeasureWay.getChildAt(j).setSelected(false);
                     }
@@ -191,6 +193,10 @@ public class CreateOrderActivity extends BaseActivity {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (isFromPhoto) {
+                        ToastUtils.showToast("当前状态不允许修改");
+                        return;
+                    }
                     for (int j = 0; j < binding.llPolicyCategory.getChildCount(); j++) {
                         binding.llPolicyCategory.getChildAt(j).setSelected(false);
                     }
@@ -251,7 +257,8 @@ public class CreateOrderActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //自动填写的数据，不允许修改
-                if (isFromChoose) {
+                if (isFromChoose || isFromPhoto) {
+                    ToastUtils.showToast("当前状态不允许修改");
                     return;
                 }
                 if (!TextUtils.isEmpty(binding.tvDateStart.getText().toString())) {
@@ -271,7 +278,8 @@ public class CreateOrderActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //自动填写的数据，不允许修改
-                if (isFromChoose) {
+                if (isFromChoose || isFromPhoto) {
+                    ToastUtils.showToast("当前状态不允许修改");
                     return;
                 }
                 if (!TextUtils.isEmpty(binding.tvDateEnd.getText().toString())) {
@@ -312,7 +320,6 @@ public class CreateOrderActivity extends BaseActivity {
                 binding.tvName.setEnabled(false);
                 binding.tvCode.setEnabled(false);
             } else if (requestCode == RESULT_MEASURE) {
-                pigId = data.getLongExtra("pigId", 0);
                 List<PolicyDetailResDTO.ClaimListBean> forResult = (List<PolicyDetailResDTO.ClaimListBean>) data.getSerializableExtra("result");
                 if (forResult != null && forResult.size() > 0) {
                     result.addAll(forResult);
@@ -362,7 +369,7 @@ public class CreateOrderActivity extends BaseActivity {
         bundle.putSerializable("mButtonItems", (Serializable) currentMeasureWay.getDetails());
         intent.putExtras(bundle);
         intent.putExtra("orderId", binding.tvCode.getText().toString());
-        if(mLocation != null){
+        if (mLocation != null) {
             intent.putExtra("latitude", mLocation.getLatitude() + "");
             intent.putExtra("longitude", mLocation.getLongitude() + "");
         }
@@ -421,7 +428,7 @@ public class CreateOrderActivity extends BaseActivity {
                 }
 
                 CreatePolicyRequestModel.PhotoInfoEntity pig = new CreatePolicyRequestModel.PhotoInfoEntity();
-                pig.setPigId(pigId + "");
+                pig.setPigId(claimListBean.getId());
                 if (mAddresses != null && mAddresses.get(0) != null && mAddresses.get(0).getAddressLine(0) != null) {
                     pig.setAddress(mAddresses.get(0).getAddressLine(0).toString());
                 }

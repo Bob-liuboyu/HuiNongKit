@@ -179,6 +179,7 @@ public class MainFragment extends BaseFragment {
     public void refreshData(){
         currentPageIndex = 1;
         mFilterModel = new SelectFilterModel();
+        mBinding.mEditText.setText("");
         initData(mFilterModel);
     }
 }

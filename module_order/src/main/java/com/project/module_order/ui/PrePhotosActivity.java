@@ -8,8 +8,6 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DisplayUtils;
-import com.project.arch_repo.utils.SharedPreferencesUtils;
-import com.project.common_resource.global.GlobalDataManager;
 import com.project.common_resource.response.MeasureResponse;
 import com.project.common_resource.response.PolicyDetailResDTO;
 import com.project.module_order.R;
@@ -171,13 +169,18 @@ public class PrePhotosActivity extends BaseActivity {
                 return;
             }
             if (measureResponse.getStatus() != MeasureResponse.CODE_SUCCESS) {
-                mBinding.llWarning.setVisibility(View.VISIBLE);
                 mBinding.llData.setVisibility(View.INVISIBLE);
-                mBinding.tvWarning.setText(measureResponse.getMsg());
+                if (!TextUtils.isEmpty(measureResponse.getMsg())) {
+                    mBinding.llWarning.setVisibility(View.VISIBLE);
+                    mBinding.tvWarning.setText(measureResponse.getMsg());
+                }else{
+                    mBinding.llWarning.setVisibility(View.INVISIBLE);
+                }
+
             } else {
                 mBinding.llWarning.setVisibility(View.INVISIBLE);
                 mBinding.llData.setVisibility(View.VISIBLE);
-                if (name.contains("长")||name.contains("猪身")) {
+                if (name.contains("长") || name.contains("猪身")) {
                     mBinding.tvMeasureResult.setVisibility(View.VISIBLE);
                     mBinding.tvMeasureResult.setText("长度：" + measureResponse.getLength());
                 } else if (name.contains("重")) {

@@ -6,6 +6,7 @@
         android:id="@+id/mRootView"
         android:layout_width="match_parent"
         android:layout_marginRight="@dimen/arch_dp_10"
+        android:background="#500073BC"
         android:layout_height="match_parent">
 
         <ImageView

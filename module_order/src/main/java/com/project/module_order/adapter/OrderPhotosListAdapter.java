@@ -36,7 +36,7 @@ public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyL
             return;
         }
         final OrderPhotoListAdapter adapter = new OrderPhotoListAdapter();
-        binding.recyclerView.post(new Runnable() {
+        binding.recyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 int screenWidth = DisplayUtils.getRealScreenSize(binding.recyclerView.getContext()).x;
@@ -48,11 +48,10 @@ public class OrderPhotosListAdapter extends BaseBindableAdapter<OrderItemPolicyL
                 binding.tvResult.setText(model.getWeight());
                 binding.tvIndex.setText((index + 1) + "");
             }
-        });
+        },200);
         binding.shadowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("list", (Serializable) getData());
                 bundle.putSerializable("model", (Serializable) model);

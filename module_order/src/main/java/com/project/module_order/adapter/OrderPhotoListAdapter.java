@@ -29,7 +29,7 @@ public class OrderPhotoListAdapter extends BaseBindableAdapter<OrderItemPolicyLi
     }
 
     @Override
-    public void onBindHolder(BaseViewHolder holder, OrderItemPolicyListPhotoBinding binding, @Nullable PolicyDetailResDTO.ClaimListBean.PigInfoBean model, int index) {
+    public void onBindHolder(BaseViewHolder holder, final OrderItemPolicyListPhotoBinding binding, @Nullable final PolicyDetailResDTO.ClaimListBean.PigInfoBean model, int index) {
         if (model == null) {
             return;
         }
@@ -42,14 +42,13 @@ public class OrderPhotoListAdapter extends BaseBindableAdapter<OrderItemPolicyLi
                 .transforms(new CenterCrop(), roundedCorners)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .skipMemoryCache(false);
-        Glide.with(getContext())
-                .asBitmap()
-                .load(model.getImgUrl())
-                .apply(coverRequestOptions)
+
+        Glide.with(getContext()).load(model.getImgUrl())
                 .into(binding.ivPhoto);
-        if(model.isSelect()){
-           binding.viewShadow.setVisibility(View.VISIBLE);
-        }else {
+
+        if (model.isSelect()) {
+            binding.viewShadow.setVisibility(View.VISIBLE);
+        } else {
             binding.viewShadow.setVisibility(View.GONE);
         }
     }

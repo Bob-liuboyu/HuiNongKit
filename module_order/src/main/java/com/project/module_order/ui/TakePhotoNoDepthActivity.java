@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -45,8 +44,11 @@ import com.xxf.view.utils.StatusBarUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 import static com.project.module_order.utils.ImageUtils.getBitmap;
 
@@ -230,6 +232,7 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
             public void onClick(View v) {
                 PolicyDetailResDTO.ClaimListBean pig = new PolicyDetailResDTO.ClaimListBean();
                 pig.setPigInfo(photos);
+                pig.setId(pigId + "");
                 result.add(pig);
                 photos.clear();
                 reset();
@@ -257,18 +260,40 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
     }
 
     private void commitPhotos() {
-        if (photos == null || photos.size() <= 0) {
+        if ((photos == null || photos.size() <= 0) && result.size() == 0) {
             finish();
             return;
         }
         PolicyDetailResDTO.ClaimListBean pig = new PolicyDetailResDTO.ClaimListBean();
+        pig.setId(pigId + "");
         pig.setPigInfo(photos);
         result.add(pig);
-        Intent intent = getIntent();
-        intent.putExtra("result", (Serializable) result);
-        intent.putExtra("pigId", pigId);
-        setResult(RESULT_OK, intent);
-        finish();
+
+        Observable.interval(0, 1, TimeUnit.SECONDS)
+                .take(3)
+                .map(new Function<Long, Long>() {
+                    @Override
+                    public Long apply(Long aLong) throws Exception {
+                        return 3 - aLong;
+                    }
+                })
+                .compose(XXF.<Long>bindToLifecycle(this))
+                .compose(XXF.<Long>bindToErrorNotice())
+                .compose(XXF.<Long>bindToProgressHud(
+                        new ProgressHUDTransformerImpl.Builder(this)
+                                .setLoadingNotice("图片处理中～")))
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        if (aLong <= 1) {
+                            Intent intent = getIntent();
+                            intent.putExtra("result", (Serializable) result);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    }
+                });
+
     }
 
 //    private void showPigTips() {
