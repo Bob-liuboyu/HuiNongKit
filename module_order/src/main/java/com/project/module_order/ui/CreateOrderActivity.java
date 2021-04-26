@@ -577,7 +577,8 @@ public class CreateOrderActivity extends BaseActivity {
      * 清空本地图片
      */
     private void clearLocalPhotos() {
-        FileUtils.deleteFiles(FILE_PATH);
+//        FileUtils.deleteFiles(FILE_PATH);
+        FileUtils.deleteFiles(getFilesDir().getAbsolutePath());
     }
 
     private void commitPolicy(CreatePolicyRequestModel requestModel) {

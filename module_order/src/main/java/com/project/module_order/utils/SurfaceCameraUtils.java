@@ -69,7 +69,7 @@ public class SurfaceCameraUtils {
 
 
     public static TakePhotoModel takePhoto(final Context context, final GLSurfaceView surfaceView, final Bitmap maskBitmap) {
-        final String filename = generateFilename();
+        final String filename = generateFilename(context);
         TakePhotoModel model = new TakePhotoModel();
         model.setPath(filename);
         /*ArSceneView view = fragment.getArSceneView();*/
@@ -105,7 +105,7 @@ public class SurfaceCameraUtils {
     }
 
     public static TakePhotoModel takePhoto(final Context context, final SurfaceView surfaceView, final Bitmap maskBitmap) {
-        final String filename = generateFilename();
+        final String filename = generateFilename(context);
         TakePhotoModel model = new TakePhotoModel();
         model.setPath(filename);
         /*ArSceneView view = fragment.getArSceneView();*/
@@ -145,8 +145,9 @@ public class SurfaceCameraUtils {
      *
      * @return
      */
-    private static String generateFilename() {
-        return FILE_PATH + System.currentTimeMillis() + ".jpg";
+    private static String generateFilename(Context context) {
+
+        return context.getFilesDir().getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg";
     }
 
     private static String saveBitmapToDisk(Bitmap bitmap, String filename) throws IOException {
