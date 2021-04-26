@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -257,6 +258,14 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
                 }
             }
         });
+
+        mBinding.surfaceview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBinding.mScrollView.setVisibility(View.INVISIBLE);
+                mBinding.llWarning.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     private void commitPhotos() {
@@ -342,6 +351,9 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
         if (currentBtnIndex < mButtonItems.size() - 1) {
             currentBtnIndex = currentBtnIndex + 1;
             mButtonItems.get(currentBtnIndex).setSelect(true);
+            if (mButtonItems.get(currentBtnIndex).getName().contains("脸") && "0".equals(category)) {
+                showPopupWindow(R.mipmap.sample_pig_face);
+            }
             mBtnAdapter.notifyDataSetChanged();
         }
 
@@ -383,6 +395,13 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
         ImagePopupWindow popupWindow = new ImagePopupWindow(this);
         popupWindow.setSrc(source);
         popupWindow.showAsDropDown(mBinding.ivQuestion, 100, 0);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                mBinding.mScrollView.setVisibility(View.INVISIBLE);
+                mBinding.llWarning.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     private void picMeasure(MeasurePicResponse model, Consumer<MeasureResponse> consumer) {
@@ -430,8 +449,10 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
         }
         pigId = measureResponse.getData().getPigId();
         if (!measureResponse.isSuccess()) {
-            mBinding.llWarning.setVisibility(View.VISIBLE);
-            mBinding.tvWarning.setText(measureResponse.getMessage());
+            if (!TextUtils.isEmpty(measureResponse.getMessage())) {
+                mBinding.llWarning.setVisibility(View.VISIBLE);
+                mBinding.tvWarning.setText(measureResponse.getMessage());
+            }
             mBinding.mScrollView.setVisibility(View.INVISIBLE);
         } else {
             MeasureResponse response = measureResponse.getData().getResults();
