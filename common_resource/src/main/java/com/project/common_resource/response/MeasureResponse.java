@@ -19,7 +19,7 @@ public class MeasureResponse implements Serializable {
     private String msg;    //string		信息说明
     private float length;        //float	Y	耳根到尾根的长度
     private float area;    //float	Y	面积（平方厘米）
-    private String result;
+    private SimilarityEntity result;
 
     public String getId() {
         return id;
@@ -69,11 +69,11 @@ public class MeasureResponse implements Serializable {
         this.area = area;
     }
 
-    public String getResult() {
+    public SimilarityEntity getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(SimilarityEntity result) {
         this.result = result;
     }
 

@@ -19,6 +19,8 @@ import com.project.arch_repo.base.activity.BaseActivity;
 import com.project.arch_repo.utils.DisplayUtils;
 import com.project.arch_repo.utils.SharedPreferencesUtils;
 import com.project.arch_repo.utils.TimeUtils;
+import com.project.arch_repo.widget.CommonDialog;
+import com.project.arch_repo.widget.GrDialogUtils;
 import com.project.arch_repo.widget.ImagePopupWindow;
 import com.project.common_resource.TakePhotoModel;
 import com.project.common_resource.global.GlobalDataManager;
@@ -176,6 +178,10 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
                             new Consumer<MeasureResponse2>() {
                                 @Override
                                 public void accept(MeasureResponse2 measureResponse) throws Exception {
+                                    if (measureResponse != null && measureResponse.getCode() != 200) {
+                                        showWarningDialog(measureResponse.getMessage());
+                                        return;
+                                    }
                                     photoModel.setResults(new Gson().toJson(measureResponse));
                                     photos.add(photoModel);
                                     checkNextButton();
@@ -196,21 +202,7 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
         mBtnAdapter.setDeletePhotoListener(new TakePhotoBtnAdapter.DeletePhotoListener() {
             @Override
             public void onDelete(int pos) {
-                mBtnAdapter.getData().get(pos).setUrl("");
-                mBtnAdapter.getData().get(pos).setSelect(true);
-                canNext();
-                for (int i = 0; i < mBtnAdapter.getData().size(); i++) {
-                    if (mBtnAdapter.getData().get(i).getUrl().isEmpty()) {
-                        currentBtnIndex = i;
-                        break;
-                    }
-                }
-                for (LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean datum : mBtnAdapter.getData()) {
-                    datum.setSelect(false);
-                }
-
-                mBtnAdapter.getData().get(currentBtnIndex).setSelect(true);
-                mBtnAdapter.notifyDataSetChanged();
+                delete(pos);
             }
 
             @Override
@@ -266,6 +258,27 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
                 mBinding.llWarning.setVisibility(View.INVISIBLE);
             }
         });
+    }
+
+    private void delete(int pos) {
+        if (mBtnAdapter == null) {
+            return;
+        }
+        mBtnAdapter.getData().get(pos).setUrl("");
+        mBtnAdapter.getData().get(pos).setSelect(true);
+        canNext();
+        for (int i = 0; i < mBtnAdapter.getData().size(); i++) {
+            if (mBtnAdapter.getData().get(i).getUrl().isEmpty()) {
+                currentBtnIndex = i;
+                break;
+            }
+        }
+        for (LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean datum : mBtnAdapter.getData()) {
+            datum.setSelect(false);
+        }
+
+        mBtnAdapter.getData().get(currentBtnIndex).setSelect(true);
+        mBtnAdapter.notifyDataSetChanged();
     }
 
     private void commitPhotos() {
@@ -470,6 +483,20 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
             mBinding.tvName.setText(GlobalDataManager.getInstance().getUserInfo().getUserName());
 
         }
+    }
+
+    private void showWarningDialog(String msg) {
+        GrDialogUtils.createCommonDialog(this, "提示", msg, new CommonDialog.OnDialogClickListener() {
+            @Override
+            public void onClickConfirm(View view) {
+                delete(currentBtnIndex);
+            }
+
+            @Override
+            public void onClickCancel(View view) {
+
+            }
+        }).show();
     }
 
     @Override
