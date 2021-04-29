@@ -567,14 +567,11 @@ public class TakePhotoNoDepthActivity extends BaseActivity implements SensorEven
         float x = sensorEvent.values[0];
         float y = sensorEvent.values[1];
         float z = sensorEvent.values[2];
-        float deltaX = x - mLastX;
-        float deltaY = y - mLastY;
-        float deltaZ = z - mLastZ;
         mLastX = x;
         mLastY = y;
         mLastZ = z;
 
-        if (x > -3 && x < 3 && y > -3 && y < 3) {
+        if (x > -2 && x < 2 && y > -2 && y < 2) {
             mBinding.tvOritation.setVisibility(View.GONE);
             mBinding.ivTake.setEnabled(true);
             DrawableCompat.setTint(drawableUp, ContextCompat.getColor(getContext(), R.color.arch_color_white));
