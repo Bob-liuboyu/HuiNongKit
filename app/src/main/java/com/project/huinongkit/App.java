@@ -3,6 +3,7 @@ package com.project.huinongkit;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
+import com.pgyersdk.crash.PgyCrashManager;
 import com.project.arch_repo.utils.ProjectInit;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -27,6 +28,9 @@ public class App extends MultiDexApplication {
         ProjectInit.getInstance().init(this);
         // bugly 初始化配置
         CrashReport.initCrashReport(getApplicationContext(), "66be8446b7", false);
+
+        // 蒲公英
+        PgyCrashManager.register();
     }
 
     /**

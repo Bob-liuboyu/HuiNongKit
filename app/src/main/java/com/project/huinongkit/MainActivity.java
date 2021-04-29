@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.pgyersdk.crash.PgyCrashManager;
 import com.project.arch_repo.base.activity.BaseTitleBarActivity;
 import com.project.config_repo.ArouterConfig;
 import com.project.huinongkit.databinding.MainActivityMainBinding;
@@ -51,6 +52,7 @@ public class MainActivity extends BaseTitleBarActivity {
         setContentView(mBinding.getRoot());
         initFragment();
         initView();
+        PgyCrashManager.register(this);
     }
 
     private void initFragment() {
@@ -58,6 +60,12 @@ public class MainActivity extends BaseTitleBarActivity {
         mineFragment = MineFragment.newInstance();
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PgyCrashManager.unregister();
+    }
 
     private void initView() {
         getTitleBar().setTitleBarTitle("慧农保").setTitleBarLeftIcon(null, null);

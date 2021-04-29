@@ -66,6 +66,7 @@ dependencies {
     compileOnly project(path: ':config_repo')
 
 //    api 'com.github.tbruyelle:rxpermissions:0.10.2'
+    api 'com.pgyersdk:sdk:3.0.10'
     api 'com.android.support:multidex:1.0.1'
 
     api 'com.github.hotchemi:permissionsdispatcher:2.3.1'

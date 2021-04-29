@@ -32,3 +32,7 @@
 }
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
+
+-libraryjars libs/pgyer_sdk_x.x.jar
+-dontwarn com.pgyersdk.**
+-keep class com.pgyersdk.** { *; }

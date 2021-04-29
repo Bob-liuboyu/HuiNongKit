@@ -9,6 +9,7 @@ buildscript {
         }
 
         maven {url 'https://developer.huawei.com/repo/'}
+        maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
@@ -25,6 +26,7 @@ allprojects {
         maven {url  "https://dl.bintray.com/rongcloud/maven"}
 
         maven {url 'https://developer.huawei.com/repo/'}
+        maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
     }
 }
 

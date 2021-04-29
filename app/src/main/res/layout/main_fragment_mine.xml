@@ -134,6 +134,20 @@
                     android:textColor="#1B1B1B"
                     android:textSize="15sp"
                     tools:text="技术支持" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="@drawable/base_dot_line" />
+
+                <TextView
+                    android:id="@+id/tv_update"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:gravity="center|left"
+                    android:textColor="#1B1B1B"
+                    android:textSize="15sp"
+                    android:text="检查更新" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 

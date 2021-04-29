@@ -63,6 +63,11 @@
         <meta-data
             android:name="android.max_aspect"
             android:value="2.4" />
+
+        <meta-data
+            android:name="PGYER_APPID"
+            android:value="b7a008f3d430a709940e9f8574f4a4eb" >
+        </meta-data>
     </application>
 
 </manifest>

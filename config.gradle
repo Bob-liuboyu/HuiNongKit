@@ -6,7 +6,7 @@ ext {
             minSdkVersion    : 19,// 最低5.0==21
             targetSdkVersion : 23, //不要轻易改
             versionCode      : 1,
-            versionName      : "1.0"//切记不能包括v或者尾巴(由于app更新)
+            versionName      : "1.1"//切记不能包括v或者尾巴(由于app更新)
     ]
 
     dependVersion = [
