@@ -570,8 +570,8 @@ public class TakePhotoNoDepthActivity extends BaseActivity implements SensorEven
         mLastX = x;
         mLastY = y;
         mLastZ = z;
-
-        if (x > -2 && x < 2 && y > -2 && y < 2) {
+//        Log.e("xxxxxxxx", x + " , " + y);
+        if (x > -0.5 && x < 2.5 && y > -1 && y < 1) {
             mBinding.tvOritation.setVisibility(View.GONE);
             mBinding.ivTake.setEnabled(true);
             DrawableCompat.setTint(drawableUp, ContextCompat.getColor(getContext(), R.color.arch_color_white));
