@@ -93,7 +93,7 @@ public class TakePhotoNoDepthActivity extends BaseActivity implements SensorEven
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
-
+    private final float mGravity = 9.80665F;
     /**
      * 拍照按钮
      */
@@ -129,7 +129,7 @@ public class TakePhotoNoDepthActivity extends BaseActivity implements SensorEven
         mBinding.layout.addView(preview);
         preview.setKeepScreenOn(true);
 
-        drawableUp = DrawableCompat.wrap(ContextCompat.getDrawable(this,R.mipmap.icon_take));
+        drawableUp = DrawableCompat.wrap(ContextCompat.getDrawable(this, R.mipmap.icon_take));
         mButtonItems = (List<LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean>) getIntent().getSerializableExtra("mButtonItems");
         orderId = getIntent().getStringExtra("orderId");
         latitude = getIntent().getStringExtra("latitude");
@@ -563,18 +563,24 @@ public class TakePhotoNoDepthActivity extends BaseActivity implements SensorEven
         float xValue = sensorEvent.values[0];// Acceleration minus Gx on the x-axis
         float yValue = sensorEvent.values[1];//Acceleration minus Gy on the y-axis
         float zValue = sensorEvent.values[2];//Acceleration minus Gz on the z-axis
-
-        if (xValue < -8 || xValue > 8 || yValue < -5 || yValue > 5) {
+//        Log.e("xxxxxxxx", "zValue = " + zValue);
+        if (zValue > 7.5 && zValue < 11) {
+            mBinding.tvOritation.setVisibility(View.GONE);
+            mBinding.ivTake.setEnabled(true);
+            DrawableCompat.setTint(drawableUp, ContextCompat.getColor(getContext(), R.color.arch_color_white));
+            mBinding.ivTake.setImageDrawable(drawableUp);
+        } else {
             mBinding.tvOritation.setVisibility(View.VISIBLE);
             mBinding.tvOritation.setText("请调整拍设角度！");
             mBinding.ivTake.setEnabled(false);
-            DrawableCompat.setTint(drawableUp, ContextCompat.getColor(getContext(),R.color.arch_color_737785));
-            mBinding.ivTake.setImageDrawable(drawableUp);
-        }else{
-            mBinding.tvOritation.setVisibility(View.GONE);
-            mBinding.ivTake.setEnabled(true);
-            DrawableCompat.setTint(drawableUp, ContextCompat.getColor(getContext(),R.color.arch_color_white));
+            DrawableCompat.setTint(drawableUp, ContextCompat.getColor(getContext(), R.color.arch_color_737785));
             mBinding.ivTake.setImageDrawable(drawableUp);
         }
+
+//        if (xValue < -8 || xValue > 8 || yValue < -5 || yValue > 5) {
+//
+//        } else {
+//
+//        }
     }
 }
