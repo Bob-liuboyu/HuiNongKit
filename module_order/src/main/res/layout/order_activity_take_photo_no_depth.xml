@@ -69,7 +69,6 @@
                 android:background="@drawable/base_dot_line_white" />
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -373,6 +372,15 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvOritation"
+            android:layout_width="match_parent"
+            android:textSize="@dimen/arch_dp_20"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textColor="@color/arch_color_fa4343"
+            android:layout_height="match_parent"/>
 
     </RelativeLayout>
 </layout>

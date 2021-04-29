@@ -1,10 +1,18 @@
 package com.project.module_order.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -60,7 +68,7 @@ import static com.project.module_order.utils.ImageUtils.getBitmap;
  * @Date 2021-03-25
  * @Description
  */
-public class TakePhotoNoDepthActivity extends BaseActivity {
+public class TakePhotoNoDepthActivity extends BaseActivity implements SensorEventListener {
     private OrderActivityTakePhotoNoDepthBinding mBinding;
 
     private static final String TAG = TakePhotoNoDepthActivity.class.getSimpleName();
@@ -83,6 +91,15 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
     private List<PolicyDetailResDTO.ClaimListBean.PigInfoBean> photos = new ArrayList<>();
     private List<PolicyDetailResDTO.ClaimListBean> result = new ArrayList<>();
 
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+
+    /**
+     * 拍照按钮
+     */
+    private Drawable drawableUp;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +119,7 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
             }, 200);
 
         }
+        initSensor(this);
 
     }
 
@@ -111,7 +129,7 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
         mBinding.layout.addView(preview);
         preview.setKeepScreenOn(true);
 
-
+        drawableUp = DrawableCompat.wrap(ContextCompat.getDrawable(this,R.mipmap.icon_take));
         mButtonItems = (List<LoginResDTO.SettingsBean.CategoryBean.MeasureWaysBean.DetailsBean>) getIntent().getSerializableExtra("mButtonItems");
         orderId = getIntent().getStringExtra("orderId");
         latitude = getIntent().getStringExtra("latitude");
@@ -513,6 +531,7 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
                 Toast.makeText(getContext(), "相机初始化失败", Toast.LENGTH_LONG).show();
             }
         }
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -525,5 +544,37 @@ public class TakePhotoNoDepthActivity extends BaseActivity {
             preview.setNull();
         }
         super.onPause();
+        mSensorManager.unregisterListener(this);
+    }
+
+    private void initSensor(Context context) {
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    }
+
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent == null) {
+            return;
+        }
+        float xValue = sensorEvent.values[0];// Acceleration minus Gx on the x-axis
+        float yValue = sensorEvent.values[1];//Acceleration minus Gy on the y-axis
+        float zValue = sensorEvent.values[2];//Acceleration minus Gz on the z-axis
+
+        if (xValue < -8 || xValue > 8 || yValue < -5 || yValue > 5) {
+            mBinding.tvOritation.setVisibility(View.VISIBLE);
+            mBinding.tvOritation.setText("请调整拍设角度！");
+            mBinding.ivTake.setEnabled(false);
+            DrawableCompat.setTint(drawableUp, ContextCompat.getColor(getContext(),R.color.arch_color_737785));
+            mBinding.ivTake.setImageDrawable(drawableUp);
+        }else{
+            mBinding.tvOritation.setVisibility(View.GONE);
+            mBinding.ivTake.setEnabled(true);
+            DrawableCompat.setTint(drawableUp, ContextCompat.getColor(getContext(),R.color.arch_color_white));
+            mBinding.ivTake.setImageDrawable(drawableUp);
+        }
     }
 }
