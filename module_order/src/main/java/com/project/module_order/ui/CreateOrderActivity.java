@@ -341,28 +341,28 @@ public class CreateOrderActivity extends BaseActivity {
     }
 
     public void showCamera() {
-        String name = binding.tvName.getText().toString();
-        String code = binding.tvCode.getText().toString();
-        String startTime = binding.tvDateStart.getText().toString();
-        String endTime = binding.tvDateEnd.getText().toString();
-        if (TextUtils.isEmpty(name) | TextUtils.isEmpty(code) |
-                TextUtils.isEmpty(startTime) | TextUtils.isEmpty(endTime)) {
-            GrDialogUtils.createCommonDialog(CreateOrderActivity.this, "提示", "请先填写信息后在进行测量！", new CommonDialog.OnDialogClickListener() {
-                @Override
-                public void onClickConfirm(View view) {
-
-                }
-
-                @Override
-                public void onClickCancel(View view) {
-
-                }
-            }).show();
-            return;
-        }
-        if (currentMeasureWay == null) {
-            return;
-        }
+//        String name = binding.tvName.getText().toString();
+//        String code = binding.tvCode.getText().toString();
+//        String startTime = binding.tvDateStart.getText().toString();
+//        String endTime = binding.tvDateEnd.getText().toString();
+//        if (TextUtils.isEmpty(name) | TextUtils.isEmpty(code) |
+//                TextUtils.isEmpty(startTime) | TextUtils.isEmpty(endTime)) {
+//            GrDialogUtils.createCommonDialog(CreateOrderActivity.this, "提示", "请先填写信息后在进行测量！", new CommonDialog.OnDialogClickListener() {
+//                @Override
+//                public void onClickConfirm(View view) {
+//
+//                }
+//
+//                @Override
+//                public void onClickCancel(View view) {
+//
+//                }
+//            }).show();
+//            return;
+//        }
+//        if (currentMeasureWay == null) {
+//            return;
+//        }
 
         Intent intent = new Intent(this, TakePhotoNoDepthActivity.class);
         Bundle bundle = new Bundle();

@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.hardware.sensor.accelerometer"/>
 
     <!-- 支持iBeancon 需要蓝牙权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />

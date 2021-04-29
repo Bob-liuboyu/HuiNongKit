@@ -556,24 +556,35 @@ public class TakePhotoNoDepthActivity extends BaseActivity implements SensorEven
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    private float mLastX;
+    private float mLastY;
+    private float mLastZ;
+
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent == null) {
             return;
         }
-        float xValue = sensorEvent.values[0];// Acceleration minus Gx on the x-axis
-        float yValue = sensorEvent.values[1];//Acceleration minus Gy on the y-axis
-        float zValue = sensorEvent.values[2];//Acceleration minus Gz on the z-axis
-//        Log.e("xxxxxxxx", "zValue = " + zValue);
-        if (zValue > 7.5 && zValue < 11) {
+        float x = sensorEvent.values[0];
+        float y = sensorEvent.values[1];
+        float z = sensorEvent.values[2];
+        float deltaX = x - mLastX;
+        float deltaY = y - mLastY;
+        float deltaZ = z - mLastZ;
+        mLastX = x;
+        mLastY = y;
+        mLastZ = z;
+
+        if (x > -3 && x < 3 && y > -3 && y < 3) {
             mBinding.tvOritation.setVisibility(View.GONE);
             mBinding.ivTake.setEnabled(true);
             DrawableCompat.setTint(drawableUp, ContextCompat.getColor(getContext(), R.color.arch_color_white));
             mBinding.ivTake.setImageDrawable(drawableUp);
         } else {
+//            Log.e("xxxxxxxx", x + " , " + y);
             mBinding.tvOritation.setVisibility(View.VISIBLE);
             mBinding.tvOritation.setText("请调整拍设角度！");
             mBinding.ivTake.setEnabled(false);
-            DrawableCompat.setTint(drawableUp, ContextCompat.getColor(getContext(), R.color.arch_color_737785));
+            DrawableCompat.setTint(drawableUp, ContextCompat.getColor(getContext(), R.color.arch_color_d1031c));
             mBinding.ivTake.setImageDrawable(drawableUp);
         }
 
